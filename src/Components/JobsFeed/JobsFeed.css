@@ -1,0 +1,7 @@
+#sortSelectLabel {
+  color: #ac00d5 !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 2px solid #ac00d5 !important;
+}

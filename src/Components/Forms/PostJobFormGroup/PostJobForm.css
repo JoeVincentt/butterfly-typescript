@@ -1,0 +1,9 @@
+@media (max-width: 445px) {
+  .MuiStepConnector-line {
+    display: none !important;
+  }
+}
+
+.makeStyles-nextOrFinishButton-8:hover {
+  background-color: #8a24ae !important;
+}

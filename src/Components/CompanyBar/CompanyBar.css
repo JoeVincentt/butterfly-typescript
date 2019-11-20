@@ -1,0 +1,27 @@
+#companyBar {
+  width: 100%;
+  position: inherit;
+  top: 0;
+  left: 0;
+  height: 300px;
+  flex-grow: inherit;
+  background-size: cover;
+  background-image: url(/static/media/background.8359d911.png);
+  background-repeat: no-repeat;
+}
+
+/* @media (min-width: 425px) {
+  #companyBar {
+    height: 200px;
+  }
+}
+@media (min-width: 768px) {
+  #companyBar {
+    height: 400px;
+  }
+}
+@media (min-width: 1700px) {
+  #companyBar {
+    height: 800px;
+  }
+} */
