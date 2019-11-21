@@ -8,6 +8,8 @@ import {
 import { Grid, Paper, Button, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import GradientButton from "../../../Buttons/GradientButton";
+
 // You can customize your Elements to give it the look and feel of your site.
 const createOptions = () => {
   return {
@@ -50,46 +52,79 @@ const _CardForm = props => {
   return (
     <div>
       <form onSubmit={() => handleSubmit()}>
-        <Grid container alignContent="center" justify="center">
-          <TextField
-            id="fullName"
-            className={classes.textField}
-            label="Full Name"
-            margin="normal"
-            variant="outlined"
-            fullWidth
-            required
-            color="primary"
-          />
-          <TextField
-            id="Address"
-            className={classes.textField}
-            label="Address"
-            margin="normal"
-            variant="outlined"
-            multiline
-            rows={4}
-            fullWidth
-          />
+        <Grid container direction="column">
+          <Grid item>
+            <Grid container spacing={2} direction="row" justify="space-between">
+              <Grid item xs={6}>
+                <TextField
+                  id="firstName"
+                  className={classes.textField}
+                  label="First Name"
+                  margin="normal"
+                  variant="filled"
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  id="lastName"
+                  className={classes.textField}
+                  label="Last Name"
+                  margin="normal"
+                  variant="filled"
+                  fullWidth
+                  required
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item>
+            <TextField
+              id="companyName"
+              className={classes.textField}
+              label="Company Name"
+              margin="normal"
+              variant="filled"
+              fullWidth
+              required
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              id="address"
+              className={classes.textField}
+              label="Address"
+              margin="normal"
+              variant="filled"
+              fullWidth
+              required
+            />
+          </Grid>
         </Grid>
-        <Typography variant="subtitle1" className={classes.spacing}>
-          Card Details
-        </Typography>
 
-        <CardElement onChange={handleChange} {...createOptions()} />
+        <Grid>
+          <Typography variant="h6" className={classes.spacing}>
+            Card Details
+          </Typography>
+          <CardElement onChange={handleChange} {...createOptions()} />
+          <div className="error" role="alert">
+            {errorMessage}
+          </div>
+        </Grid>
 
-        <div className="error" role="alert">
-          {errorMessage}
-        </div>
-
-        <Grid container justify="center">
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-          >
-            Pay
-          </Button>
+        <Grid container justify="space-between" alignContent="center">
+          <Grid item className={classes.button}>
+            <GradientButton
+              text="Submit Payment"
+              size="large"
+              labelName="stripePay"
+              onClick={() => console.log("payment")}
+            />
+          </Grid>
+          <Grid item className={classes.button}>
+            <Typography variant="h6">Total Price: 290$</Typography>
+          </Grid>
         </Grid>
       </form>
     </div>
@@ -102,7 +137,7 @@ const Payment = props => {
   const classes = useStyles();
   return (
     <Grid container justify="center" alignContent="center">
-      <Grid item xs={12} sm={6}>
+      <Grid item xs={12} sm={8}>
         <Paper className={classes.paper}>
           <StripeProvider apiKey={"pk_test_12345"}>
             <Elements>
@@ -118,12 +153,13 @@ const Payment = props => {
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
-    margin: theme.spacing(3, 1)
+    margin: theme.spacing(1),
+    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
   },
 
   button: {
-    marginTop: theme.spacing(3),
-    padding: theme.spacing(2, 8)
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4)
   },
   spacing: {
     margin: theme.spacing(4, 0)

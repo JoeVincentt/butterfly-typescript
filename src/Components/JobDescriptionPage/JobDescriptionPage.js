@@ -5,7 +5,11 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
-import { Typography, Divider } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+
+import colors from "../../constants/colors";
 
 import CompanyInfoCard from "./CompanyInfoCard";
 
@@ -35,10 +39,15 @@ const JobDescriptionPage = props => {
   } = job.description;
 
   const renderDate = date => (
-    <Grid container direction="row" justify="flex-end" alignItems="flex-start">
-      <Typography variant="subtitle2" className={classes.spacing}>
-        {date}
-      </Typography>
+    <Grid container direction="row" justify="flex-end" alignItems="center">
+      <Grid item>
+        <AccessTimeIcon className={classes.icon} />
+      </Grid>
+      <Grid item>
+        <Typography variant="subtitle2" className={classes.spacing}>
+          {date}
+        </Typography>
+      </Grid>
     </Grid>
   );
 
@@ -53,9 +62,17 @@ const JobDescriptionPage = props => {
   const renderJobHighlights = highlights => (
     <Grid container spacing={2} item xs={12} direction="row">
       {highlights.map((highlight, index) => (
-        <Paper className={classes.highlightPaper} key={index}>
+        <Fab
+          key={index}
+          disableRipple
+          variant="extended"
+          size="medium"
+          color="primary"
+          aria-label="highlight"
+          className={classes.highlightPaper}
+        >
           {highlight.toUpperCase()}
-        </Paper>
+        </Fab>
       ))}
     </Grid>
   );
@@ -75,7 +92,9 @@ const JobDescriptionPage = props => {
           <Typography className={classes.listTitle}>{name}</Typography>
           <ul>
             {args.map((item, index) => (
-              <li key={index}>{item}</li>
+              <li key={index} className={classes.listItem}>
+                {item}
+              </li>
             ))}
           </ul>
         </Grid>
@@ -87,67 +106,34 @@ const JobDescriptionPage = props => {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
-        {/* Small Screen */}
-        <Hidden smUp>
-          {/* Company Card */}
-          <Grid item xs={12}>
-            <CompanyInfoCard
-              location={location}
-              company={company}
-              companyId={companyId}
-              logoImage={logoImage}
-              altLogoText={altLogoText}
-            />
-          </Grid>
+      <Grid container justify="center" alignContent="center">
+        {/* Company Card */}
+        <Grid item xs={12} sm={4} md={2}>
+          <CompanyInfoCard
+            location={location}
+            company={company}
+            companyId={companyId}
+            logoImage={logoImage}
+            altLogoText={altLogoText}
+          />
+        </Grid>
 
-          {/* Basic Info */}
-          <Grid item xs={12}>
-            <Paper className={classes.paper}>
-              {renderDate(date)}
-              {renderJobTitle(title)}
-              {renderJobHighlights(highlights)}
-              {renderJobAbout(about)}
-              {renderListProperty(responsibilities, "Responsibilities")}
-              {renderListProperty(
-                educationAndExperience,
-                "Education and Experience"
-              )}
-              {renderListProperty(skills, "Skills")}
-              {renderListProperty(benefits, "Benefits")}
-            </Paper>
-          </Grid>
-        </Hidden>
-
-        {/* MD and UP */}
-        <Hidden xsDown>
-          {/* Basic Info */}
-          <Grid item xs={9}>
-            <Paper className={classes.paper}>
-              {renderDate(date)}
-              {renderJobTitle(title)}
-              {renderJobHighlights(highlights)}
-              {renderJobAbout(about)}
-              {renderListProperty(responsibilities, "Responsibilities")}
-              {renderListProperty(
-                educationAndExperience,
-                "Education and Experience"
-              )}
-              {renderListProperty(skills, "Skills")}
-              {renderListProperty(benefits, "Benefits")}
-            </Paper>
-          </Grid>
-          {/* Company Card */}
-          <Grid item xs={3}>
-            <CompanyInfoCard
-              location={location}
-              company={company}
-              companyId={companyId}
-              logoImage={logoImage}
-              altLogoText={altLogoText}
-            />
-          </Grid>
-        </Hidden>
+        {/* Basic Info */}
+        <Grid item xs={12} sm={8} md={10} lg={8}>
+          <Paper className={classes.paper}>
+            {renderDate(date)}
+            {renderJobTitle(title)}
+            {renderJobAbout(about)}
+            {renderJobHighlights(highlights)}
+            {renderListProperty(responsibilities, "Responsibilities")}
+            {renderListProperty(
+              educationAndExperience,
+              "Education and Experience"
+            )}
+            {renderListProperty(skills, "Skills")}
+            {renderListProperty(benefits, "Benefits")}
+          </Paper>
+        </Grid>
       </Grid>
     </div>
   );
@@ -158,15 +144,26 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(4),
     margin: theme.spacing(1),
-    color: theme.palette.text.secondary
+    color: theme.palette.text.secondary,
+    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.2)"
   },
   highlightPaper: {
-    padding: theme.spacing(1),
-    margin: theme.spacing(1),
+    padding: theme.spacing(10),
+    margin: theme.spacing(2),
+    marginLeft: theme.spacing(0),
     textAlign: "center",
-    color: theme.palette.text.secondary
+    color: colors.purple,
+    boxShadow: "none",
+    backgroundColor: "rgba(107, 19, 107, 0.1)",
+    "&:hover": {
+      cursor: "auto",
+      backgroundColor: "rgba(107, 19, 107, 0.1)"
+    },
+    "&:active": {
+      boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.1)"
+    }
   },
   spacing: {
     margin: theme.spacing(1)
@@ -176,6 +173,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: "1rem",
     fontWeight: 500,
     marginBottom: -10
+  },
+  icon: {
+    marginTop: 5,
+    fontSize: "1.1rem",
+    color: colors.darkGrey
   }
 }));
 

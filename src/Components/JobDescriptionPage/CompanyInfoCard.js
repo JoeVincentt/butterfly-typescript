@@ -4,8 +4,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Avatar from "@material-ui/core/Avatar";
-import { Grid } from "@material-ui/core";
-import RoomIcon from "@material-ui/icons/Room";
+import { Grid, Paper } from "@material-ui/core";
+import BusinessIcon from "@material-ui/icons/Business";
+import LocationOnIcon from "@material-ui/icons/LocationOn";
+
+import GradientButton from "../Buttons/GradientButton";
+
+import colors from "../../constants/colors";
 
 const CompanyInfoCard = ({
   location,
@@ -16,36 +21,106 @@ const CompanyInfoCard = ({
 }) => {
   const classes = useStyles();
 
-  return (
-    <Grid container direction="column" justify="center" alignItems="center">
-      <Avatar alt={altLogoText} src={logoImage} className={classes.bigAvatar} />
-      <Button
-        size="small"
-        color="secondary"
-        onClick={() => console.log("Company ID is", companyId)}
-      >
-        See Profile
-      </Button>
+  const renderCardTitleText = () => (
+    <Grid container direction="column" justify="center" alignContent="center">
+      <Typography variant="h6">Company Details</Typography>
+    </Grid>
+  );
 
-      <Typography gutterBottom variant="h6" component="h2">
-        {company}
-      </Typography>
-      <Grid container direction="row" justify="center" alignItems="center">
-        <RoomIcon color="disabled" fontSize="small" />
-        <Typography variant="body2" color="textSecondary" component="p">
-          {location}
-        </Typography>
+  const renderCompanyProfilePicture = () => (
+    <Grid container direction="column" justify="center" alignContent="center">
+      <img alt={altLogoText} src={logoImage} className={classes.bigAvatar} />
+    </Grid>
+  );
+
+  const renderCompanyDetails = () => (
+    <Grid
+      container
+      spacing={2}
+      direction="column"
+      justify="center"
+      alignContent="center"
+    >
+      <Grid item>
+        <Grid container direction="row">
+          <Grid item>
+            <BusinessIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1" color="textSecondary">
+              {company}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item>
+        <Grid container direction="row">
+          <Grid item>
+            <LocationOnIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1" color="textSecondary">
+              {location}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid item>
+        <Grid container justify="center">
+          <GradientButton
+            text="See Profile"
+            size="small"
+            onClick={() => console.log("Company ID is", companyId)}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );
+
+  return (
+    <Paper className={classes.paper}>
+      <Grid
+        container
+        spacing={2}
+        direction="column"
+        justify="center"
+        alignItems="center"
+      >
+        <Grid item xs={12}>
+          {renderCardTitleText()}
+        </Grid>
+        <Grid item xs={12}>
+          {renderCompanyProfilePicture()}
+        </Grid>
+        <Grid item xs={12}>
+          {renderCompanyDetails()}
+        </Grid>
+      </Grid>
+    </Paper>
+  );
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  paper: {
+    margin: theme.spacing(1),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
+    boxShadow: "none",
+    border: "1px solid rgba(107, 19, 107, 0.2)"
+  },
   bigAvatar: {
-    margin: 10,
+    margin: theme.spacing(3),
+    boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
+    cursor: "pointer",
     width: 100,
     height: 100
+  },
+
+  icon: {
+    marginRight: theme.spacing(1),
+    fontSize: "1.1rem",
+    color: colors.darkGrey
   }
-});
+}));
 
 export default CompanyInfoCard;

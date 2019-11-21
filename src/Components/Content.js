@@ -37,16 +37,16 @@ const Content = props => {
       {/* <ProfileForm /> */}
 
       {/* <JobsFeed
-          jobs={jobs}
-          // id={id}
-          // title={title}
-          // location={location}
-          // company={company}
-          // companyId={companyId}
-          // logoImage={logoImage}
-          // altLogoText={altLogoText}
-          // date={date}
-        /> */}
+        jobs={jobs}
+        // id={id}
+        // title={title}
+        // location={location}
+        // company={company}
+        // companyId={companyId}
+        // logoImage={logoImage}
+        // altLogoText={altLogoText}
+        // date={date}
+      /> */}
       {/* </Container> */}
 
       <Footer />

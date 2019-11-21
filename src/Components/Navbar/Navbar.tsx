@@ -12,8 +12,11 @@ import CategoryIcon from "@material-ui/icons/Category";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
 import Fab from "@material-ui/core/Fab";
+import GradientButton from "../Buttons/GradientButton";
 
 import logo from "../../images/logo_horizontal.png";
+
+import colors from "../../constants/colors";
 
 import MenuDrawer from "./MenuDrawer";
 import AccountMenu from "./AccountMenu";
@@ -23,6 +26,10 @@ const Navbar: React.FC = () => {
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [loggedIn, setLogIn] = React.useState<boolean>(false);
+
+  const logData = () => {
+    console.log("Post a Job");
+  };
 
   return (
     <div>
@@ -50,8 +57,13 @@ const Navbar: React.FC = () => {
           </div>
 
           <Hidden xsDown>
-            <Fab
-              onClick={() => console.log("Post a Job")}
+            <GradientButton
+              onClick={logData}
+              size="medium"
+              labelName="postAJob"
+              text="Post A Job"
+            />
+            {/* <Fab
               color="primary"
               variant="extended"
               size="medium"
@@ -59,7 +71,7 @@ const Navbar: React.FC = () => {
               className={classes.postJobButton}
             >
               Post a Job
-            </Fab>
+            </Fab> */}
 
             {!loggedIn && (
               <Fab
@@ -85,7 +97,8 @@ const useStyles = makeStyles(theme => ({
   //   flexGrow: 1
   // },
   appBar: {
-    background: "#fafafa"
+    background: "#fafafa",
+    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.2)"
   },
 
   title: {
@@ -97,15 +110,15 @@ const useStyles = makeStyles(theme => ({
   },
   loginButton: {
     margin: theme.spacing(1),
-    color: "#ac00d5",
-    backgroundColor: "#f4f4f4"
+    color: colors.purple,
+    backgroundColor: colors.grey
   },
   menuButton: {
-    color: "#ac00d5"
+    color: colors.purple
   },
   postJobButton: {
     margin: theme.spacing(1),
-    background: "linear-gradient(to bottom, #ff00cc, #333399)"
+    background: `linear-gradient(to bottom, #8e24aa, #333399)`
   }
 }));
 

@@ -11,6 +11,8 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
 
+import colors from "../../constants/colors";
+
 import "./Style/Card.css";
 
 interface Props {
@@ -206,7 +208,7 @@ const useStyles = makeStyles(theme => ({
   icon: {
     marginRight: 2,
     fontSize: "1.1rem",
-    color: "#616161"
+    color: colors.darkGrey
   },
   cardInfoBody: {
     marginBottom: theme.spacing(2),
@@ -218,8 +220,8 @@ const useStyles = makeStyles(theme => ({
   detailsButton: {
     margin: theme.spacing(1),
     marginRight: 0,
-    color: "#ac00d5",
-    backgroundColor: "#f4f4f4"
+    color: colors.purple,
+    backgroundColor: colors.grey
   },
   applyButton: {
     margin: theme.spacing(1),

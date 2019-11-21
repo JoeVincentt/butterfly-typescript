@@ -1,16 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import {
-  Grid,
-  Button,
-  Input,
-  Paper,
-  Typography,
-  IconButton,
-  Divider
-} from "@material-ui/core";
+import { Grid, Paper, Typography, IconButton } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
+
+import colors from "../../../../constants/colors";
 
 const JobDescription = () => {
   const [highlightsFields, setHighlightsFields] = React.useState([""]);
@@ -122,9 +116,19 @@ const JobDescription = () => {
           color="primary"
         />
         <TextField
-          id="About"
+          id="aboutPosition"
           className={classes.textField}
-          label="About"
+          label="About Position"
+          margin="normal"
+          variant="filled"
+          multiline
+          rows={4}
+          fullWidth
+        />
+        <TextField
+          id="companyInformation"
+          className={classes.textField}
+          label="Company Information"
           margin="normal"
           variant="filled"
           multiline
@@ -200,8 +204,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: "5%"
   },
   addFieldButton: {
-    color: "#fff",
-    backgroundColor: "#8a24ae",
+    color: colors.grey,
+    backgroundColor: colors.purple,
     borderRadius: "50%"
   }
 }));

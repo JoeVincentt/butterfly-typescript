@@ -3,6 +3,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { Typography, Divider, Button } from "@material-ui/core";
+import CheckIcon from "@material-ui/icons/Check";
+
+import GradientButton from "../../../Buttons/GradientButton";
+
+import "./AdvertisementPlan.css";
+import colors from "../../../../constants/colors";
 
 import { plans } from "../../../../MockUpData/plans";
 
@@ -13,28 +19,74 @@ const AdvertisementPlan = () => {
 
   const renderPlans = plans => {
     return plans.map((plan, index) => (
-      <Grid key={index} item xs={12} sm={4} md={4}>
+      <Grid key={index} item xs={12} sm={8} md={4}>
         <Paper
+          id={active === plan.id ? "advertisement_plan" : null}
           className={active !== plan.id ? classes.paper : classes.paperActive}
-          elevation={active === plan.id ? 10 : 0}
+          elevation={0}
         >
-          <Grid>
-            <Typography variant="h4">{plan.planName}</Typography>
-            <Typography variant="h6">What you get:</Typography>
-            {plan.offers.map((offer, index) => (
-              <Typography key={index} variant="body1">
-                {offer}
+          <Grid container spacing={2} direction="column">
+            <Grid item className={classes.textPlanNameContainer}>
+              <Typography variant="h4" className={classes.textPlanName}>
+                {plan.planName.toUpperCase()}
               </Typography>
-            ))}
+            </Grid>
+            <Grid item>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignContent="flex-start"
+              >
+                <Grid item>
+                  <Typography color="textSecondary" variant="h6">
+                    $
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="h3">{plan.price}</Typography>
+                </Grid>
+                <Divider />
+                <Grid item>
+                  <Typography color="textSecondary" variant="caption">
+                    / MONTH
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
             <Divider />
-            <Typography variant="h4">${plan.price}</Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setActive(plan.id)}
-            >
-              Choose Plan
-            </Button>
+            <Grid item className={classes.offersContainer}>
+              <Grid container spacing={1} direction="column" justify="center">
+                {plan.offers.map((offer, index) => (
+                  <Grid item key={index}>
+                    <Grid
+                      container
+                      spacing={1}
+                      direction="row"
+                      justify="center"
+                    >
+                      <Grid item>
+                        <CheckIcon className={classes.checkIcon} />
+                      </Grid>
+                      <Grid item>
+                        <Typography color="textSecondary" variant="body1">
+                          {offer}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              <GradientButton
+                onClick={() => setActive(plan.id)}
+                labelName="advertisementPlan"
+                text="Choose Plan"
+                size="large"
+              />
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
@@ -43,7 +95,7 @@ const AdvertisementPlan = () => {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={2} justify="center">
+      <Grid container justify="center">
         {renderPlans(plans)}
       </Grid>
     </div>
@@ -52,19 +104,35 @@ const AdvertisementPlan = () => {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    margin: theme.spacing(1),
+    padding: theme.spacing(1)
   },
   paper: {
-    padding: theme.spacing(2),
-    margin: theme.spacing(2),
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
     textAlign: "center",
-    color: theme.palette.text.secondary
+    border: "1px solid rgba(107, 19, 107, 0.1)"
   },
   paperActive: {
-    padding: theme.spacing(2),
-    margin: theme.spacing(2),
+    padding: theme.spacing(1),
+    margin: theme.spacing(1),
     textAlign: "center",
-    color: theme.palette.text.primary
+    boxShadow: "0 0 20px 0px rgba(107, 19, 107, 0.4)",
+    transform: "scale(1.02)"
+  },
+  textPlanName: {
+    color: colors.pinkLight
+  },
+  textPlanNameContainer: {
+    textAlign: "center"
+  },
+  checkIcon: {
+    color: colors.pinkLight,
+    fontSize: "1rem"
+  },
+  offersContainer: {
+    marginTop: theme.spacing(2)
   }
 }));
 

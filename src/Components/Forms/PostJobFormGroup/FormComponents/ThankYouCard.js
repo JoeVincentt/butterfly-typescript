@@ -1,6 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, Button } from "@material-ui/core";
+import colors from "../../../../constants/colors";
+import GradientButton from "../../../Buttons/GradientButton";
 
 const ThankYouCard = props => {
   const classes = useStyles();
@@ -11,33 +13,41 @@ const ThankYouCard = props => {
         <Paper className={classes.paper}>
           <Grid
             container
+            spacing={2}
             direction="column"
             justify="center"
             alignContent="center"
           >
-            <Typography variant="h6">Thank You!</Typography>
-            <Typography variant="h5">Job Posting Completed</Typography>
-            <Typography variant="subtitle1">
-              Please check your email for confirmation.
-            </Typography>
-            <Typography variant="subtitle1">
-              Order Number: 262tyahs12sa
-            </Typography>
-            <Button
-              variant="contained"
-              color="secondary"
-              className={classes.button}
-            >
-              Go to dashboard
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={props.handleReset}
-            >
-              Post Another job
-            </Button>
+            <Grid item>
+              {" "}
+              <Typography variant="h3" className={classes.thankYouText}>
+                Thank You!
+              </Typography>
+            </Grid>
+            <Grid item>
+              {" "}
+              <Typography variant="h6">Job Posting Completed</Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle2" color="textSecondary">
+                Please check your email for confirmation.
+              </Typography>
+            </Grid>
+            <Grid item>
+              {" "}
+              <Typography variant="subtitle2" color="textSecondary">
+                Order Number: 262tyahs12sa
+              </Typography>
+            </Grid>
+            <Grid item className={classes.button}>
+              {" "}
+              <GradientButton
+                text="Go to dashboard"
+                labelName="goToDash"
+                size="large"
+                onClick={() => console.log("go to dash")}
+              />
+            </Grid>
           </Grid>
         </Paper>
       </Grid>
@@ -48,15 +58,20 @@ const ThankYouCard = props => {
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
-    margin: theme.spacing(3, 1)
+    margin: theme.spacing(2),
+    textAlign: "center",
+    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
   },
   button: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   spacing: {
     margin: theme.spacing(4, 0)
   },
-  textField: {}
+  thankYouText: {
+    color: colors.pinkLight
+  }
 }));
 
 export default ThankYouCard;

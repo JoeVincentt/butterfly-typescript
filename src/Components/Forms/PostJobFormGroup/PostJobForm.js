@@ -5,6 +5,8 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { ArrowForward, ArrowBack } from "@material-ui/icons";
 
+import colors from "../../../constants/colors";
+
 import JobDescription from "./FormComponents/JobDescription";
 import AdvertisementPlan from "./FormComponents/AdvertisementPlan";
 import Payment from "./FormComponents/Payment";
@@ -34,7 +36,7 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(4);
   const steps = getSteps();
 
   const handleNext = () => {
@@ -103,13 +105,13 @@ const PostJobForm = () => {
 const useStyles = makeStyles(theme => ({
   backButton: {
     marginRight: theme.spacing(2),
-    color: "#ac00d5",
-    backgroundColor: "#f4f4f4"
+    color: colors.purple,
+    backgroundColor: colors.grey
   },
   nextOrFinishButton: {
     marginLeft: theme.spacing(2),
-    color: "#f4f4f4",
-    backgroundColor: "#ac00d5"
+    color: colors.grey,
+    backgroundColor: colors.purple
   },
   instructions: {
     marginTop: theme.spacing(1),

@@ -64,9 +64,8 @@ const useStyles = makeStyles(theme => ({
   footer: {
     fontFamily: "Helvetica Neue, Helvetica",
     padding: theme.spacing(1),
-    marginTop: "auto",
-    boxShadow:
-      "0px 1px 2px -0.5px rgba(0,0,0,0.2), 0px 2px 2.5px 0px rgba(0,0,0,0.14), 0px 0.5px 5px 0px rgba(0,0,0,0.12)"
+    marginTop: "auto"
+    // boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.2)"
   }
 }));
 
