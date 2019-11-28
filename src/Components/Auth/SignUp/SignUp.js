@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControlLabel } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import GradientButton from "../../Buttons/GradientButton";
 import { emailRegex, mediumStrengthPasswordRegex } from "../../utils/regex";
@@ -23,15 +24,14 @@ const SignUp = props => {
 
   //State components
   const [zoomIn, setZoomIn] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   //State Sets
-  const [firstName, setFirstName] = React.useState("John");
-  const [lastName, setLastName] = React.useState("Doe");
-  const [email, setEmail] = React.useState("eugene.bb@hotmail.com");
-  const [password, setPassword] = React.useState("12345a");
-  const [passwordConfirmation, setPasswordConfirmation] = React.useState(
-    "12345a"
-  );
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
   const [subscribeEmail, setSubscribeEmail] = React.useState(true);
 
   //State validation
@@ -128,7 +128,8 @@ const SignUp = props => {
     }
   };
 
-  const signUp = () =>
+  const signUp = () => {
+    setLoading(true);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -141,15 +142,18 @@ const SignUp = props => {
         setSignUpError(true);
         setSignUpErrorCode(error.code);
         setSignUpErrorMessage(error.message);
+        setLoading(false);
       });
+  };
 
-  const signIn = () =>
+  const signIn = () => {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
         setSignInError(false);
-        createDatabaseInstanceOfTheUser();
+        await createDatabaseInstanceOfTheUser();
+        setLoading(false);
         props.history.push("/");
       })
       .catch(error => {
@@ -157,8 +161,9 @@ const SignUp = props => {
         setSignInError(true);
         setSignInErrorCode(error.code);
         setSignInErrorMessage(error.message);
+        setLoading(false);
       });
-
+  };
   const createDatabaseInstanceOfTheUser = async () => {
     const { uid } = await firebase.auth().currentUser;
     if (subscribeEmail) {
@@ -240,6 +245,12 @@ const SignUp = props => {
           Passwords does not match. Please match your passwords.
         </Typography>
       );
+    }
+  };
+
+  const renderLoadingBar = () => {
+    if (loading) {
+      return <LinearProgress />;
     }
   };
 
@@ -330,6 +341,7 @@ const SignUp = props => {
                   value={passwordConfirmation}
                   onChange={e => handlePasswordConfirmationChange(e)}
                 />
+                {renderLoadingBar()}
                 <Grid>
                   <FormControlLabel
                     control={

@@ -6,8 +6,8 @@ import Avatar from "@material-ui/core/Avatar";
 import Zoom from "@material-ui/core/Zoom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
 
 import GradientButton from "../../Buttons/GradientButton";
@@ -18,8 +18,21 @@ import signInImageBackground from "../../../images/signUpInBackground.jpeg";
 
 const SignIn = props => {
   const classes = useStyles();
+  const db = firebase.firestore();
   const [isSignedIn, setIsSignedIn] = React.useState(false);
+
+  //State components
   const [zoomIn, setZoomIn] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  //State Sets
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+
+  //SignIN Error
+  const [signInError, setSignInError] = React.useState(false);
+  const [signInErrorCode, setSignInErrorCode] = React.useState("");
+  const [signInErrorMessage, setSignInErrorMessage] = React.useState("");
 
   React.useEffect(() => {
     setZoomIn(true);
@@ -33,6 +46,67 @@ const SignIn = props => {
     };
   }, []);
 
+  const handleEmailChange = e => setEmail(e.target.value);
+  const handlePasswordChange = e => setPassword(e.target.value);
+
+  const signInWithEmailAndPassword = () => {
+    setLoading(true);
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        setSignInError(false);
+        setLoading(false);
+        props.history.push("/");
+      })
+      .catch(error => {
+        // Handle Errors here.
+        setLoading(false);
+        setSignInError(true);
+        setSignInErrorCode(error.code);
+        setSignInErrorMessage(error.message);
+      });
+  };
+
+  const createDatabaseInstanceOfTheUser = async () => {
+    const { uid, displayName, email } = await firebase.auth().currentUser;
+    const fullName = displayName.split(" ");
+    const firstName = fullName[0];
+    const lastName = fullName[1];
+
+    setLoading(true);
+
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          return;
+        } else {
+          db.collection("subscriptions")
+            .doc(uid)
+            .set({
+              email: email
+            })
+            .catch(error => {});
+          db.collection("users")
+            .doc(uid)
+            .set({
+              uid: uid,
+              firstName: firstName,
+              lastName: lastName,
+              email: email
+            })
+            .catch(error => {});
+        }
+        setLoading(false);
+      })
+      .catch(error => {
+        setLoading(false);
+        // console.log("Error getting document:", error);
+      });
+  };
+
   const uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: "popup",
@@ -45,10 +119,26 @@ const SignIn = props => {
     ],
     callbacks: {
       // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: () => {
-        console.log(firebase.auth().currentUser);
+      signInSuccessWithAuthResult: async () => {
+        await createDatabaseInstanceOfTheUser();
         props.history.push("/");
       }
+    }
+  };
+
+  const renderSingInError = () => {
+    if (signInError) {
+      return (
+        <Typography variant="caption" className={classes.errorMessage}>
+          Invalid Credentials
+        </Typography>
+      );
+    }
+  };
+
+  const renderLoadingBar = () => {
+    if (loading) {
+      return <LinearProgress />;
     }
   };
 
@@ -74,6 +164,8 @@ const SignIn = props => {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  value={email}
+                  onChange={e => handleEmailChange(e)}
                 />
                 <TextField
                   className={classes.textField}
@@ -86,10 +178,17 @@ const SignIn = props => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={e => handlePasswordChange(e)}
                 />
+                <Grid container direction="column">
+                  {renderSingInError()}
+                </Grid>
+                <div style={{ height: "4px" }}>{renderLoadingBar()}</div>
+
                 <Grid item className={classes.submit}>
                   <GradientButton
-                    onClick={() => console.log("submit")}
+                    onClick={() => signInWithEmailAndPassword()}
                     text="Login"
                     labelName="loginButton"
                     size="large"
@@ -159,6 +258,9 @@ const useStyles = makeStyles(theme => ({
   submit: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2)
+  },
+  errorMessage: {
+    color: "red"
   }
 }));
 

@@ -30,15 +30,15 @@ const Content = props => {
   return (
     <Router>
       <div className={classes.root}>
-        {/* <CssBaseline />
-        <Toolbar id="back-to-top-anchor" /> */}
-        {/* <Navbar /> */}
+        <CssBaseline />
+        <Toolbar id="back-to-top-anchor" />
+        <Navbar />
         <Switch>
-          <Route path="/">
+          {/* <Route path="/">
             <Subscribe />
-          </Route>
+          </Route> */}
 
-          {/* <Route exact path="/">
+          <Route exact path="/">
             <CompanyBar />
             <Container component="main" className={classes.main}>
               <JobsFeed jobs={jobs} />
@@ -66,11 +66,11 @@ const Content = props => {
 
           <Route path="/sign-up">
             <SignUp />
-          </Route> */}
+          </Route>
           <Route component={NoMatch} />
         </Switch>
 
-        {/* <ScrollToTheTop {...props}>
+        <ScrollToTheTop {...props}>
           <Fab
             color="secondary"
             size="small"
@@ -79,9 +79,9 @@ const Content = props => {
           >
             <KeyboardArrowUpIcon />
           </Fab>
-        </ScrollToTheTop> */}
+        </ScrollToTheTop>
       </div>
-      {/* <Footer /> */}
+      <Footer />
     </Router>
   );
 };
