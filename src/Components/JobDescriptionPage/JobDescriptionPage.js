@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Hidden from "@material-ui/core/Hidden";
-import withWidth from "@material-ui/core/withWidth";
 import { Typography } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -17,26 +16,25 @@ import { jobs } from "../../MockUpData/jobs";
 
 const JobDescriptionPage = props => {
   const classes = useStyles();
+  const [job, setJob] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  const job = jobs[0]; //is going to come from props
-  const {
-    id,
-    title,
-    location,
-    company,
-    companyId,
-    logoImage,
-    altLogoText,
-    date
-  } = job;
-  const {
-    highlights,
-    about,
-    responsibilities,
-    educationAndExperience,
-    skills,
-    benefits
-  } = job.description;
+  useEffect(() => {
+    console.log(props.match.params.id);
+
+    //need to fetch job description from the database
+    const getAJobFromTheList = async () => {
+      await jobs.forEach(job => {
+        if (job.id === props.match.params.id) {
+          // console.log(job);
+          setJob(job);
+        }
+      });
+    };
+    getAJobFromTheList();
+    setLoading(false);
+    // code to run on component mount
+  }, []);
 
   const renderDate = date => (
     <Grid container direction="row" justify="flex-end" alignItems="center">
@@ -106,35 +104,42 @@ const JobDescriptionPage = props => {
 
   return (
     <div className={classes.root}>
-      <Grid container justify="center" alignContent="center">
-        {/* Company Card */}
-        <Grid item xs={12} sm={4} md={2}>
-          <CompanyInfoCard
-            location={location}
-            company={company}
-            companyId={companyId}
-            logoImage={logoImage}
-            altLogoText={altLogoText}
-          />
-        </Grid>
+      {loading ? (
+        <div>loading</div>
+      ) : (
+        <Grid container justify="center" alignContent="center">
+          {/* Company Card */}
+          <Grid item xs={12} sm={4} md={2}>
+            <CompanyInfoCard
+              location={job.location}
+              company={job.company}
+              companyId={job.companyId}
+              logoImage={job.logoImage}
+              altLogoText={job.altLogoText}
+            />
+          </Grid>
 
-        {/* Basic Info */}
-        <Grid item xs={12} sm={8} md={10} lg={8}>
-          <Paper className={classes.paper}>
-            {renderDate(date)}
-            {renderJobTitle(title)}
-            {renderJobAbout(about)}
-            {renderJobHighlights(highlights)}
-            {renderListProperty(responsibilities, "Responsibilities")}
-            {renderListProperty(
-              educationAndExperience,
-              "Education and Experience"
-            )}
-            {renderListProperty(skills, "Skills")}
-            {renderListProperty(benefits, "Benefits")}
-          </Paper>
+          {/* Basic Info */}
+          <Grid item xs={12} sm={8} md={10} lg={8}>
+            <Paper className={classes.paper}>
+              {renderDate(job.date)}
+              {renderJobTitle(job.title)}
+              {renderJobAbout(job.description.about)}
+              {renderJobHighlights(job.description.highlights)}
+              {renderListProperty(
+                job.description.responsibilities,
+                "Responsibilities"
+              )}
+              {renderListProperty(
+                job.description.educationAndExperience,
+                "Education and Experience"
+              )}
+              {renderListProperty(job.description.skills, "Skills")}
+              {renderListProperty(job.description.benefits, "Benefits")}
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </div>
   );
 };
@@ -181,8 +186,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-JobDescriptionPage.propTypes = {
-  width: PropTypes.oneOf(["lg", "md", "sm", "xl", "xs"]).isRequired
-};
-
-export default withWidth()(JobDescriptionPage);
+export default withRouter(JobDescriptionPage);

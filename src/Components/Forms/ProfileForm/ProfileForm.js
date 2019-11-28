@@ -1,18 +1,23 @@
 import React from "react";
-import { Grid, Paper, Typography, TextField, Button } from "@material-ui/core";
+import { Grid, Paper, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
+import { useDropzone } from "react-dropzone";
+
+import GradientButton from "../../Buttons/GradientButton";
+
+import shadows from "../../../constants/shadows";
 
 import listOfCountries from "./FormComponents/ListOfCountries";
 import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
+import colors from "../../../constants/colors";
 
 const ProfileForm = () => {
   const classes = useStyles();
-
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [country, setCountry] = React.useState("");
@@ -24,6 +29,27 @@ const ProfileForm = () => {
   React.useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
+
+  //DropZone Parameters
+  const {
+    acceptedFiles,
+    rejectedFiles,
+    getRootProps,
+    getInputProps
+  } = useDropzone({
+    accept: "application/pdf"
+  });
+
+  const acceptedFilesItems = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
+  // const rejectedFilesItems = rejectedFiles.map(file => (
+  //   <li key={file.path}>
+  //     {file.path} - {file.size} bytes
+  //   </li>
+  // ));
 
   const handleChange = (event, param) => {
     switch (param) {
@@ -54,60 +80,36 @@ const ProfileForm = () => {
       alignContent="center"
       className={classes.root}
     >
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={10} md={8}>
         <Paper className={classes.paper}>
-          <Grid container justify="center" alignContent="center">
-            <Typography className={classes.title} variant="h6">
-              Account Information
-            </Typography>
-            <Grid item xs={12} sm={10}>
+          <Grid container spacing={2} justify="center" alignContent="center">
+            <Grid item xs={12}>
+              <Typography className={classes.title} variant="h4">
+                Account Information
+              </Typography>
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
               <Grid container spacing={3}>
                 {/* First Name */}
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     id="firstName"
                     className={classes.textField}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.cssLabel,
-                        focused: classes.cssFocused
-                      }
-                    }}
-                    InputProps={{
-                      classes: {
-                        root: classes.cssOutlinedInput,
-                        focused: classes.cssFocused,
-                        notchedOutline: classes.notchedOutline
-                      }
-                    }}
                     label="First Name"
-                    variant="outlined"
+                    variant="standard"
                     value={firstName}
                     fullWidth
                     onChange={e => handleChange(e, "firstName")}
                   />
                 </Grid>
-
                 {/* Last Name */}
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     id="lastName"
                     className={classes.textField}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.cssLabel,
-                        focused: classes.cssFocused
-                      }
-                    }}
-                    InputProps={{
-                      classes: {
-                        root: classes.cssOutlinedInput,
-                        focused: classes.cssFocused,
-                        notchedOutline: classes.notchedOutline
-                      }
-                    }}
                     label="Last Name"
-                    variant="outlined"
+                    variant="standard"
                     value={lastName}
                     fullWidth
                     onChange={e => handleChange(e, "lastName")}
@@ -115,9 +117,9 @@ const ProfileForm = () => {
                 </Grid>
 
                 {/* Country*/}
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <FormControl
-                    variant="outlined"
+                    variant="standard"
                     className={classes.formControl}
                   >
                     <InputLabel ref={inputLabel} id="country-input-label">
@@ -141,27 +143,13 @@ const ProfileForm = () => {
                     </Select>
                   </FormControl>
                 </Grid>
-
                 {/* Zip Code */}
-                <Grid item xs={12}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     id="zipCode"
                     className={classes.textField}
-                    InputLabelProps={{
-                      classes: {
-                        root: classes.cssLabel,
-                        focused: classes.cssFocused
-                      }
-                    }}
-                    InputProps={{
-                      classes: {
-                        root: classes.cssOutlinedInput,
-                        focused: classes.cssFocused,
-                        notchedOutline: classes.notchedOutline
-                      }
-                    }}
                     label="Zip Code"
-                    variant="outlined"
+                    variant="standard"
                     type="number"
                     value={zipCode}
                     onChange={e => handleChange(e, "zipCode")}
@@ -172,7 +160,7 @@ const ProfileForm = () => {
                 {/* Current Career Level */}
                 <Grid item xs={12}>
                   <FormControl
-                    variant="outlined"
+                    variant="standard"
                     className={classes.formControl}
                   >
                     <InputLabel
@@ -201,22 +189,64 @@ const ProfileForm = () => {
                 </Grid>
 
                 {/* Resume */}
-                <Grid item xs={12}>
-                  <label className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary">
-                    <input
-                      type="file"
-                      onChange={e => console.log(e.target.value)}
-                    />
-                    <CloudUploadIcon style={{ marginRight: 10 }} />
-                    Resume Upload
-                  </label>
+                <Grid item xs={12} className={classes.dragAndDropContainer}>
+                  <Paper elevation={0} className={classes.dragAndDropPaper}>
+                    <Grid
+                      container
+                      direction="column"
+                      justify="center"
+                      alignContent="center"
+                    >
+                      <Grid
+                        container
+                        direction="column"
+                        justify="center"
+                        alignContent="center"
+                        {...getRootProps({ className: "dropzone" })}
+                      >
+                        <Grid item>
+                          <Grid
+                            container
+                            direction="column"
+                            justify="center"
+                            alignContent="center"
+                          >
+                            <input {...getInputProps()} />
+                            <CloudUploadOutlinedIcon
+                              className={classes.uploadIcon}
+                            />
+                          </Grid>
+                        </Grid>
+                        <Grid item>
+                          <Typography
+                            variant="h6"
+                            className={classes.purpleText}
+                          >
+                            Upload Your Resume Here
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          {" "}
+                          <Typography variant="subtitle2" color="textSecondary">
+                            (Only *.pdf images will be accepted)
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <ul>{acceptedFilesItems}</ul>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Paper>
                 </Grid>
 
                 {/* Update Profile Button */}
-                <Grid item xs={10}>
-                  <Button variant="contained" color="primary">
-                    Update
-                  </Button>
+                <Grid item xs={12}>
+                  <GradientButton
+                    text="UPDATE"
+                    labelName="updateProfile"
+                    size="large"
+                    onClick={() => console.log("update")}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -229,13 +259,11 @@ const ProfileForm = () => {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    height: "100vh"
-  },
-  title: {
-    margin: theme.spacing(2)
+    minHeight: "100vh"
   },
   paper: {
-    padding: theme.spacing(4, 1)
+    padding: theme.spacing(4, 2),
+    boxShadow: shadows.purpleShadow
   },
   formControl: {
     minWidth: "100%"
@@ -243,24 +271,21 @@ const useStyles = makeStyles(theme => ({
   selectEmpty: {
     marginTop: theme.spacing(2)
   },
-  button: {
-    padding: theme.spacing(2),
-    minWidth: "100%"
+  dragAndDropContainer: {
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1)
   },
-  textField: {},
-  notchedOutline: {},
-  cssLabel: {
-    "&$cssFocused": {
-      color: "green"
-    }
+  dragAndDropPaper: {
+    border: "1px solid rgba(107, 19, 107, 0.2)"
   },
-  cssOutlinedInput: {
-    "&$cssFocused $notchedOutline": {
-      borderColor: "green"
-    }
+  uploadIcon: {
+    fontSize: "5rem",
+    color: colors.mediumGrey
   },
-  cssFocused: {},
-  notchedOutline: {}
+  purpleText: {
+    color: colors.purple,
+    textDecoration: "underline"
+  }
 }));
 
 export default ProfileForm;

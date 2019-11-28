@@ -1,8 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Fab } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import { ArrowForward, ArrowBack } from "@material-ui/icons";
 
 import colors from "../../../constants/colors";
@@ -36,7 +34,7 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(4);
+  const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
 
   const handleNext = () => {

@@ -5,6 +5,7 @@ import { Grid, Paper, Typography, IconButton } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 
 import colors from "../../../../constants/colors";
+import shadows from "../../../../constants/shadows";
 
 const JobDescription = () => {
   const [highlightsFields, setHighlightsFields] = React.useState([""]);
@@ -184,7 +185,7 @@ const JobDescription = () => {
 const useStyles = makeStyles(theme => ({
   paper: {
     margin: theme.spacing(2),
-    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+    boxShadow: shadows.purpleShadow
   },
   containerForDynamicFields: {
     marginBottom: theme.spacing(6)

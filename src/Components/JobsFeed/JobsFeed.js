@@ -1,24 +1,32 @@
 import React from "react";
-
+import { withRouter } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import NativeSelect from "@material-ui/core/NativeSelect";
 
 import "./JobsFeed.css";
-import CompanyBar from "../CompanyBar/CompanyBar";
 import JobCard from "../JobCard/JobCard";
 
-const JobsFeed = ({ jobs }) => {
+const JobsFeed = ({ jobs, history }) => {
   const classes = useStyles();
   const [sortBy, setSortBy] = React.useState("");
 
   const handleChange = name => event => {
     setSortBy(event.target.value);
+  };
+
+  const navigateToJobDetails = id => {
+    // console.log(history);
+    // console.log(id);
+    history.push({
+      pathname: `/job-description/${id}`,
+      state: {
+        id
+      }
+    });
   };
 
   const renderJobsFeed = () =>
@@ -46,6 +54,7 @@ const JobsFeed = ({ jobs }) => {
           logoImage={logoImage}
           altLogoText={altLogoText}
           date={date}
+          navigateToJobDetails={() => navigateToJobDetails(id)}
         />
       )
     );
@@ -110,4 +119,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default JobsFeed;
+export default withRouter(JobsFeed);

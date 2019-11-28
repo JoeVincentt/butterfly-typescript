@@ -24,7 +24,6 @@ const Button = ({ onClick, text, labelName, size }) => {
 
 const useStyles = makeStyles(theme => ({
   button: {
-    margin: theme.spacing(1),
     background: `linear-gradient(to bottom, #8e24aa, #333399)`
   }
 }));

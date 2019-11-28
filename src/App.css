@@ -1,7 +1,11 @@
+body {
+  margin: 0px;
+}
+
 .makeStyles-root-8 {
   flex-grow: 0 !important;
 }
 
-input[type="file"] {
-  display: none;
+.MuiFab-root {
+  box-shadow: 0 0 10px 0px rgba(107, 19, 107, 0.3) !important;
 }

@@ -1,13 +1,14 @@
-import React, { Component } from "react";
+import React from "react";
 import {
   CardElement,
   injectStripe,
   StripeProvider,
   Elements
 } from "react-stripe-elements";
-import { Grid, Paper, Button, Typography, TextField } from "@material-ui/core";
+import { Grid, Paper, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import shadows from "../../../../constants/shadows";
 import GradientButton from "../../../Buttons/GradientButton";
 
 // You can customize your Elements to give it the look and feel of your site.
@@ -154,7 +155,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     margin: theme.spacing(1),
-    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+    boxShadow: shadows.purpleShadow
   },
 
   button: {
