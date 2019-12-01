@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
@@ -9,6 +9,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { FormControlLabel } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import LinearProgress from "@material-ui/core/LinearProgress";
+
+import {
+  UserStateContext,
+  UserDispatchContext
+} from "../../../StateManagement/UserState";
 
 import GradientButton from "../../Buttons/GradientButton";
 import { emailRegex, mediumStrengthPasswordRegex } from "../../utils/regex";
@@ -22,39 +27,48 @@ const SignUp = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
+  const state = useContext(UserStateContext);
+  const dispatch = useContext(UserDispatchContext);
+
   //State components
-  const [zoomIn, setZoomIn] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [zoomIn, setZoomIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //State Sets
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = React.useState("");
-  const [subscribeEmail, setSubscribeEmail] = React.useState(true);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [subscribeEmail, setSubscribeEmail] = useState(true);
+  const [
+    termsConditionsPrivacyPolicy,
+    setTermsConditionsPrivacyPolicy
+  ] = useState(false);
 
   //State validation
-  const [emailInvalid, setEmailInvalid] = React.useState(true);
-  const [passwordIsTooWeak, setPasswordIsTooWeak] = React.useState(true);
-  const [passwordDoesNotMatch, setPasswordDoesNotMatch] = React.useState(true);
+  //Empty
+  //Validation
+  const [emailInvalid, setEmailInvalid] = useState(false);
+  const [passwordIsTooWeak, setPasswordIsTooWeak] = useState(false);
+  const [passwordDoesNotMatch, setPasswordDoesNotMatch] = useState(false);
   //SignIN Error
-  const [signInError, setSignInError] = React.useState(false);
-  const [signInErrorCode, setSignInErrorCode] = React.useState("");
-  const [signInErrorMessage, setSignInErrorMessage] = React.useState("");
+  const [signInError, setSignInError] = useState(false);
+  const [signInErrorCode, setSignInErrorCode] = useState("");
+  const [signInErrorMessage, setSignInErrorMessage] = useState("");
   //SignUP Error
-  const [signUpError, setSignUpError] = React.useState(false);
-  const [signUpErrorCode, setSignUpErrorCode] = React.useState("");
-  const [signUpErrorMessage, setSignUpErrorMessage] = React.useState("");
+  const [signUpError, setSignUpError] = useState(false);
+  const [signUpErrorCode, setSignUpErrorCode] = useState("");
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
 
   //ComponentDidMount
-  React.useEffect(() => {
+  useEffect(() => {
     setZoomIn(true);
     return () => setZoomIn(false);
   }, []);
 
   //Validate form state callback
-  React.useEffect(() => {
+  useEffect(() => {
     formValidation();
   }, [
     email,
@@ -67,10 +81,18 @@ const SignUp = props => {
 
   //Change Handlers
   const handleSubscribeToEmails = () => setSubscribeEmail(!subscribeEmail);
-  const handleFirstNameChange = e => setFirstName(e.target.value);
-  const handleLastNameChange = e => setLastName(e.target.value);
+  const handleTermsConditionsPrivacyPolicy = () =>
+    setTermsConditionsPrivacyPolicy(!termsConditionsPrivacyPolicy);
+  const handleFirstNameChange = e =>
+    setFirstName(e.target.value.replace(/[^a-zA-Z]/g, ""));
+
+  const handleLastNameChange = e =>
+    setLastName(e.target.value.replace(/[^a-zA-Z]/g, ""));
+
   const handleEmailChange = e => setEmail(e.target.value);
+
   const handlePasswordChange = e => setPassword(e.target.value);
+
   const handlePasswordConfirmationChange = e =>
     setPasswordConfirmation(e.target.value);
 
@@ -104,7 +126,8 @@ const SignUp = props => {
       !passwordIsTooWeak &&
       !passwordDoesNotMatch &&
       validFirstName &&
-      validLastName
+      validLastName &&
+      termsConditionsPrivacyPolicy
     ) {
       // console.log("good to go");
       return true;
@@ -153,6 +176,10 @@ const SignUp = props => {
       .then(async () => {
         setSignInError(false);
         await createDatabaseInstanceOfTheUser();
+        dispatch({
+          type: "login",
+          payload: { firstName: firstName, lastName: lastName, email: email }
+        });
         setLoading(false);
         props.history.push("/");
       })
@@ -356,6 +383,21 @@ const SignUp = props => {
                     className={classes.checkBox}
                   />
                 </Grid>
+                <Grid>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={termsConditionsPrivacyPolicy}
+                        onChange={() => handleTermsConditionsPrivacyPolicy()}
+                        value="termsAndPrivacy"
+                        color="primary"
+                      />
+                    }
+                    label="I read and agree on Terms and Conditions & Privacy Policy"
+                    className={classes.checkBox}
+                  />
+                </Grid>
+
                 <Grid container direction="column">
                   {renderSingUpError()}
                   {renderSingInError()}
@@ -366,12 +408,13 @@ const SignUp = props => {
 
                 <Grid item className={classes.submit}>
                   <GradientButton
-                    onClick={() => handleSubmit()}
+                    onClick={() => (loading ? () => {} : handleSubmit())}
                     text="Register"
                     labelName="registerButton"
                     size="large"
                   />
                 </Grid>
+
                 <Grid container>
                   <Grid item>
                     <Link to="/sign-in" style={{ textDecoration: "none" }}>

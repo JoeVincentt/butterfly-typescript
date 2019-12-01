@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,25 +12,50 @@ import withWidth from "@material-ui/core/withWidth";
 import Fab from "@material-ui/core/Fab";
 import GradientButton from "../Buttons/GradientButton";
 
+import {
+  UserStateContext,
+  UserDispatchContext
+} from "../../StateManagement/UserState";
+
 import logo from "../../images/logo_horizontal.png";
-
 import colors from "../../constants/colors";
-
 import MenuDrawer from "./MenuDrawer";
 
 const Navbar = props => {
   const classes = useStyles();
 
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [loggedIn, setLogIn] = React.useState(false);
+  const state = useContext(UserStateContext);
+  const dispatch = useContext(UserDispatchContext);
+
+  const { isLoggedIn } = state;
+
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navigateToPostJobScreen = () => props.history.push("/post-a-job");
 
   const navigateToLoginScreen = () => props.history.push("/sign-in");
 
+  const signOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        // Sign-out successful.
+        dispatch({ type: "logOut" });
+      })
+      .catch(function(error) {
+        // An error happened.
+      });
+  };
+
   return (
     <div>
-      <MenuDrawer drawerOpen={drawerOpen} setDrawerOpen={setDrawerOpen} />
+      <MenuDrawer
+        drawerOpen={drawerOpen}
+        setDrawerOpen={setDrawerOpen}
+        isLoggedIn={isLoggedIn}
+        dispatch={dispatch}
+      />
       <AppBar position="fixed" elevation={1} className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -62,18 +88,16 @@ const Navbar = props => {
               text="Post A Job"
             />
 
-            {!loggedIn && (
-              <Fab
-                onClick={() => navigateToLoginScreen()}
-                color="inherit"
-                variant="extended"
-                size="medium"
-                aria-label="login"
-                className={classes.loginButton}
-              >
-                Login
-              </Fab>
-            )}
+            <Fab
+              onClick={() => (isLoggedIn ? signOut() : navigateToLoginScreen())}
+              color="inherit"
+              variant="extended"
+              size="medium"
+              aria-label="login"
+              className={classes.loginButton}
+            >
+              {isLoggedIn ? "Sign Out" : "Sign In"}
+            </Fab>
           </Hidden>
         </Toolbar>
       </AppBar>

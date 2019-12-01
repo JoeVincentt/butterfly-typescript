@@ -7,6 +7,7 @@ import {
 } from "@material-ui/core/styles";
 import { orange, purple } from "@material-ui/core/colors";
 import Content from "./Components/Content";
+import { UserStateProvider } from "./StateManagement/UserState";
 import "./App.css";
 
 let theme = createMuiTheme({
@@ -24,7 +25,9 @@ theme = responsiveFontSizes(theme);
 const App = props => {
   return (
     <ThemeProvider theme={theme}>
-      <Content />
+      <UserStateProvider>
+        <Content />
+      </UserStateProvider>
     </ThemeProvider>
   );
 };

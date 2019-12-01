@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Link, withRouter } from "react-router-dom";
@@ -10,6 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
 
+import {
+  UserStateContext,
+  UserDispatchContext
+} from "../../../StateManagement/UserState";
+
 import GradientButton from "../../Buttons/GradientButton";
 import logo from "../../../images/logo.png";
 import "./SignIn.css";
@@ -19,30 +24,36 @@ import signInImageBackground from "../../../images/signUpInBackground.jpeg";
 const SignIn = props => {
   const classes = useStyles();
   const db = firebase.firestore();
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
+
+  //Use context
+  const state = useContext(UserStateContext);
+  const dispatch = useContext(UserDispatchContext);
+
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
   //State components
-  const [zoomIn, setZoomIn] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [zoomIn, setZoomIn] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   //State Sets
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   //SignIN Error
-  const [signInError, setSignInError] = React.useState(false);
-  const [signInErrorCode, setSignInErrorCode] = React.useState("");
-  const [signInErrorMessage, setSignInErrorMessage] = React.useState("");
+  const [signInError, setSignInError] = useState(false);
+  const [signInErrorCode, setSignInErrorCode] = useState("");
+  const [signInErrorMessage, setSignInErrorMessage] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     setZoomIn(true);
-    const unregisterAuthObserver = firebase
-      .auth()
-      .onAuthStateChanged(user => setIsSignedIn(!!user));
+    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+      setIsSignedIn(!!user);
+    });
 
     return () => {
       unregisterAuthObserver();
       setZoomIn(false);
+      setLoading(false);
     };
   }, []);
 
@@ -56,8 +67,33 @@ const SignIn = props => {
       .signInWithEmailAndPassword(email, password)
       .then(() => {
         setSignInError(false);
-        setLoading(false);
-        props.history.push("/");
+        const { uid } = firebase.auth().currentUser;
+        db.collection("users")
+          .doc(uid)
+          .get()
+          .then(doc => {
+            if (doc.exists) {
+              //set state
+              let data = doc.data();
+              dispatch({
+                type: "login",
+                payload: {
+                  uid: uid,
+                  firstName: data.firstName,
+                  lastName: data.lastName,
+                  email: data.email
+                }
+              });
+              props.history.push("/");
+              return;
+            } else {
+              return;
+            }
+          })
+          .catch(error => {
+            setLoading(false);
+            // console.log("Error getting document:", error);
+          });
       })
       .catch(error => {
         // Handle Errors here.
@@ -68,43 +104,85 @@ const SignIn = props => {
       });
   };
 
-  const createDatabaseInstanceOfTheUser = async () => {
-    const { uid, displayName, email } = await firebase.auth().currentUser;
-    const fullName = displayName.split(" ");
-    const firstName = fullName[0];
-    const lastName = fullName[1];
-
+  const createDatabaseInstanceOfTheUser = async (
+    uid,
+    firstName,
+    lastName,
+    email
+  ) => {
     setLoading(true);
-
-    db.collection("users")
-      .doc(uid)
-      .get()
-      .then(doc => {
-        if (doc.exists) {
-          return;
-        } else {
-          db.collection("subscriptions")
+    try {
+      const user = await db
+        .collection("users")
+        .doc(uid)
+        .get();
+      if (user.exists) {
+        props.history.push("/");
+        return;
+      } else {
+        try {
+          await db
+            .collection("subscriptions")
             .doc(uid)
             .set({
               email: email
-            })
-            .catch(error => {});
-          db.collection("users")
+            });
+        } catch (error) {
+          console.log(error);
+        }
+        try {
+          await db
+            .collection("users")
             .doc(uid)
             .set({
               uid: uid,
               firstName: firstName,
               lastName: lastName,
               email: email
-            })
-            .catch(error => {});
+            });
+          props.history.push("/");
+        } catch (error) {
+          console.log(error);
         }
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        // console.log("Error getting document:", error);
-      });
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+
+    // db.collection("users")
+    //   .doc(uid)
+    //   .get()
+    //   .then(doc => {
+    //     if (doc.exists) {
+    //       //set state
+    //       props.history.push("/");
+    //       return;
+    //     } else {
+    //       db.collection("subscriptions")
+    //         .doc(uid)
+    //         .set({
+    //           email: email
+    //         })
+    //         .catch(error => {});
+    //       db.collection("users")
+    //         .doc(uid)
+    //         .set({
+    //           uid: uid,
+    //           firstName: firstName,
+    //           lastName: lastName,
+    //           email: email
+    //         })
+    //         .then(() => {
+    //           props.history.push("/");
+    //         })
+    //         .catch(error => {});
+    //     }
+    //   })
+    //   .catch(error => {
+    //     setLoading(false);
+    //     // console.log("Error getting document:", error);
+    //   });
   };
 
   const uiConfig = {
@@ -119,9 +197,24 @@ const SignIn = props => {
     ],
     callbacks: {
       // Avoid redirects after sign-in.
-      signInSuccessWithAuthResult: async () => {
-        await createDatabaseInstanceOfTheUser();
-        props.history.push("/");
+      signInSuccessWithAuthResult: () => {
+        const user = firebase.auth().currentUser;
+        const { uid, displayName, email } = firebase.auth().currentUser;
+        const fullName = displayName.split(" ");
+        const firstName = fullName[0];
+        const lastName = fullName[1];
+        dispatch({
+          type: "login",
+          payload: {
+            uid: uid,
+            firstName: firstName,
+            lastName: lastName,
+            email: email
+          }
+        });
+        createDatabaseInstanceOfTheUser(uid, firstName, lastName, email);
+
+        return false;
       }
     }
   };

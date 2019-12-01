@@ -1,4 +1,5 @@
 import React from "react";
+import firebase from "firebase/app";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -14,7 +15,13 @@ import { Divider, Collapse } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import logo from "../../images/logo.png";
 
-const MenuDrawer = ({ setDrawerOpen, drawerOpen, history }) => {
+const MenuDrawer = ({
+  setDrawerOpen,
+  drawerOpen,
+  history,
+  isLoggedIn,
+  dispatch
+}) => {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -42,6 +49,20 @@ const MenuDrawer = ({ setDrawerOpen, drawerOpen, history }) => {
     history.push(`/${path}`);
   };
 
+  const signOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        // Sign-out successful.
+        dispatch({ type: "logOut" });
+      })
+      .catch(function(error) {
+        // An error happened.
+      });
+    setDrawerOpen(false);
+  };
+
   const renderCategoryList = categoryList =>
     categoryList.map((category, index) => (
       <div
@@ -57,12 +78,9 @@ const MenuDrawer = ({ setDrawerOpen, drawerOpen, history }) => {
       </div>
     ));
 
-  return (
-    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-      <img className={classes.logoImg} alt="Butterfly remote" src={logo}></img>
-      <List>
-        <Divider />
-
+  const renderIfLoggedIn = () =>
+    isLoggedIn && (
+      <React.Fragment>
         <ListItem
           button
           onClick={() => navigateTo("profile")}
@@ -84,6 +102,16 @@ const MenuDrawer = ({ setDrawerOpen, drawerOpen, history }) => {
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
+      </React.Fragment>
+    );
+
+  return (
+    <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+      <img className={classes.logoImg} alt="Butterfly remote" src={logo}></img>
+      <List>
+        <Divider />
+
+        {renderIfLoggedIn()}
 
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
@@ -101,16 +129,17 @@ const MenuDrawer = ({ setDrawerOpen, drawerOpen, history }) => {
             </ListItem>
           </List>
         </Collapse>
+
         <Divider />
         <ListItem
           button
-          onClick={() => setDrawerOpen(false)}
-          onKeyDown={() => setDrawerOpen(false)}
+          onClick={() => (isLoggedIn ? signOut() : navigateTo("sign-in"))}
+          onKeyDown={() => (isLoggedIn ? signOut() : navigateTo("sign-in"))}
         >
           <ListItemIcon>
             <ExitToAppIcon />
           </ListItemIcon>
-          <ListItemText primary="Log Out" />
+          <ListItemText primary={isLoggedIn ? "Sign Out" : "Sign In"} />
         </ListItem>
       </List>
     </Drawer>
