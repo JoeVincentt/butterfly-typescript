@@ -14,6 +14,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Divider, Collapse } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import logo from "../../images/logo.png";
+import { categoryList } from "../../MockUpData/categoryList";
 
 const MenuDrawer = ({
   setDrawerOpen,
@@ -29,20 +30,6 @@ const MenuDrawer = ({
   const handleClick = () => {
     setOpen(!open);
   };
-
-  const categoryList = [
-    "Programming",
-    "Design",
-    "Copywriting",
-    "DevOps & Sysadmin",
-    "Business & Management",
-    "Product",
-    "Customer Support",
-    "Finance and Legal",
-    "Sales and Marketing",
-    "Contract",
-    "All Other"
-  ];
 
   const navigateTo = path => {
     setDrawerOpen(false);
@@ -73,7 +60,7 @@ const MenuDrawer = ({
         onKeyDown={() => setDrawerOpen(false)}
       >
         <ListItem button key={index}>
-          <ListItemText primary={category} />
+          <ListItemText primary={category} style={{ fontSize: "10px" }} />
         </ListItem>
       </div>
     ));
@@ -166,7 +153,7 @@ const useStyles = makeStyles(theme => ({
     height: "auto"
   },
   nested: {
-    paddingLeft: theme.spacing(4)
+    // paddingLeft: theme.spacing(4)
   }
 }));
 

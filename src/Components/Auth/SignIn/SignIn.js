@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Link, withRouter } from "react-router-dom";
-import Avatar from "@material-ui/core/Avatar";
 import Zoom from "@material-ui/core/Zoom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
@@ -128,7 +127,7 @@ const SignIn = props => {
               email: email
             });
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
         try {
           await db
@@ -142,11 +141,11 @@ const SignIn = props => {
             });
           props.history.push("/");
         } catch (error) {
-          console.log(error);
+          // console.log(error);
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       setLoading(false);
     }
 
@@ -213,7 +212,6 @@ const SignIn = props => {
           }
         });
         createDatabaseInstanceOfTheUser(uid, firstName, lastName, email);
-
         return false;
       }
     }

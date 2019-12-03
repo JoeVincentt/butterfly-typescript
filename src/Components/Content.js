@@ -11,10 +11,10 @@ import ScrollToTheTop from "./ScrollToTheTop";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
 import ProfileForm from "./Forms/ProfileForm/ProfileForm";
-import JobDescriptionPage from "./JobDescriptionPage/JobDescriptionPage";
+import JobDescriptionPageRender from "./JobDescriptionPage/JobDescriptionPageRender";
 import SignIn from "./Auth/SignIn/SignIn";
 import SignUp from "./Auth/SignUp/SignUp";
-import PostJobForm from "./Forms/PostJobFormGroup/PostJobForm";
+import PostJobForm from "./Forms/PostJobForm/PostJobForm";
 import JobsFeed from "./JobsFeed/JobsFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 import Dashboard from "./Dashboard/Dashboard";
@@ -49,7 +49,7 @@ const Content = props => {
             <ProfileForm />
           </Route>
           <Route path="/job-description/:id">
-            <JobDescriptionPage />
+            <JobDescriptionPageRender />
           </Route>
 
           <Route path="/post-a-job">

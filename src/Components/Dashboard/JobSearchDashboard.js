@@ -79,14 +79,7 @@ const rows = [
     "Unchecked"
   ),
 
-  createData(
-    "ID3",
-    "jobID",
-    "Swift Engineer",
-    "SpaceX",
-    1466761737914,
-    "Checked"
-  )
+  createData("ID3", "jobID", "Swift Engineer", "SpaceX", 1575348202, "Checked")
 ];
 
 const convertTimestamp = unix_timestamp => {

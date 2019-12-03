@@ -8,6 +8,7 @@ import {
 import { orange, purple } from "@material-ui/core/colors";
 import Content from "./Components/Content";
 import { UserStateProvider } from "./StateManagement/UserState";
+import { PostJobStateProvider } from "./StateManagement/PostJobState";
 import "./App.css";
 
 let theme = createMuiTheme({
@@ -26,7 +27,9 @@ const App = props => {
   return (
     <ThemeProvider theme={theme}>
       <UserStateProvider>
-        <Content />
+        <PostJobStateProvider>
+          <Content />
+        </PostJobStateProvider>
       </UserStateProvider>
     </ThemeProvider>
   );

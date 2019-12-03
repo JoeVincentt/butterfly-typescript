@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { Grid, Paper } from "@material-ui/core";
+import { Grid, Paper, Button } from "@material-ui/core";
 import BusinessIcon from "@material-ui/icons/Business";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 
@@ -10,23 +10,23 @@ import GradientButton from "../Buttons/GradientButton";
 import colors from "../../constants/colors";
 
 const CompanyInfoCard = ({
-  location,
-  company,
-  companyId,
-  logoImage,
-  altLogoText
+  logo,
+  companyName,
+  companyLocation,
+  companyWebsite,
+  companyAbout
 }) => {
   const classes = useStyles();
 
-  const renderCardTitleText = () => (
-    <Grid container direction="column" justify="center" alignContent="center">
-      <Typography variant="h6">Company Details</Typography>
-    </Grid>
-  );
+  // const renderCardTitleText = () => (
+  //   <Grid container direction="column" justify="center" alignContent="center">
+  //     <Typography variant="h6">Company Details</Typography>
+  //   </Grid>
+  // );
 
   const renderCompanyProfilePicture = () => (
     <Grid container direction="column" justify="center" alignContent="center">
-      <img alt={altLogoText} src={logoImage} className={classes.bigAvatar} />
+      <img alt="company logo" src={logo} className={classes.bigAvatar} />
     </Grid>
   );
 
@@ -39,38 +39,43 @@ const CompanyInfoCard = ({
       alignContent="center"
     >
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction="row" alignItems="flex-end">
           <Grid item>
             <BusinessIcon className={classes.icon} />
           </Grid>
           <Grid item>
             <Typography variant="body1" color="textSecondary">
-              {company}
+              {companyName}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction="row" alignItems="flex-end">
           <Grid item>
             <LocationOnIcon className={classes.icon} />
           </Grid>
           <Grid item>
             <Typography variant="body1" color="textSecondary">
-              {location}
+              {companyLocation}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
-        <Grid container justify="center">
-          <GradientButton
-            text="See Profile"
-            size="small"
-            onClick={() => console.log("Company ID is", companyId)}
-          />
+      {companyWebsite !== null && companyWebsite !== "" && (
+        <Grid item>
+          <Grid container justify="center">
+            <a
+              href={companyWebsite}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <Button color="primary">Visit Website</Button>
+            </a>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </Grid>
   );
 
@@ -83,9 +88,9 @@ const CompanyInfoCard = ({
         justify="center"
         alignItems="center"
       >
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           {renderCardTitleText()}
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           {renderCompanyProfilePicture()}
         </Grid>
@@ -107,8 +112,7 @@ const useStyles = makeStyles(theme => ({
   },
   bigAvatar: {
     margin: theme.spacing(3),
-    boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
-    cursor: "pointer",
+    // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
     width: 100,
     height: 100
   },

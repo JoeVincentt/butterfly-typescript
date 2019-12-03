@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React from "react";
 import { useImmerReducer } from "use-immer";
 
 export const loginReducer = (draft, action) => {
@@ -20,14 +20,6 @@ export const loginReducer = (draft, action) => {
       draft.email = action.payload.email;
       return;
     }
-    // case "error": {
-    //   draft.error = "Incorrect username or password!";
-    //   draft.isLoggedIn = false;
-    //   draft.isLoading = false;
-    //   draft.username = "";
-    //   draft.password = "";
-    //   return;
-    // }
     case "logOut": {
       draft.isLoggedIn = false;
       draft.uid = "";
@@ -42,10 +34,11 @@ export const loginReducer = (draft, action) => {
 };
 
 const initialState = {
-  isLoggedIn: false,
-  firstName: "",
-  lastName: "",
-  email: ""
+  isLoggedIn: true,
+  uid: "uid",
+  firstName: "testName",
+  lastName: "testLastName",
+  email: "test@test.com"
 };
 
 export const UserStateContext = React.createContext();

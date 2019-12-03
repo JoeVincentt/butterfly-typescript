@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,33 +11,28 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
 
+import { UserStateContext } from "../../StateManagement/UserState";
+
 import GradientButton from "../Buttons/GradientButton";
-
 import colors from "../../constants/colors";
-
-import "./Style/Card.css";
+// import "./Style/Card.css";
 
 const JobCard = ({
   id,
   title,
-  location,
-  company,
-  companyId,
-  logoImage,
-  altLogoText,
+  companyLocation,
+  companyName,
+  logo,
   date,
   navigateToJobDetails
 }) => {
   const classes = useStyles();
+  const state = useContext(UserStateContext);
+  const { isLoggedIn } = state;
 
   const renderLogoImage = () => (
     <Grid item xs={6} sm={2}>
-      <img
-        alt={altLogoText}
-        src={logoImage}
-        className={classes.bigAvatar}
-        onClick={() => console.log("Company id is ", companyId)}
-      />
+      <img alt="Company Logo" src={logo} className={classes.bigAvatar} />
     </Grid>
   );
 
@@ -46,7 +41,7 @@ const JobCard = ({
       item
       xs={10}
       className={classes.jobTitle}
-      onClick={() => console.log("Open job details ", id)}
+      onClick={() => navigateToJobDetails(id)}
     >
       <Typography variant="h6">{title}</Typography>
     </Grid>
@@ -79,27 +74,33 @@ const JobCard = ({
   );
 
   const renderCompanyDetails = () => (
-    <Grid spacing={1} container direction="row" justify="flex-start">
+    <Grid
+      spacing={1}
+      container
+      direction="row"
+      justify="flex-start"
+      alignItems="flex-end"
+    >
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction="row" alignItems="flex-end">
           <Grid item>
             <BusinessIcon className={classes.icon} />
           </Grid>
           <Grid item>
             <Typography variant="body1" color="textSecondary">
-              {company}
+              {companyName}
             </Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction="row" alignItems="flex-end">
           <Grid item>
             <LocationOnIcon className={classes.icon} />
           </Grid>
           <Grid item>
             <Typography variant="body1" color="textSecondary">
-              {location}
+              {companyLocation}
             </Typography>
           </Grid>
         </Grid>
@@ -108,34 +109,51 @@ const JobCard = ({
   );
 
   const renderCardButtons = () => (
-    <Grid container direction="row" justify="space-between">
-      <GradientButton
-        onClick={() => console.log("1-Click Apply", id)}
-        text="1-Click Apply"
-        size="small"
-        labelName="1clickApply"
-      />
-      <Fab
-        size="small"
-        variant="extended"
-        aria-label="details"
-        className={classes.detailsButton}
-        onClick={() => {
-          navigateToJobDetails(id);
-        }}
-      >
-        Details
-      </Fab>{" "}
+    <Grid
+      container
+      direction="row"
+      justify="space-between"
+      alignItems="center"
+      className={classes.buttonRow}
+    >
+      <Grid item>
+        <Fab
+          size="small"
+          variant="extended"
+          aria-label="details"
+          className={classes.detailsButton}
+          onClick={() => {
+            navigateToJobDetails(id);
+          }}
+        >
+          Details
+        </Fab>
+      </Grid>
+      <Grid item>
+        {isLoggedIn && (
+          <GradientButton
+            onClick={() => console.log("apply for position", id)}
+            text="apply"
+            size="small"
+            labelName="apply"
+          />
+        )}
+      </Grid>
     </Grid>
   );
 
   return (
     <Grid container justify="center">
-      <Grid item xs={12} sm={10} md={10}>
+      <Grid item xs={12} sm={12} md={10}>
         <Paper id="job-card" className={classes.paper} elevation={0}>
           <Grid container spacing={1}>
             <Grid container>
-              <Grid container direction="row" justify="space-between">
+              <Grid
+                container
+                direction="row"
+                justify="space-between"
+                alignItems="center"
+              >
                 {renderLogoImage()}
                 {renderTimePostedSmallScreen()}
                 <Grid item xs>
@@ -151,13 +169,7 @@ const JobCard = ({
                           {renderTimePostedMediumAndUpScreen()}
                         </Grid>
                       </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={10}
-                        md={10}
-                        className={classes.margin}
-                      >
+                      <Grid item xs={12} sm={10} md={10}>
                         {renderCompanyDetails()}
                       </Grid>
                       <Grid item xs={12}>
@@ -177,19 +189,34 @@ const JobCard = ({
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    padding: theme.spacing(2, 2),
+    padding: theme.spacing(1, 2),
     margin: theme.spacing(1),
-    border: "1px solid rgba(107, 19, 107, 0.2)"
+    border: "1px solid rgba(107, 19, 107, 0.2)",
+    "@media (max-width: 750px)": {
+      padding: theme.spacing(2),
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(0)
+    },
+    "&:hover": {
+      boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
+    }
   },
   jobTitle: {
     cursor: "pointer"
   },
   bigAvatar: {
     margin: theme.spacing(3),
-    width: 60,
-    height: 60,
-    boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
-    cursor: "pointer"
+    marginLeft: theme.spacing(1),
+    width: 100,
+    height: 100,
+    // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
+
+    "@media (max-width: 750px)": {
+      marginTop: "-30px",
+      margin: theme.spacing(0),
+      width: 60,
+      height: 60
+    }
   },
   icon: {
     marginRight: 2,
@@ -203,8 +230,11 @@ const useStyles = makeStyles(theme => ({
   margin: {
     marginBottom: theme.spacing(2)
   },
+  buttonRow: {
+    marginTop: theme.spacing(1)
+  },
   detailsButton: {
-    margin: theme.spacing(1),
+    marginRight: theme.spacing(1),
     marginRight: 0,
     color: colors.purple,
     backgroundColor: colors.grey

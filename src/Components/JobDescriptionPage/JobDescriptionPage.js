@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -10,78 +9,110 @@ import AccessTimeIcon from "@material-ui/icons/AccessTime";
 
 import colors from "../../constants/colors";
 
+import ApplicationDialog from "../Application/ApplicationDialog";
+import GradientButton from "../Buttons/GradientButton";
 import CompanyInfoCard from "./CompanyInfoCard";
+import ButterflyLoader from "../Loader/ButterflyLoader";
 
-import { jobs } from "../../MockUpData/jobs";
-
-const JobDescriptionPage = props => {
+const JobDescriptionPage = ({ job }) => {
   const classes = useStyles();
-  const [job, setJob] = useState({});
+
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
-    console.log(props.match.params.id);
-
-    //need to fetch job description from the database
-    const getAJobFromTheList = async () => {
-      await jobs.forEach(job => {
-        if (job.id === props.match.params.id) {
-          // console.log(job);
-          setJob(job);
-        }
-      });
-    };
-    getAJobFromTheList();
     setLoading(false);
-    // code to run on component mount
   }, []);
 
   const renderDate = date => (
-    <Grid container direction="row" justify="flex-end" alignItems="center">
+    <Grid container direction="row" justify="space-between" alignItems="center">
       <Grid item>
-        <AccessTimeIcon className={classes.icon} />
+        <Grid container direction="row" justify="space-around">
+          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+            {job.fullTimePosition && "Full-Time"}
+          </Typography>
+          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+            {job.partTimePosition && "Part-Time"}
+          </Typography>
+          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+            {job.contractPosition && "Contract"}
+          </Typography>
+        </Grid>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle2" className={classes.spacing}>
-          {date}
-        </Typography>
+        <Grid container direction="row" justify="flex-end" alignItems="center">
+          <Grid item>
+            <AccessTimeIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle2" className={classes.spacing}>
+              {date}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
 
-  const renderJobTitle = title => (
-    <Grid container spacing={2} item xs={12}>
-      <Typography variant="h5" className={classes.spacing}>
-        {title}
-      </Typography>
-    </Grid>
-  );
+  const renderJobTitle = title => {
+    if (title.trim().length !== 0) {
+      return (
+        <Grid container spacing={2} item xs={12}>
+          <Typography variant="h5" className={classes.spacing}>
+            {title}
+          </Typography>
+        </Grid>
+      );
+    }
+  };
 
-  const renderJobHighlights = highlights => (
-    <Grid container spacing={2} item xs={12} direction="row">
-      {highlights.map((highlight, index) => (
-        <Fab
-          key={index}
-          disableRipple
-          variant="extended"
-          size="medium"
-          color="primary"
-          aria-label="highlight"
-          className={classes.highlightPaper}
+  const renderJobHighlights = highlights => {
+    if (highlights.length > 0) {
+      return (
+        <Grid
+          container
+          spacing={2}
+          item
+          xs={12}
+          direction="row"
+          style={{ marginLeft: 2 }}
         >
-          {highlight.toUpperCase()}
-        </Fab>
-      ))}
-    </Grid>
-  );
+          {highlights.map((highlight, index) => (
+            <Fab
+              key={index}
+              disableRipple
+              variant="extended"
+              size="medium"
+              color="primary"
+              aria-label="highlight"
+              className={classes.highlightPaper}
+            >
+              {highlight.toUpperCase()}
+            </Fab>
+          ))}
+        </Grid>
+      );
+    }
+  };
 
-  const renderJobAbout = about => (
-    <Grid container spacing={2} item xs={12}>
-      <Typography variant="subtitle1" className={classes.spacing}>
-        {about}
-      </Typography>{" "}
-    </Grid>
-  );
+  const renderJobAbout = about => {
+    if (about.trim().length !== 0) {
+      return (
+        <Grid container spacing={2} item xs={12}>
+          <Typography variant="subtitle1" className={classes.spacing}>
+            {about}
+          </Typography>{" "}
+        </Grid>
+      );
+    }
+  };
 
   const renderListProperty = (args, name) => {
     if (args.length > 0) {
@@ -102,20 +133,61 @@ const JobDescriptionPage = props => {
     }
   };
 
+  const renderAdditionalInformation = additionalInformation => {
+    if (additionalInformation.trim().length !== 0) {
+      return (
+        <Grid
+          container
+          direction="column"
+          justify="flex-start"
+          className={classes.additionalInformationBox}
+        >
+          <Grid item className={classes.additionalInformationHeader}>
+            <Typography variant="body2" color="primary">
+              Additional Information
+            </Typography>
+          </Grid>
+          <Grid item className={classes.additionalInformationText}>
+            <Typography variant="caption">{additionalInformation}</Typography>
+          </Grid>
+        </Grid>
+      );
+    }
+  };
+
+  const renderApplyButton = () => (
+    <Grid
+      container
+      justify="center"
+      alignContent="center"
+      alignItems="center"
+      className={classes.applyButton}
+    >
+      <GradientButton
+        onClick={() =>
+          job.id !== "draftJobPosting" ? handleClickOpen() : () => {}
+        }
+        size="large"
+        labelName="apply"
+        text="apply for position"
+      />
+    </Grid>
+  );
+
   return (
     <div className={classes.root}>
       {loading ? (
-        <div>loading</div>
+        <ButterflyLoader />
       ) : (
         <Grid container justify="center" alignContent="center">
           {/* Company Card */}
           <Grid item xs={12} sm={4} md={2}>
             <CompanyInfoCard
-              location={job.location}
-              company={job.company}
-              companyId={job.companyId}
-              logoImage={job.logoImage}
-              altLogoText={job.altLogoText}
+              logo={job.logo}
+              companyName={job.companyName}
+              companyLocation={job.companyLocation}
+              companyWebsite={job.companyWebsite}
+              companyAbout={job.companyAbout}
             />
           </Grid>
 
@@ -124,20 +196,27 @@ const JobDescriptionPage = props => {
             <Paper className={classes.paper}>
               {renderDate(job.date)}
               {renderJobTitle(job.title)}
-              {renderJobAbout(job.description.about)}
-              {renderJobHighlights(job.description.highlights)}
+              {renderJobAbout(job.about)}
+              {renderJobHighlights(job.highlights)}
+              {renderListProperty(job.responsibilities, "Responsibilities")}
               {renderListProperty(
-                job.description.responsibilities,
-                "Responsibilities"
-              )}
-              {renderListProperty(
-                job.description.educationAndExperience,
+                job.educationAndExperience,
                 "Education and Experience"
               )}
-              {renderListProperty(job.description.skills, "Skills")}
-              {renderListProperty(job.description.benefits, "Benefits")}
+              {renderListProperty(job.skills, "Skills")}
+              {renderListProperty(job.benefits, "Benefits")}
+              {renderListProperty(job.compensation, "Compensation")}
+              {renderAdditionalInformation(job.additionalInformation)}
+              {renderApplyButton()}
             </Paper>
           </Grid>
+
+          {/* Application Dialog */}
+          <ApplicationDialog
+            open={open}
+            handleClose={handleClose}
+            title={job.title}
+          />
         </Grid>
       )}
     </div>
@@ -146,7 +225,11 @@ const JobDescriptionPage = props => {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    marginTop: theme.spacing(20),
+    "@media (max-width: 600px)": {
+      marginTop: theme.spacing(0)
+    }
   },
   paper: {
     padding: theme.spacing(4),
@@ -170,8 +253,16 @@ const useStyles = makeStyles(theme => ({
       boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.1)"
     }
   },
+  additionalInformationBox: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    border: "1px solid rgba(107, 19, 107, 0.2)"
+  },
   spacing: {
     margin: theme.spacing(1)
+  },
+  applyButton: {
+    marginTop: theme.spacing(3)
   },
   listTitle: {
     margin: theme.spacing(1),
