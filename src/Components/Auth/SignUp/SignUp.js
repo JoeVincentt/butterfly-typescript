@@ -175,10 +175,20 @@ const SignUp = props => {
       .signInWithEmailAndPassword(email, password)
       .then(async () => {
         setSignInError(false);
-        await createDatabaseInstanceOfTheUser();
+        const { uid } = await firebase.auth().currentUser;
+        await createDatabaseInstanceOfTheUser(uid);
         dispatch({
           type: "login",
-          payload: { firstName: firstName, lastName: lastName, email: email }
+          payload: {
+            uid: uid,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            country: "",
+            zipCode: "",
+            currentCareerLevel: "",
+            resume: ""
+          }
         });
         setLoading(false);
         props.history.push("/");
@@ -191,8 +201,7 @@ const SignUp = props => {
         setLoading(false);
       });
   };
-  const createDatabaseInstanceOfTheUser = async () => {
-    const { uid } = await firebase.auth().currentUser;
+  const createDatabaseInstanceOfTheUser = async uid => {
     if (subscribeEmail) {
       db.collection("subscriptions")
         .doc(uid)
@@ -207,7 +216,11 @@ const SignUp = props => {
         uid: uid,
         firstName: firstName,
         lastName: lastName,
-        email: email
+        email: email,
+        country: "",
+        zipCode: "",
+        currentCareerLevel: "",
+        resume: ""
       })
       .catch(error => {});
   };

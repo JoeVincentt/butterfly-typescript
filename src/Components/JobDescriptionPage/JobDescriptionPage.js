@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -13,12 +13,15 @@ import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
 import CompanyInfoCard from "./CompanyInfoCard";
 import ButterflyLoader from "../Loader/ButterflyLoader";
+import { UserStateContext } from "../../StateManagement/UserState";
 
 const JobDescriptionPage = ({ job }) => {
   const classes = useStyles();
 
+  const { isLoggedIn } = useContext(UserStateContext);
+
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -207,6 +210,7 @@ const JobDescriptionPage = ({ job }) => {
               {renderListProperty(job.benefits, "Benefits")}
               {renderListProperty(job.compensation, "Compensation")}
               {renderAdditionalInformation(job.additionalInformation)}
+
               {renderApplyButton()}
             </Paper>
           </Grid>
@@ -216,6 +220,7 @@ const JobDescriptionPage = ({ job }) => {
             open={open}
             handleClose={handleClose}
             title={job.title}
+            id={job.id}
           />
         </Grid>
       )}

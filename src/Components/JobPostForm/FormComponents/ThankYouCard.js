@@ -1,9 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, Button } from "@material-ui/core";
-import colors from "../../../../constants/colors";
-import shadows from "../../../../constants/shadows";
-import GradientButton from "../../../Buttons/GradientButton";
+import colors from "../../../constants/colors";
+import shadows from "../../../constants/shadows";
+import GradientButton from "../../Buttons/GradientButton";
 
 const ThankYouCard = props => {
   const classes = useStyles();

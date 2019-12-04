@@ -5,12 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import { Typography, Divider } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 
-import GradientButton from "../../../Buttons/GradientButton";
+import GradientButton from "../../Buttons/GradientButton";
 
 import "./AdvertisementPlan.css";
-import colors from "../../../../constants/colors";
+import colors from "../../../constants/colors";
 
-import { plans } from "../../../../MockUpData/plans";
+import { plans } from "../../../MockUpData/plans";
 
 const AdvertisementPlan = () => {
   const classes = useStyles();

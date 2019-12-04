@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Fab } from "@material-ui/core";
 import { ArrowForward, ArrowBack } from "@material-ui/icons";
 
-import colors from "../../../constants/colors";
+import colors from "../../constants/colors";
 
 import JobDescription from "./FormComponents/JobDescription";
 import AdvertisementPlan from "./FormComponents/AdvertisementPlan";

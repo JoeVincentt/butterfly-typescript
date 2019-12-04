@@ -23,13 +23,13 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { useDropzone } from "react-dropzone";
-import { PostJobDispatchContext } from "../../../../StateManagement/PostJobState";
-import { UserStateContext } from "../../../../StateManagement/UserState";
+import { PostJobDispatchContext } from "../../../StateManagement/PostJobState";
+import { UserStateContext } from "../../../StateManagement/UserState";
 
-import { categoryList } from "../../../../MockUpData/categoryList";
+import { categoryList } from "../../../MockUpData/categoryList";
 
-import colors from "../../../../constants/colors";
-import shadows from "../../../../constants/shadows";
+import colors from "../../../constants/colors";
+import shadows from "../../../constants/shadows";
 
 const JobDescription = () => {
   const classes = useStyles();
@@ -81,7 +81,7 @@ const JobDescription = () => {
   } = useDropzone({
     accept: "image/*",
     multiple: false,
-    maxSize: 500000,
+    maxSize: 200000,
     onDrop: acceptedFiles =>
       acceptedFiles.map(file =>
         Object.assign(file, {
@@ -408,7 +408,7 @@ const JobDescription = () => {
                 </Grid>
                 <Grid item>
                   <Typography variant="subtitle2" color="textSecondary">
-                    (Recommended size is 100px x 100px, 500KB MAX Size )
+                    (Recommended size is 100px x 100px, 200KB MAX Size )
                   </Typography>
                 </Grid>
 

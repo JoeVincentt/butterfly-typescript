@@ -80,7 +80,11 @@ const SignIn = props => {
                   uid: uid,
                   firstName: data.firstName,
                   lastName: data.lastName,
-                  email: data.email
+                  email: data.email,
+                  country: data.country,
+                  zipCode: data.zipCode,
+                  currentCareerLevel: data.currentCareerLevel,
+                  resume: data.resume
                 }
               });
               props.history.push("/");
@@ -103,85 +107,94 @@ const SignIn = props => {
       });
   };
 
-  const createDatabaseInstanceOfTheUser = async (
-    uid,
-    firstName,
-    lastName,
-    email
-  ) => {
+  const checkIfUserExistsInDatabaseAndSetGlobalState = () => {
     setLoading(true);
-    try {
-      const user = await db
-        .collection("users")
-        .doc(uid)
-        .get();
-      if (user.exists) {
-        props.history.push("/");
-        return;
-      } else {
-        try {
-          await db
-            .collection("subscriptions")
+    const { uid, displayName, email } = firebase.auth().currentUser;
+    const fullName = displayName.split(" ");
+    const firstName = fullName[0];
+    const lastName = fullName[1];
+    db.collection("users")
+      .doc(uid)
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          //set state
+          //get profile and update global state
+          let data = doc.data();
+          dispatch({
+            type: "login",
+            payload: {
+              uid: uid,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              country: data.country,
+              zipCode: data.zipCode,
+              currentCareerLevel: data.currentCareerLevel,
+              resume: data.resume
+            }
+          });
+          // props.history.push("/");
+          return;
+        } else {
+          db.collection("subscriptions")
             .doc(uid)
             .set({
               email: email
-            });
-        } catch (error) {
-          // console.log(error);
-        }
-        try {
-          await db
-            .collection("users")
+            })
+            .catch(error => {});
+          db.collection("users")
             .doc(uid)
             .set({
               uid: uid,
               firstName: firstName,
               lastName: lastName,
-              email: email
+              email: email,
+              country: "",
+              zipCode: "",
+              currentCareerLevel: "",
+              resume: ""
+            })
+            .then(() => {
+              db.collection("users")
+                .doc(uid)
+                .get()
+                .then(doc => {
+                  if (doc.exists) {
+                    //set state
+                    //get profile and update global state
+                    let data = doc.data();
+                    dispatch({
+                      type: "login",
+                      payload: {
+                        uid: uid,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        email: data.email,
+                        country: data.country,
+                        zipCode: data.zipCode,
+                        currentCareerLevel: data.currentCareerLevel,
+                        resume: data.resume
+                      }
+                    });
+                    setLoading(false);
+                    props.history.push("/");
+                  } else {
+                  }
+                })
+                .catch(error => {
+                  setLoading(false);
+                });
+            })
+            .catch(error => {
+              setLoading(false);
             });
-          props.history.push("/");
-        } catch (error) {
-          // console.log(error);
         }
-      }
-    } catch (error) {
-      // console.log(error);
-      setLoading(false);
-    }
-
-    // db.collection("users")
-    //   .doc(uid)
-    //   .get()
-    //   .then(doc => {
-    //     if (doc.exists) {
-    //       //set state
-    //       props.history.push("/");
-    //       return;
-    //     } else {
-    //       db.collection("subscriptions")
-    //         .doc(uid)
-    //         .set({
-    //           email: email
-    //         })
-    //         .catch(error => {});
-    //       db.collection("users")
-    //         .doc(uid)
-    //         .set({
-    //           uid: uid,
-    //           firstName: firstName,
-    //           lastName: lastName,
-    //           email: email
-    //         })
-    //         .then(() => {
-    //           props.history.push("/");
-    //         })
-    //         .catch(error => {});
-    //     }
-    //   })
-    //   .catch(error => {
-    //     setLoading(false);
-    //     // console.log("Error getting document:", error);
-    //   });
+      })
+      .catch(error => {
+        setLoading(false);
+        // console.log("Error getting document:", error);
+      });
   };
 
   const uiConfig = {
@@ -197,21 +210,22 @@ const SignIn = props => {
     callbacks: {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: () => {
-        const user = firebase.auth().currentUser;
-        const { uid, displayName, email } = firebase.auth().currentUser;
-        const fullName = displayName.split(" ");
-        const firstName = fullName[0];
-        const lastName = fullName[1];
-        dispatch({
-          type: "login",
-          payload: {
-            uid: uid,
-            firstName: firstName,
-            lastName: lastName,
-            email: email
-          }
-        });
-        createDatabaseInstanceOfTheUser(uid, firstName, lastName, email);
+        // const user = firebase.auth().currentUser;
+        // const { uid, displayName, email } = firebase.auth().currentUser;
+        // const fullName = displayName.split(" ");
+        // const firstName = fullName[0];
+        // const lastName = fullName[1];
+        // dispatch({
+        //   type: "login",
+        //   payload: {
+        //     uid: uid,
+        //     firstName: firstName,
+        //     lastName: lastName,
+        //     email: email
+        //   }
+        // });
+        // createDatabaseInstanceOfTheUser(uid, firstName, lastName, email);
+        checkIfUserExistsInDatabaseAndSetGlobalState();
         return false;
       }
     }

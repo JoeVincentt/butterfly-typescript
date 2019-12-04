@@ -10,11 +10,11 @@ import ScrollToTheTop from "./ScrollToTheTop";
 
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
-import ProfileForm from "./Forms/ProfileForm/ProfileForm";
+import ProfileForm from "./Application/ApplicationForm/ApplicationForm";
 import JobDescriptionPageRender from "./JobDescriptionPage/JobDescriptionPageRender";
 import SignIn from "./Auth/SignIn/SignIn";
 import SignUp from "./Auth/SignUp/SignUp";
-import PostJobForm from "./Forms/PostJobForm/PostJobForm";
+import PostJobForm from "./JobPostForm/PostJobForm";
 import JobsFeed from "./JobsFeed/JobsFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 import Dashboard from "./Dashboard/Dashboard";

@@ -18,6 +18,10 @@ export const loginReducer = (draft, action) => {
       draft.firstName = action.payload.firstName;
       draft.lastName = action.payload.lastName;
       draft.email = action.payload.email;
+      draft.country = action.payload.country;
+      draft.zipCode = action.payload.zipCode;
+      draft.currentCareerLevel = action.payload.currentCareerLevel;
+      draft.resume = action.payload.resume;
       return;
     }
     case "logOut": {
@@ -26,6 +30,19 @@ export const loginReducer = (draft, action) => {
       draft.firstName = "";
       draft.lastName = "";
       draft.email = "";
+      draft.country = "";
+      draft.zipCode = "";
+      draft.currentCareerLevel = "";
+      draft.resume = "";
+      return;
+    }
+    case "updateProfile": {
+      draft.firstName = action.payload.firstName;
+      draft.lastName = action.payload.lastName;
+      draft.country = action.payload.country;
+      draft.zipCode = action.payload.zipCode;
+      draft.currentCareerLevel = action.payload.currentCareerLevel;
+      draft.resume = action.payload.resume;
       return;
     }
     default:
@@ -38,7 +55,11 @@ const initialState = {
   uid: "uid",
   firstName: "testName",
   lastName: "testLastName",
-  email: "test@test.com"
+  email: "test@test.com",
+  country: "",
+  zipCode: "",
+  currentCareerLevel: "",
+  resume: ""
 };
 
 export const UserStateContext = React.createContext();

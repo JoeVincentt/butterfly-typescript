@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,6 +13,7 @@ import withWidth from "@material-ui/core/withWidth";
 
 import { UserStateContext } from "../../StateManagement/UserState";
 
+import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
 import colors from "../../constants/colors";
 // import "./Style/Card.css";
@@ -29,6 +30,15 @@ const JobCard = ({
   const classes = useStyles();
   const state = useContext(UserStateContext);
   const { isLoggedIn } = state;
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const renderLogoImage = () => (
     <Grid item xs={6} sm={2}>
@@ -130,14 +140,12 @@ const JobCard = ({
         </Fab>
       </Grid>
       <Grid item>
-        {isLoggedIn && (
-          <GradientButton
-            onClick={() => console.log("apply for position", id)}
-            text="apply"
-            size="small"
-            labelName="apply"
-          />
-        )}
+        <GradientButton
+          onClick={() => handleClickOpen()}
+          text="apply"
+          size="small"
+          labelName="apply"
+        />
       </Grid>
     </Grid>
   );
@@ -183,6 +191,13 @@ const JobCard = ({
           </Grid>
         </Paper>
       </Grid>
+      {/* Application Dialog */}
+      <ApplicationDialog
+        open={open}
+        handleClose={handleClose}
+        title={title}
+        id={id}
+      />
     </Grid>
   );
 };

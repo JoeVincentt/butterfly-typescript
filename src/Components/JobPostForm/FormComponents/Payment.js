@@ -8,8 +8,8 @@ import {
 import { Grid, Paper, Typography, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import shadows from "../../../../constants/shadows";
-import GradientButton from "../../../Buttons/GradientButton";
+import shadows from "../../../constants/shadows";
+import GradientButton from "../../Buttons/GradientButton";
 
 // You can customize your Elements to give it the look and feel of your site.
 const createOptions = () => {

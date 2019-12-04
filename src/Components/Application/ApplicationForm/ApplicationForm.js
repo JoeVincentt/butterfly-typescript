@@ -1,16 +1,27 @@
-import React from "react";
-import { Grid, Paper, Typography, TextField } from "@material-ui/core";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import firebase from "firebase/app";
+import "firebase/storage";
+import {
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  LinearProgress
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
+import DescriptionIcon from "@material-ui/icons/Description";
 import { useDropzone } from "react-dropzone";
-
+import {
+  UserDispatchContext,
+  UserStateContext
+} from "../../../StateManagement/UserState";
 import GradientButton from "../../Buttons/GradientButton";
-
-import shadows from "../../../constants/shadows";
 
 import listOfCountries from "./FormComponents/ListOfCountries";
 import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
@@ -18,17 +29,20 @@ import colors from "../../../constants/colors";
 
 const ProfileForm = () => {
   const classes = useStyles();
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [country, setCountry] = React.useState("");
-  const [zipCode, setZipCode] = React.useState("");
-  const [currentCareerLevel, setCurrentCareerLevel] = React.useState("");
+  //Context
+  const state = useContext(UserStateContext);
+  const dispatch = useContext(UserDispatchContext);
 
-  const inputLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
-  }, []);
+  //State
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [country, setCountry] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [currentCareerLevel, setCurrentCareerLevel] = useState("");
+  const [resume, setResume] = useState("");
+
+  //Functional State
+  const [progress, setProgress] = useState(null);
 
   //DropZone Parameters
   const {
@@ -37,41 +51,115 @@ const ProfileForm = () => {
     getRootProps,
     getInputProps
   } = useDropzone({
-    accept: "application/pdf"
+    accept: "application/pdf, .doc, .docx, application/msword",
+    multiple: false,
+    maxSize: 200000
   });
 
-  const acceptedFilesItems = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
-  // const rejectedFilesItems = rejectedFiles.map(file => (
-  //   <li key={file.path}>
-  //     {file.path} - {file.size} bytes
-  //   </li>
-  // ));
+  const inputLabel = useRef(null);
+  const [labelWidth, setLabelWidth] = useState(0);
+  useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
 
-  const handleChange = (event, param) => {
-    switch (param) {
-      case "firstName":
-        setFirstName(event.target.value);
-        break;
-      case "lastName":
-        setLastName(event.target.value);
-        break;
-      case "country":
-        setCountry(event.target.value);
-        break;
-      case "zipCode":
-        setZipCode(event.target.value);
-        break;
-      case "currentCareerLevel":
-        setCurrentCareerLevel(event.target.value);
-        break;
-      default:
-        return;
+  //Set Local State to values from global state
+  useEffect(() => {
+    setFirstName(state.firstName);
+    setLastName(state.lastName);
+    setCountry(state.country);
+    setZipCode(state.zipCode);
+    setCurrentCareerLevel(state.currentCareerLevel);
+    setResume(state.resume);
+  }, []);
+
+  //Set Global State
+  useEffect(() => {
+    const profileUpdated = {
+      firstName: firstName,
+      lastName: lastName,
+      country: country,
+      zipCode: zipCode,
+      currentCareerLevel: currentCareerLevel,
+      resume: resume
+    };
+    dispatch({
+      type: "updateProfile",
+      payload: profileUpdated
+    });
+  }, [firstName, lastName, country, zipCode, currentCareerLevel, resume]);
+
+  //Image Upload
+  useEffect(() => {
+    if (acceptedFiles.length !== 0) {
+      // setLogo(acceptedFiles[0].preview);
+      uploadToStorage();
     }
+  }, [acceptedFiles, rejectedFiles]);
+
+  //Data storage Upload File
+  const uploadToStorage = () => {
+    const storageRef = firebase.storage().ref();
+    const uploadTask = storageRef
+      .child(`resumes/${state.uid}/${firstName}-${lastName}-resume`)
+      .put(acceptedFiles[0]);
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        // progress function ....
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(progress);
+      },
+      error => {
+        // error function ....
+        // console.log(error);
+      },
+      () => {
+        // complete function ....
+        storageRef
+          .child("resumes")
+          .child(state.uid)
+          .child(`${firstName}-${lastName}-resume`)
+          .getDownloadURL()
+          .then(url => {
+            // console.log(url);
+            setResume(url);
+          })
+          .catch(error => {
+            // console.log(error);
+          });
+      }
+    );
   };
+
+  const acceptedFilesItems = acceptedFiles.map((file, index) => {
+    if (index === 0) {
+      return (
+        <div
+          key={file.path}
+          className={classes.margin}
+          style={{ color: "green" }}
+        >
+          Accepted: {file.path}
+        </div>
+      );
+    }
+  });
+
+  const rejectedFilesItems = rejectedFiles.map((file, index) => {
+    if (index === 0) {
+      return (
+        <div
+          key={file.path}
+          className={classes.margin}
+          style={{ color: "red" }}
+        >
+          Rejected: {file.path}
+        </div>
+      );
+    }
+  });
 
   return (
     <Grid
@@ -80,12 +168,12 @@ const ProfileForm = () => {
       alignContent="center"
       className={classes.root}
     >
-      <Grid item xs={12} sm={10} md={8}>
-        <Paper className={classes.paper}>
+      <Grid item xs={12}>
+        <Paper elevation={0}>
           <Grid container spacing={2} justify="center" alignContent="center">
             <Grid item xs={12}>
-              <Typography className={classes.title} variant="h4">
-                Account Information
+              <Typography className={classes.title} variant="h6">
+                Profile
               </Typography>
             </Grid>
 
@@ -98,9 +186,9 @@ const ProfileForm = () => {
                     className={classes.textField}
                     label="First Name"
                     variant="standard"
-                    value={firstName}
                     fullWidth
-                    onChange={e => handleChange(e, "firstName")}
+                    value={firstName}
+                    onChange={e => setFirstName(e.target.value)}
                   />
                 </Grid>
                 {/* Last Name */}
@@ -110,9 +198,9 @@ const ProfileForm = () => {
                     className={classes.textField}
                     label="Last Name"
                     variant="standard"
-                    value={lastName}
                     fullWidth
-                    onChange={e => handleChange(e, "lastName")}
+                    value={lastName}
+                    onChange={e => setLastName(e.target.value)}
                   />
                 </Grid>
 
@@ -128,9 +216,9 @@ const ProfileForm = () => {
                     <Select
                       labelId="country-select-label"
                       id="country"
-                      value={country}
-                      onChange={e => handleChange(e, "country")}
                       labelWidth={labelWidth}
+                      value={country}
+                      onChange={e => setCountry(e.target.value)}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -151,9 +239,9 @@ const ProfileForm = () => {
                     label="Zip Code"
                     variant="standard"
                     type="number"
-                    value={zipCode}
-                    onChange={e => handleChange(e, "zipCode")}
                     fullWidth
+                    value={zipCode}
+                    onChange={e => setZipCode(e.target.value)}
                   />
                 </Grid>
 
@@ -172,9 +260,9 @@ const ProfileForm = () => {
                     <Select
                       labelId="currentCareerLevel-select-label"
                       id="currentCareerLevel"
-                      value={currentCareerLevel}
-                      onChange={e => handleChange(e, "currentCareerLevel")}
                       labelWidth={labelWidth}
+                      value={currentCareerLevel}
+                      onChange={e => setCurrentCareerLevel(e.target.value)}
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -187,6 +275,23 @@ const ProfileForm = () => {
                     </Select>
                   </FormControl>
                 </Grid>
+
+                {/* Resume Button */}
+                {resume !== "" && (
+                  <Grid item xs={12}>
+                    <a
+                      href={resume}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Button color="primary" size="large">
+                        <DescriptionIcon style={{ marginRight: 3 }} />
+                        Current Resume
+                      </Button>
+                    </a>
+                  </Grid>
+                )}
 
                 {/* Resume */}
                 <Grid item xs={12} className={classes.dragAndDropContainer}>
@@ -218,35 +323,57 @@ const ProfileForm = () => {
                           </Grid>
                         </Grid>
                         <Grid item>
-                          <Typography
-                            variant="h6"
-                            className={classes.purpleText}
+                          {" "}
+                          <Grid
+                            container
+                            direction="column"
+                            justify="center"
+                            alignContent="center"
                           >
-                            Upload Your Resume Here
-                          </Typography>
+                            <Typography
+                              variant="h6"
+                              className={classes.purpleText}
+                            >
+                              Upload Your Resume Here
+                            </Typography>
+                          </Grid>
                         </Grid>
                         <Grid item>
                           {" "}
                           <Typography variant="subtitle2" color="textSecondary">
-                            (Only *.pdf images will be accepted)
+                            (Only *.pdf, *.doc, *.docx. 200KB MAX size)
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <ul>{acceptedFilesItems}</ul>
+                          <Grid
+                            container
+                            direction="column"
+                            alignContent="center"
+                            justify="center"
+                            alignItems="center"
+                          >
+                            {acceptedFilesItems}
+                            {rejectedFilesItems}
+                          </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
+                    {progress !== null && progress !== 100 && (
+                      <LinearProgress variant="determinate" value={progress} />
+                    )}
                   </Paper>
                 </Grid>
 
                 {/* Update Profile Button */}
                 <Grid item xs={12}>
-                  <GradientButton
-                    text="UPDATE"
-                    labelName="updateProfile"
-                    size="large"
-                    onClick={() => console.log("update")}
-                  />
+                  <Grid container justify="center" alignItems="center">
+                    <GradientButton
+                      text="Apply for position"
+                      labelName="applyProfile"
+                      size="large"
+                      onClick={() => console.log("update")}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
@@ -259,11 +386,14 @@ const ProfileForm = () => {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    minHeight: "100vh"
+    // minHeight: "100vh"
   },
   paper: {
-    padding: theme.spacing(4, 2),
-    boxShadow: shadows.purpleShadow
+    // padding: theme.spacing(4, 2),
+    // boxShadow: shadows.purpleShadow
+  },
+  margin: {
+    margin: theme.spacing(2)
   },
   formControl: {
     minWidth: "100%"
