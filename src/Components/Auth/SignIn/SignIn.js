@@ -28,8 +28,6 @@ const SignIn = props => {
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
 
-  const [isSignedIn, setIsSignedIn] = useState(false);
-
   //State components
   const [zoomIn, setZoomIn] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -46,7 +44,7 @@ const SignIn = props => {
   useEffect(() => {
     setZoomIn(true);
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
-      setIsSignedIn(!!user);
+      // setIsSignedIn(!!user);
     });
 
     return () => {
@@ -210,21 +208,6 @@ const SignIn = props => {
     callbacks: {
       // Avoid redirects after sign-in.
       signInSuccessWithAuthResult: () => {
-        // const user = firebase.auth().currentUser;
-        // const { uid, displayName, email } = firebase.auth().currentUser;
-        // const fullName = displayName.split(" ");
-        // const firstName = fullName[0];
-        // const lastName = fullName[1];
-        // dispatch({
-        //   type: "login",
-        //   payload: {
-        //     uid: uid,
-        //     firstName: firstName,
-        //     lastName: lastName,
-        //     email: email
-        //   }
-        // });
-        // createDatabaseInstanceOfTheUser(uid, firstName, lastName, email);
         checkIfUserExistsInDatabaseAndSetGlobalState();
         return false;
       }

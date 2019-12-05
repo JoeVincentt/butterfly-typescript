@@ -221,6 +221,7 @@ const JobDescriptionPage = ({ job }) => {
             handleClose={handleClose}
             title={job.title}
             id={job.id}
+            postedBy={job.postedBy}
           />
         </Grid>
       )}

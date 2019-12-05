@@ -20,6 +20,7 @@ import colors from "../../constants/colors";
 
 const JobCard = ({
   id,
+  postedBy,
   title,
   companyLocation,
   companyName,
@@ -197,6 +198,7 @@ const JobCard = ({
         handleClose={handleClose}
         title={title}
         id={id}
+        postedBy={postedBy}
       />
     </Grid>
   );

@@ -1,6 +1,7 @@
 export const jobs = [
   {
     id: "wqw122321452354235341wqwq",
+    postedBy: "userIdWhoPosted",
     date: "15 OCT",
     logo:
       "https://upload.wikimedia.org/wikipedia/commons/8/82/Square-logo-white.jpeg",
@@ -38,6 +39,7 @@ export const jobs = [
   },
   {
     id: "wqw122321452354dsadas235341wqwq",
+    postedBy: "userIdWhoPosted",
     date: "25 OCT",
     logo:
       "https://i2.wp.com/jamybechler.com/wp-content/uploads/2018/12/Fiverr-logo.png",

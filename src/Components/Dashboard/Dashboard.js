@@ -6,7 +6,7 @@ import HiringDashboard from "./HiringDashboard";
 
 const Dashboard = () => {
   const classes = useStyles();
-  const [user, setUser] = useState("employee");
+  const [user, setUser] = useState("employer");
 
   const renderDashboard = () => {
     if (user === "employee") {

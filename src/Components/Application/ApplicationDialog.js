@@ -15,12 +15,21 @@ import { UserStateContext } from "../../StateManagement/UserState";
 import ApplicationForm from "./ApplicationForm/ApplicationForm";
 import GradientButton from "../Buttons/GradientButton";
 
-const ApplicationDialog = ({ open, handleClose, title, history }) => {
+const ApplicationDialog = ({
+  open,
+  handleClose,
+  title,
+  history,
+  id,
+  postedBy
+}) => {
   const { isLoggedIn } = useContext(UserStateContext);
 
   const renderContent = () => {
     if (isLoggedIn) {
-      return <ApplicationForm />;
+      return (
+        <ApplicationForm jobTitle={title} jobID={id} postedBy={postedBy} />
+      );
     } else {
       return (
         <Grid

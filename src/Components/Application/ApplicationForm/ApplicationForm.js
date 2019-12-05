@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import firebase from "firebase/app";
 import "firebase/storage";
+import "firebase/firestore";
 import {
   Grid,
   Paper,
@@ -27,20 +28,12 @@ import listOfCountries from "./FormComponents/ListOfCountries";
 import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
 import colors from "../../../constants/colors";
 
-const ProfileForm = () => {
+const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
   const classes = useStyles();
+  const db = firebase.firestore();
   //Context
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
-
-  //State
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [country, setCountry] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [currentCareerLevel, setCurrentCareerLevel] = useState("");
-  const [resume, setResume] = useState("");
-
   //Functional State
   const [progress, setProgress] = useState(null);
 
@@ -62,32 +55,6 @@ const ProfileForm = () => {
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
 
-  //Set Local State to values from global state
-  useEffect(() => {
-    setFirstName(state.firstName);
-    setLastName(state.lastName);
-    setCountry(state.country);
-    setZipCode(state.zipCode);
-    setCurrentCareerLevel(state.currentCareerLevel);
-    setResume(state.resume);
-  }, []);
-
-  //Set Global State
-  useEffect(() => {
-    const profileUpdated = {
-      firstName: firstName,
-      lastName: lastName,
-      country: country,
-      zipCode: zipCode,
-      currentCareerLevel: currentCareerLevel,
-      resume: resume
-    };
-    dispatch({
-      type: "updateProfile",
-      payload: profileUpdated
-    });
-  }, [firstName, lastName, country, zipCode, currentCareerLevel, resume]);
-
   //Image Upload
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
@@ -100,7 +67,7 @@ const ProfileForm = () => {
   const uploadToStorage = () => {
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
-      .child(`resumes/${state.uid}/${firstName}-${lastName}-resume`)
+      .child(`resumes/${state.uid}/${state.firstName}-${state.lastName}-resume`)
       .put(acceptedFiles[0]);
     uploadTask.on(
       "state_changed",
@@ -120,17 +87,86 @@ const ProfileForm = () => {
         storageRef
           .child("resumes")
           .child(state.uid)
-          .child(`${firstName}-${lastName}-resume`)
+          .child(`${state.firstName}-${state.lastName}-resume`)
           .getDownloadURL()
           .then(url => {
             // console.log(url);
-            setResume(url);
+            dispatch({
+              type: "field",
+              fieldName: "resume",
+              payload: url
+            });
+
+            // setResume(url);
           })
           .catch(error => {
             // console.log(error);
           });
       }
     );
+  };
+
+  const applyForPosition = () => {
+    console.log(jobTitle, jobID, state.email, postedBy);
+    console.log("apply");
+    db.collection("applications")
+      .doc(postedBy)
+      .collection("applications")
+      .get()
+      .then(docs => {
+        console.log(docs);
+        // if (docs.exists) {
+        //   console.log("Document data:", doc.data());
+        // } else {
+        //   // doc.data() will be undefined in this case
+        //   console.log("No such document!");
+        // }
+      })
+      .catch(function(error) {
+        console.log("Error getting document:", error);
+      });
+
+    // db.collection("applications")
+    //   .doc(postedBy)
+    //   .collection("applications")
+    //   .doc(`${jobID}-${state.uid}`)
+    //   .set({
+    //     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     jobID: jobID,
+    //     jobTitle: jobTitle,
+    //     email: state.email,
+    //     firstName: state.firstName,
+    //     lastName: state.lastName,
+    //     country: state.country,
+    //     zipCode: state.zipCode,
+    //     currentCareerLevel: state.currentCareerLevel,
+    //     resume: state.resume,
+    //     status: "unchecked"
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+
+    // //UPDATING PROFILE
+    // if (state.modified) {
+    //   console.log("modified");
+    //   db.collection("users")
+    //     .doc(state.uid)
+    //     .update({
+    //       firstName: state.firstName,
+    //       lastName: state.lastName,
+    //       country: state.country,
+    //       zipCode: state.zipCode,
+    //       currentCareerLevel: state.currentCareerLevel,
+    //       resume: state.resume,
+    //       timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    //     })
+    //     .catch(error => {
+    //       console.log(error);
+    //     });
+    // } else {
+    //   console.log("not modified");
+    // }
   };
 
   const acceptedFilesItems = acceptedFiles.map((file, index) => {
@@ -187,8 +223,14 @@ const ProfileForm = () => {
                     label="First Name"
                     variant="standard"
                     fullWidth
-                    value={firstName}
-                    onChange={e => setFirstName(e.target.value)}
+                    value={state.firstName}
+                    onChange={e =>
+                      dispatch({
+                        type: "field",
+                        fieldName: "firstName",
+                        payload: e.target.value
+                      })
+                    }
                   />
                 </Grid>
                 {/* Last Name */}
@@ -199,8 +241,14 @@ const ProfileForm = () => {
                     label="Last Name"
                     variant="standard"
                     fullWidth
-                    value={lastName}
-                    onChange={e => setLastName(e.target.value)}
+                    value={state.lastName}
+                    onChange={e =>
+                      dispatch({
+                        type: "field",
+                        fieldName: "lastName",
+                        payload: e.target.value
+                      })
+                    }
                   />
                 </Grid>
 
@@ -217,8 +265,14 @@ const ProfileForm = () => {
                       labelId="country-select-label"
                       id="country"
                       labelWidth={labelWidth}
-                      value={country}
-                      onChange={e => setCountry(e.target.value)}
+                      value={state.country}
+                      onChange={e =>
+                        dispatch({
+                          type: "field",
+                          fieldName: "country",
+                          payload: e.target.value
+                        })
+                      }
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -240,8 +294,14 @@ const ProfileForm = () => {
                     variant="standard"
                     type="number"
                     fullWidth
-                    value={zipCode}
-                    onChange={e => setZipCode(e.target.value)}
+                    value={state.zipCode}
+                    onChange={e =>
+                      dispatch({
+                        type: "field",
+                        fieldName: "zipCode",
+                        payload: e.target.value
+                      })
+                    }
                   />
                 </Grid>
 
@@ -261,8 +321,14 @@ const ProfileForm = () => {
                       labelId="currentCareerLevel-select-label"
                       id="currentCareerLevel"
                       labelWidth={labelWidth}
-                      value={currentCareerLevel}
-                      onChange={e => setCurrentCareerLevel(e.target.value)}
+                      value={state.currentCareerLevel}
+                      onChange={e =>
+                        dispatch({
+                          type: "field",
+                          fieldName: "currentCareerLevel",
+                          payload: e.target.value
+                        })
+                      }
                     >
                       <MenuItem value="">
                         <em>None</em>
@@ -277,10 +343,10 @@ const ProfileForm = () => {
                 </Grid>
 
                 {/* Resume Button */}
-                {resume !== "" && (
+                {state.resume !== "" && (
                   <Grid item xs={12}>
                     <a
-                      href={resume}
+                      href={state.resume}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none" }}
@@ -371,7 +437,7 @@ const ProfileForm = () => {
                       text="Apply for position"
                       labelName="applyProfile"
                       size="large"
-                      onClick={() => console.log("update")}
+                      onClick={() => applyForPosition()}
                     />
                   </Grid>
                 </Grid>
@@ -418,4 +484,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default ProfileForm;
+export default ApplicationForm;

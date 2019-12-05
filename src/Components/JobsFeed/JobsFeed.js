@@ -27,10 +27,14 @@ const JobsFeed = ({ jobs, history }) => {
 
   const renderJobsFeed = jobs =>
     jobs.map(
-      ({ id, title, companyLocation, companyName, logo, date }, index) => (
+      (
+        { id, title, postedBy, companyLocation, companyName, logo, date },
+        index
+      ) => (
         <JobCard
           key={id}
           id={id}
+          postedBy={postedBy}
           title={title}
           companyLocation={companyLocation}
           companyName={companyName}

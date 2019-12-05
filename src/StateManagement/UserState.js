@@ -3,17 +3,14 @@ import { useImmerReducer } from "use-immer";
 
 export const loginReducer = (draft, action) => {
   switch (action.type) {
-    // case "field": {
-    //   draft[action.fieldName] = action.payload;
-    //   return;
-    // }
-    // case "login": {
-    //   draft.error = "";
-    //   draft.isLoading = true;
-    //   return;
-    // }
+    case "field": {
+      draft[action.fieldName] = action.payload;
+      draft.modified = true;
+      return;
+    }
     case "login": {
       draft.isLoggedIn = true;
+      draft.modified = false;
       draft.uid = action.payload.uid;
       draft.firstName = action.payload.firstName;
       draft.lastName = action.payload.lastName;
@@ -26,6 +23,7 @@ export const loginReducer = (draft, action) => {
     }
     case "logOut": {
       draft.isLoggedIn = false;
+      draft.modified = false;
       draft.uid = "";
       draft.firstName = "";
       draft.lastName = "";
@@ -36,15 +34,6 @@ export const loginReducer = (draft, action) => {
       draft.resume = "";
       return;
     }
-    case "updateProfile": {
-      draft.firstName = action.payload.firstName;
-      draft.lastName = action.payload.lastName;
-      draft.country = action.payload.country;
-      draft.zipCode = action.payload.zipCode;
-      draft.currentCareerLevel = action.payload.currentCareerLevel;
-      draft.resume = action.payload.resume;
-      return;
-    }
     default:
       return;
   }
@@ -52,6 +41,7 @@ export const loginReducer = (draft, action) => {
 
 const initialState = {
   isLoggedIn: true,
+  modified: false,
   uid: "uid",
   firstName: "testName",
   lastName: "testLastName",
