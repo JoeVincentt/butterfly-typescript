@@ -222,6 +222,7 @@ const JobDescriptionPage = ({ job }) => {
             title={job.title}
             id={job.id}
             postedBy={job.postedBy}
+            companyName={job.companyName}
           />
         </Grid>
       )}

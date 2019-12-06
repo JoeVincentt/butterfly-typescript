@@ -199,6 +199,7 @@ const JobCard = ({
         title={title}
         id={id}
         postedBy={postedBy}
+        companyName={companyName}
       />
     </Grid>
   );

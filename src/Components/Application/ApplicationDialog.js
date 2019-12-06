@@ -21,14 +21,20 @@ const ApplicationDialog = ({
   title,
   history,
   id,
-  postedBy
+  postedBy,
+  companyName
 }) => {
   const { isLoggedIn } = useContext(UserStateContext);
 
   const renderContent = () => {
     if (isLoggedIn) {
       return (
-        <ApplicationForm jobTitle={title} jobID={id} postedBy={postedBy} />
+        <ApplicationForm
+          jobTitle={title}
+          jobID={id}
+          postedBy={postedBy}
+          companyName={companyName}
+        />
       );
     } else {
       return (

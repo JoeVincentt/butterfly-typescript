@@ -8,7 +8,8 @@ import {
   Typography,
   TextField,
   Button,
-  LinearProgress
+  LinearProgress,
+  CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -28,7 +29,7 @@ import listOfCountries from "./FormComponents/ListOfCountries";
 import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
 import colors from "../../../constants/colors";
 
-const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
+const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
   const classes = useStyles();
   const db = firebase.firestore();
   //Context
@@ -36,6 +37,8 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
   const dispatch = useContext(UserDispatchContext);
   //Functional State
   const [progress, setProgress] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   //DropZone Parameters
   const {
@@ -65,9 +68,12 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
 
   //Data storage Upload File
   const uploadToStorage = () => {
+    const date = Date.now();
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
-      .child(`resumes/${state.uid}/${state.firstName}-${state.lastName}-resume`)
+      .child(
+        `resumes/${state.uid}/${state.firstName}-${state.lastName}-resume-${date}`
+      )
       .put(acceptedFiles[0]);
     uploadTask.on(
       "state_changed",
@@ -87,7 +93,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
         storageRef
           .child("resumes")
           .child(state.uid)
-          .child(`${state.firstName}-${state.lastName}-resume`)
+          .child(`${state.firstName}-${state.lastName}-resume-${date}`)
           .getDownloadURL()
           .then(url => {
             // console.log(url);
@@ -107,66 +113,90 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
   };
 
   const applyForPosition = () => {
+    setLoading(true);
     console.log(jobTitle, jobID, state.email, postedBy);
     console.log("apply");
-    db.collection("applications")
-      .doc(postedBy)
-      .collection("applications")
-      .get()
-      .then(docs => {
-        console.log(docs);
-        // if (docs.exists) {
-        //   console.log("Document data:", doc.data());
-        // } else {
-        //   // doc.data() will be undefined in this case
-        //   console.log("No such document!");
-        // }
-      })
-      .catch(function(error) {
-        console.log("Error getting document:", error);
-      });
-
     // db.collection("applications")
     //   .doc(postedBy)
     //   .collection("applications")
-    //   .doc(`${jobID}-${state.uid}`)
-    //   .set({
-    //     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //     jobID: jobID,
-    //     jobTitle: jobTitle,
-    //     email: state.email,
-    //     firstName: state.firstName,
-    //     lastName: state.lastName,
-    //     country: state.country,
-    //     zipCode: state.zipCode,
-    //     currentCareerLevel: state.currentCareerLevel,
-    //     resume: state.resume,
-    //     status: "unchecked"
+    //   .get()
+    //   .then(docs => {
+    //     console.log(docs);
+    //     // if (docs.exists) {
+    //     //   console.log("Document data:", doc.data());
+    //     // } else {
+    //     //   // doc.data() will be undefined in this case
+    //     //   console.log("No such document!");
+    //     // }
     //   })
-    //   .catch(error => {
-    //     console.log(error);
+    //   .catch(function(error) {
+    //     console.log("Error getting document:", error);
     //   });
 
+    //ADD APPLICATION TO EMPLOYER
+    db.collection("applications-employer")
+      .doc(postedBy)
+      .collection("applications")
+      .doc()
+      .set({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        jobID: jobID,
+        jobTitle: jobTitle,
+        email: state.email,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        country: state.country,
+        zipCode: state.zipCode,
+        currentCareerLevel: state.currentCareerLevel,
+        resume: state.resume,
+        status: "unchecked"
+      })
+      .then(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        setError(true);
+        // console.log(error);
+      });
+
+    //ADD APPLICATION TO EMPLOYEE
+    db.collection("applications-employee")
+      .doc(state.uid)
+      .collection("applications")
+      .doc()
+      .set({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        jobID: jobID,
+        jobTitle: jobTitle,
+        companyName: companyName,
+        email: state.email,
+        firstName: state.firstName,
+        lastName: state.lastName,
+        resume: state.resume
+      })
+      .then(() => setLoading(false))
+      .catch(error => {
+        setLoading(false);
+        setError(true);
+        // console.log(error);
+      });
+
     // //UPDATING PROFILE
-    // if (state.modified) {
-    //   console.log("modified");
-    //   db.collection("users")
-    //     .doc(state.uid)
-    //     .update({
-    //       firstName: state.firstName,
-    //       lastName: state.lastName,
-    //       country: state.country,
-    //       zipCode: state.zipCode,
-    //       currentCareerLevel: state.currentCareerLevel,
-    //       resume: state.resume,
-    //       timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    //     })
-    //     .catch(error => {
-    //       console.log(error);
-    //     });
-    // } else {
-    //   console.log("not modified");
-    // }
+    if (state.modified) {
+      db.collection("users")
+        .doc(state.uid)
+        .update({
+          firstName: state.firstName,
+          lastName: state.lastName,
+          country: state.country,
+          zipCode: state.zipCode,
+          currentCareerLevel: state.currentCareerLevel,
+          resume: state.resume,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .catch(error => {
+          // console.log(error);
+        });
+    }
   };
 
   const acceptedFilesItems = acceptedFiles.map((file, index) => {
@@ -433,12 +463,23 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy }) => {
                 {/* Update Profile Button */}
                 <Grid item xs={12}>
                   <Grid container justify="center" alignItems="center">
-                    <GradientButton
-                      text="Apply for position"
-                      labelName="applyProfile"
-                      size="large"
-                      onClick={() => applyForPosition()}
-                    />
+                    {loading ? (
+                      <CircularProgress />
+                    ) : (
+                      <GradientButton
+                        text="Apply for position"
+                        labelName="applyProfile"
+                        size="large"
+                        onClick={() => !loading && applyForPosition()}
+                      />
+                    )}
+                  </Grid>
+                  <Grid container justify="center" alignItems="center">
+                    {error && (
+                      <Typography variant="caption" color="secondary">
+                        Error Occurred. Please try again later.
+                      </Typography>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

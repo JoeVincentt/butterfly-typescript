@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Fab } from "@material-ui/core";
 import { ArrowForward, ArrowBack } from "@material-ui/icons";
@@ -12,6 +12,7 @@ import PreviewJobPosting from "./FormComponents/PreviewJobPosting";
 import CustomStepper from "./FormComponents/CustomStepper";
 import ThankYouCard from "./FormComponents/ThankYouCard";
 import "./PostJobForm.css";
+import { PaymentStateContext } from "../../StateManagement/PaymentState";
 
 const getSteps = () => {
   return ["Description", "Preview", "Advertisement Plan", "Payment"];
@@ -34,7 +35,8 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(3);
+  // const {completed} =useContext(PaymentStateContext)
   const steps = getSteps();
 
   const handleNext = () => {

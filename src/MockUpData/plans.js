@@ -7,7 +7,18 @@ export const plans = [
       "Display your company logo",
       "Pin ad for 7 days on main page"
     ],
-    price: "39"
+    price: 39
+  },
+  {
+    id: "44223dsds",
+    planName: "Medium",
+    offers: [
+      "2x Social media posts",
+      "Monthly stats email",
+      "Display your company logo",
+      "Pin ad for 7 days on main page"
+    ],
+    price: 49
   },
   {
     id: "8493849sdhsj",
@@ -20,17 +31,6 @@ export const plans = [
       "Pin ad for 7 days on main page",
       "Featured email placement"
     ],
-    price: "59"
-  },
-  {
-    id: "44223dsds",
-    planName: "Medium",
-    offers: [
-      "2x Social media posts",
-      "Monthly stats email",
-      "Display your company logo",
-      "Pin ad for 7 days on main page"
-    ],
-    price: "49"
+    price: 59
   }
 ];

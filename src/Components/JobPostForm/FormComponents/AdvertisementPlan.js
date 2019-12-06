@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -11,11 +11,28 @@ import "./AdvertisementPlan.css";
 import colors from "../../../constants/colors";
 
 import { plans } from "../../../MockUpData/plans";
+import {
+  PaymentDispatchContext,
+  PaymentStateContext
+} from "../../../StateManagement/PaymentState";
 
 const AdvertisementPlan = () => {
   const classes = useStyles();
 
+  const { basePrice } = useContext(PaymentStateContext);
+  const dispatch = useContext(PaymentDispatchContext);
+
   const [active, setActive] = React.useState(null);
+
+  const selectPlan = (id, standardPrice) => {
+    setActive(id);
+    const newPrice = Number(basePrice + standardPrice);
+    dispatch({
+      type: "field",
+      fieldName: "price",
+      payload: newPrice
+    });
+  };
 
   const renderPlans = plans => {
     return plans.map((plan, index) => (
@@ -81,7 +98,7 @@ const AdvertisementPlan = () => {
 
             <Grid item>
               <GradientButton
-                onClick={() => setActive(plan.id)}
+                onClick={() => selectPlan(plan.id, plan.price)}
                 labelName="advertisementPlan"
                 text="Choose Plan"
                 size="large"

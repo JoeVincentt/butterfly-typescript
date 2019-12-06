@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
+import axios from "axios";
 import {
   CardElement,
   injectStripe,
@@ -10,6 +11,12 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import shadows from "../../../constants/shadows";
 import GradientButton from "../../Buttons/GradientButton";
+import { UserStateContext } from "../../../StateManagement/UserState";
+import { PostJobStateContext } from "../../../StateManagement/PostJobState";
+import {
+  PaymentDispatchContext,
+  PaymentStateContext
+} from "../../../StateManagement/PaymentState";
 
 // You can customize your Elements to give it the look and feel of your site.
 const createOptions = () => {
@@ -33,7 +40,27 @@ const createOptions = () => {
 
 const _CardForm = props => {
   const classes = useStyles();
-  const [errorMessage, setErrorMessage] = React.useState("");
+
+  const userState = useContext(UserStateContext);
+  const postJobState = useContext(PostJobStateContext);
+  const { email, firstName, lastName, companyName, price } = useContext(
+    PaymentStateContext
+  );
+  const dispatch = useContext(PaymentDispatchContext);
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    dispatch({
+      type: "setPayment",
+      payload: {
+        email: userState.email,
+        firstName: userState.firstName,
+        lastName: userState.lastName,
+        companyName: postJobState.companyName
+      }
+    });
+  }, []);
 
   const handleChange = ({ error }) => {
     if (error) {
@@ -41,65 +68,152 @@ const _CardForm = props => {
     }
   };
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
+  const handlePaymentRequest = async token => {
+    // Example POST method implementation:
+    const data = {
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      companyName: companyName,
+      amount: price,
+      token: token
+    };
+    console.log(data);
+    const response = await axios({
+      method: "POST",
+      url:
+        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe",
+      data: data
+    });
+    console.log(response);
+  };
+
+  const handleSubmit = e => {
+    // e.preventDefault();
     if (props.stripe) {
-      props.stripe.createToken().then(props.handleResult);
+      props.stripe
+        .createToken()
+        .then(payload => {
+          if (payload.error) {
+            console.log(payload.error);
+          } else if (payload.token) {
+            console.log("[token]", payload.token);
+            handlePaymentRequest(payload.token.id);
+          }
+        })
+
+        .catch(error => console.log(error));
     } else {
       console.log("Stripe.js hasn't loaded yet.");
     }
+    // if (props.stripe) {
+    //   props.stripe.createToken().then(resp => {
+    //     console.log(resp);
+    //     props.handleResult();
+    //   });
+    // } else {
+    //   console.log("Stripe.js hasn't loaded yet.");
+    // }
   };
 
   return (
     <div>
       <form onSubmit={() => handleSubmit()}>
-        <Grid container direction="column">
+        <Grid container justify="flex-end" alignContent="center">
           <Grid item>
-            <Grid container spacing={2} direction="row" justify="space-between">
-              <Grid item xs={6}>
-                <TextField
-                  id="firstName"
-                  className={classes.textField}
-                  label="First Name"
-                  margin="normal"
-                  variant="filled"
-                  fullWidth
-                  required
-                />
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="flex-end"
+              alignContent="flex-end"
+              spacing={1}
+            >
+              <Grid item>
+                <Typography variant="subtitle1">Total Price:</Typography>
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  id="lastName"
-                  className={classes.textField}
-                  label="Last Name"
-                  margin="normal"
-                  variant="filled"
-                  fullWidth
-                  required
-                />
+              <Grid item>
+                <Typography variant="h6">{price}$</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="firstName"
+              className={classes.textField}
+              label="First Name"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={firstName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "firstName",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="lastName"
+              className={classes.textField}
+              label="Last Name"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={lastName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "lastName",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
             <TextField
               id="companyName"
               className={classes.textField}
               label="Company Name"
               margin="normal"
-              variant="filled"
+              variant="standard"
               fullWidth
               required
+              value={companyName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "companyName",
+                  payload: e.target.value
+                })
+              }
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12} sm={6}>
             <TextField
-              id="address"
+              id="Email"
               className={classes.textField}
-              label="Address"
+              label="Email"
               margin="normal"
-              variant="filled"
+              variant="standard"
               fullWidth
               required
+              value={email}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "email",
+                  payload: e.target.value
+                })
+              }
             />
           </Grid>
         </Grid>
@@ -114,17 +228,14 @@ const _CardForm = props => {
           </div>
         </Grid>
 
-        <Grid container justify="space-between" alignContent="center">
+        <Grid container justify="center" alignContent="center">
           <Grid item className={classes.button}>
             <GradientButton
               text="Submit Payment"
               size="large"
               labelName="stripePay"
-              onClick={() => console.log("payment")}
+              onClick={e => handleSubmit(e)}
             />
-          </Grid>
-          <Grid item className={classes.button}>
-            <Typography variant="h6">Total Price: 290$</Typography>
           </Grid>
         </Grid>
       </form>
@@ -140,9 +251,11 @@ const Payment = props => {
     <Grid container justify="center" alignContent="center">
       <Grid item xs={12} sm={8}>
         <Paper className={classes.paper}>
-          <StripeProvider apiKey={"pk_test_12345"}>
+          <StripeProvider apiKey={"pk_test_RppBJ2eaykT7fLU90EHShe43004Fx31yx1"}>
             <Elements>
-              <CardForm handleResult={props.handleResult} />
+              <CardForm
+              //  handleResult={props.handleResult}
+              />
             </Elements>
           </StripeProvider>
         </Paper>
@@ -160,11 +273,12 @@ const useStyles = makeStyles(theme => ({
 
   button: {
     marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4)
+    marginBottom: theme.spacing(2)
   },
   spacing: {
     margin: theme.spacing(4, 0)
   },
+
   textField: {}
 }));
 
