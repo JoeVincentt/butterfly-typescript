@@ -9,24 +9,23 @@ import { makeStyles } from "@material-ui/core/styles";
 import JobCard from "../JobCard/JobCard";
 import ButterflyLoader from "../Loader/ButterflyLoader";
 
-const JobsFeed = ({ jobs, history }) => {
+const JobsFeed = ({ history, location }) => {
   const classes = useStyles();
   const db = firebase.firestore();
   const [loading, setLoading] = useState(true);
-  const [recentJobs, setRecentJobs] = useState([]);
-  const [featuredJobs, setFeaturedJobs] = useState([]);
+  const [jobsInCategory, setJobs] = useState([]);
 
   useEffect(() => {
-    getRecentJobs();
-    getFeaturedJobs();
-  }, []);
+    // this.props.location.state
+    // console.log(location);
+    // getRecentJobs();
+    getJobs();
+  }, [location]);
 
-  const getFeaturedJobs = () => {
+  const getJobs = () => {
     let jobs = [];
     db.collection("jobs")
-      .where("advertisementPlan", "==", "High")
-      // .orderBy("date", "desc")
-      .limit(10)
+      .where("category", "==", location.state.categoryID)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(function(doc) {
@@ -36,32 +35,7 @@ const JobsFeed = ({ jobs, history }) => {
         });
       })
       .then(() => {
-        setFeaturedJobs(jobs);
-        // console.log(jobs);
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        // console.log("Error getting documents: ", error);
-      });
-  };
-  const getRecentJobs = () => {
-    let sevenDaysFromNow = Date.now() - 604800000;
-    let jobs = [];
-    db.collection("jobs")
-      .where("date", ">=", sevenDaysFromNow)
-      .orderBy("date", "desc")
-      .limit(10)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          jobs.push(doc.data());
-        });
-      })
-      .then(() => {
-        setRecentJobs(jobs);
+        setJobs(jobs);
         // console.log(jobs);
         setLoading(false);
       })
@@ -123,22 +97,12 @@ const JobsFeed = ({ jobs, history }) => {
         <Grid item xs={4} className={classes.categoryBox}>
           <Grid container justify="center" alignContent="center">
             <Typography variant="h5" className={classes.categoryText}>
-              Featured
+              {location.state.category}
             </Typography>
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {renderJobsFeed(featuredJobs)}
-        </Grid>
-        <Grid item xs={8} sm={4} className={classes.categoryBox}>
-          <Grid container justify="center" alignContent="center">
-            <Typography variant="h5" className={classes.categoryText}>
-              Recently Posted
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          {renderJobsFeed(recentJobs)}
+          {renderJobsFeed(jobsInCategory)}
         </Grid>
       </Grid>
     );

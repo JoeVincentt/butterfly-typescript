@@ -202,9 +202,10 @@ const JobDescription = () => {
 
   //Data storage Upload File
   const uploadToStorage = () => {
+    const date = Date.now();
     const storageRef = firebase.storage().ref();
     const uploadTask = storageRef
-      .child(`images/${uid}/${acceptedFiles[0].name}`)
+      .child(`images/${uid}/${acceptedFiles[0].name}-${date}`)
       .put(acceptedFiles[0]);
     uploadTask.on(
       "state_changed",
@@ -224,10 +225,10 @@ const JobDescription = () => {
         storageRef
           .child("images")
           .child(uid)
-          .child(acceptedFiles[0].name)
+          .child(`${acceptedFiles[0].name}-${date}`)
           .getDownloadURL()
           .then(url => {
-            // console.log(url);
+            console.log(url);
             setLogo(url);
           })
           .catch(error => {});

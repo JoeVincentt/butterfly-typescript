@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, Button } from "@material-ui/core";
 import colors from "../../../constants/colors";
@@ -21,23 +22,13 @@ const ThankYouCard = props => {
           >
             <Grid item>
               {" "}
-              <Typography variant="h3" className={classes.thankYouText}>
+              <Typography variant="h6" color="primary">
                 Thank You!
               </Typography>
             </Grid>
             <Grid item>
-              {" "}
-              <Typography variant="h6">Job Posting Completed</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="subtitle2" color="textSecondary">
-                Please check your email for confirmation.
-              </Typography>
-            </Grid>
-            <Grid item>
-              {" "}
-              <Typography variant="subtitle2" color="textSecondary">
-                Order Number: 262tyahs12sa
+              <Typography variant="h6" color="textSecondary">
+                Please check your email for receipt.
               </Typography>
             </Grid>
             <Grid item className={classes.button}>
@@ -46,7 +37,7 @@ const ThankYouCard = props => {
                 text="Go to dashboard"
                 labelName="goToDash"
                 size="large"
-                onClick={() => console.log("go to dash")}
+                onClick={() => props.history.push("/dashboard")}
               />
             </Grid>
           </Grid>
@@ -75,4 +66,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default ThankYouCard;
+export default withRouter(ThankYouCard);

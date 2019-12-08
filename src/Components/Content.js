@@ -10,7 +10,6 @@ import ScrollToTheTop from "./ScrollToTheTop";
 
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
-import ProfileForm from "./Application/ApplicationForm/ApplicationForm";
 import JobDescriptionPageRender from "./JobDescriptionPage/JobDescriptionPageRender";
 import SignIn from "./Auth/SignIn/SignIn";
 import SignUp from "./Auth/SignUp/SignUp";
@@ -19,6 +18,7 @@ import JobsFeed from "./JobsFeed/JobsFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 import Dashboard from "./Dashboard/Dashboard";
 import Subscribe from "./Pre-subscription/Subscribe";
+import JobByCategory from "./JobByCategoryPage/JobByCategory";
 import NoMatch from "./NoMatch";
 
 import { jobs } from "../MockUpData/jobs";
@@ -33,23 +33,22 @@ const Content = props => {
         <CssBaseline />
         <Toolbar id="back-to-top-anchor" />
         <Navbar />
+        <CompanyBar />
         <Switch>
           {/* <Route path="/">
             <Subscribe />
           </Route> */}
 
           <Route exact path="/">
-            <CompanyBar />
-            <Container component="main" className={classes.main}>
-              <JobsFeed jobs={jobs} />
-            </Container>
+            <JobsFeed jobs={jobs} />
           </Route>
 
-          <Route path="/profile">
-            <ProfileForm />
-          </Route>
           <Route path="/job-description/:id">
             <JobDescriptionPageRender />
+          </Route>
+
+          <Route path="/job-by-category/:categoryID">
+            <JobByCategory />
           </Route>
 
           <Route path="/post-a-job">

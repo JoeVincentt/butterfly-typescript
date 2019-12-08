@@ -61,9 +61,7 @@ const ApplicationDialog = ({
       aria-labelledby="customized-dialog-title"
       open={open}
     >
-      <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-        Apply for {title}
-      </DialogTitle>
+      <DialogTitle id="customized-dialog-title">Apply for {title}</DialogTitle>
       <DialogContent dividers>{renderContent()}</DialogContent>
       <DialogActions>
         <Button autoFocus onClick={handleClose} color="primary">

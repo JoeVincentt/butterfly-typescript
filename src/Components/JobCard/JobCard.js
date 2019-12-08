@@ -26,6 +26,7 @@ const JobCard = ({
   companyName,
   logo,
   date,
+  advertisementPlan,
   navigateToJobDetails
 }) => {
   const classes = useStyles();
@@ -42,7 +43,7 @@ const JobCard = ({
   };
 
   const renderLogoImage = () => (
-    <Grid item xs={6} sm={2}>
+    <Grid item xs={6} sm={2} xl={1}>
       <img alt="Company Logo" src={logo} className={classes.bigAvatar} />
     </Grid>
   );
@@ -154,7 +155,13 @@ const JobCard = ({
   return (
     <Grid container justify="center">
       <Grid item xs={12} sm={12} md={10}>
-        <Paper id="job-card" className={classes.paper} elevation={0}>
+        <Paper
+          id="job-card"
+          className={
+            advertisementPlan === "High" ? classes.paperHighAd : classes.paper
+          }
+          elevation={0}
+        >
           <Grid container spacing={1}>
             <Grid container>
               <Grid
@@ -216,7 +223,23 @@ const useStyles = makeStyles(theme => ({
       marginBottom: theme.spacing(0)
     },
     "&:hover": {
-      boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
+      // boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
+      backgroundColor: "ghostwhite"
+    }
+  },
+  paperHighAd: {
+    padding: theme.spacing(1, 2),
+    margin: theme.spacing(1),
+    border: "1px solid rgba(107, 19, 107, 0.2)",
+    backgroundColor: "papayawhip",
+    "@media (max-width: 750px)": {
+      padding: theme.spacing(2),
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(0)
+    },
+    "&:hover": {
+      // boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
+      backgroundColor: "ghostwhite"
     }
   },
   jobTitle: {
@@ -225,11 +248,12 @@ const useStyles = makeStyles(theme => ({
   bigAvatar: {
     margin: theme.spacing(3),
     marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
     width: 100,
     height: 100,
     // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
 
-    "@media (max-width: 750px)": {
+    "@media (max-width: 650px)": {
       marginTop: "-30px",
       margin: theme.spacing(0),
       width: 60,

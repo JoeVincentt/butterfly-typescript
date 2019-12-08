@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import { convertTimestamp } from "../utils/convertTimestamp";
 
 import colors from "../../constants/colors";
 
@@ -56,7 +57,7 @@ const JobDescriptionPage = ({ job }) => {
           </Grid>
           <Grid item>
             <Typography variant="subtitle2" className={classes.spacing}>
-              {date}
+              {convertTimestamp(date)}
             </Typography>
           </Grid>
         </Grid>
@@ -184,7 +185,7 @@ const JobDescriptionPage = ({ job }) => {
       ) : (
         <Grid container justify="center" alignContent="center">
           {/* Company Card */}
-          <Grid item xs={12} sm={4} md={2}>
+          <Grid item xs={12} sm={12} md={3} lg={2}>
             <CompanyInfoCard
               logo={job.logo}
               companyName={job.companyName}
@@ -195,7 +196,7 @@ const JobDescriptionPage = ({ job }) => {
           </Grid>
 
           {/* Basic Info */}
-          <Grid item xs={12} sm={8} md={10} lg={8}>
+          <Grid item xs={12} sm={12} md={9} lg={10}>
             <Paper className={classes.paper}>
               {renderDate(job.date)}
               {renderJobTitle(job.title)}
@@ -233,7 +234,7 @@ const JobDescriptionPage = ({ job }) => {
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    marginTop: theme.spacing(20),
+    // marginTop: theme.spacing(20),
     "@media (max-width: 600px)": {
       marginTop: theme.spacing(0)
     }

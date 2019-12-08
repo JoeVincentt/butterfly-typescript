@@ -39,7 +39,7 @@ const CompanyInfoCard = ({
       alignContent="center"
     >
       <Grid item>
-        <Grid container direction="row" alignItems="flex-end">
+        <Grid container direction="row" justify="center" alignItems="flex-end">
           <Grid item>
             <BusinessIcon className={classes.icon} />
           </Grid>
@@ -51,7 +51,7 @@ const CompanyInfoCard = ({
         </Grid>
       </Grid>
       <Grid item>
-        <Grid container direction="row" alignItems="flex-end">
+        <Grid container direction="row" justify="center" alignItems="flex-end">
           <Grid item>
             <LocationOnIcon className={classes.icon} />
           </Grid>

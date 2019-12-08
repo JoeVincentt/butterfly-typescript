@@ -3,6 +3,10 @@ import { useImmerReducer } from "use-immer";
 
 export const postJobReducer = (draft, action) => {
   switch (action.type) {
+    case "field": {
+      draft[action.fieldName] = action.payload;
+      return;
+    }
     case "setJobDescription": {
       draft.logo = action.payload.logo;
       draft.companyName = action.payload.companyName;
@@ -32,6 +36,7 @@ export const postJobReducer = (draft, action) => {
 const initialState = {
   id: "draftJobPosting",
   date: "15 OCT",
+  advertisementPlan: "",
   logo: "",
   companyName: "",
   companyLocation: "",

@@ -27,7 +27,7 @@ const initialState = {
   companyName: "",
   price: 199,
   basePrice: 199,
-  completed: false
+  paymentSuccess: false
 };
 
 export const PaymentStateContext = React.createContext();

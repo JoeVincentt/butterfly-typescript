@@ -85,7 +85,7 @@ const SignIn = props => {
                   resume: data.resume
                 }
               });
-              props.history.push("/");
+              props.history.goBack();
               return;
             } else {
               return;
@@ -132,7 +132,7 @@ const SignIn = props => {
               resume: data.resume
             }
           });
-          // props.history.push("/");
+          props.history.goBack();
           return;
         } else {
           db.collection("subscriptions")
@@ -176,7 +176,7 @@ const SignIn = props => {
                       }
                     });
                     setLoading(false);
-                    props.history.push("/");
+                    props.history.goBack();
                   } else {
                   }
                 })
@@ -199,7 +199,7 @@ const SignIn = props => {
     // Popup signin flow rather than redirect flow.
     signInFlow: "popup",
     // Redirect to /signedIn after sign in is successful. Alternatively you can provide a callbacks.signInSuccess function.
-    signInSuccessUrl: "/",
+    // signInSuccessUrl: "/",
     // We will display Google and Facebook as auth providers.
     signInOptions: [
       firebase.auth.GoogleAuthProvider.PROVIDER_ID,
@@ -308,14 +308,14 @@ const SignIn = props => {
 
 const useStyles = makeStyles(theme => ({
   image: {
-    height: "100vh",
-    backgroundImage: `url(${signInImageBackground})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    "@media (max-height: 820px)": {
-      height: "auto"
-    }
+    // height: "100vh",
+    // backgroundImage: `url(${signInImageBackground})`,
+    // backgroundRepeat: "no-repeat",
+    // backgroundSize: "cover",
+    // backgroundPosition: "center",
+    // "@media (max-height: 820px)": {
+    //   height: "auto"
+    // }
   },
   shadowPaper: {
     padding: theme.spacing(4),
@@ -329,7 +329,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
     },
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "0 0 200px 0px rgba(70, 9, 125, 0.33)"
+    boxShadow: "0 0 20px 0px rgba(70, 9, 125, 0.33)"
   },
   logo: {
     width: "100px",

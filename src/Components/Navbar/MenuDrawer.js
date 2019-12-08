@@ -8,12 +8,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import CategoryIcon from "@material-ui/icons/Category";
-import PersonIcon from "@material-ui/icons/Person";
+import HomeIcon from "@material-ui/icons/Home";
 import SpeedIcon from "@material-ui/icons/Speed";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Divider, Collapse } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import logo from "../../images/logo.png";
+import logo from "../../images/logoFull.webp";
 import { categoryList } from "../../MockUpData/categoryList";
 
 const MenuDrawer = ({
@@ -60,7 +60,7 @@ const MenuDrawer = ({
         onKeyDown={() => setDrawerOpen(false)}
       >
         <ListItem button key={index}>
-          <ListItemText primary={category} style={{ fontSize: "10px" }} />
+          <ListItemText primary={category} />
         </ListItem>
       </div>
     ));
@@ -70,15 +70,15 @@ const MenuDrawer = ({
       <React.Fragment>
         <ListItem
           button
-          onClick={() => navigateTo("profile")}
-          onKeyDown={() => navigateTo("profile")}
+          color="primary"
+          onClick={() => navigateTo("")}
+          onKeyDown={() => navigateTo("/")}
         >
           <ListItemIcon>
-            <PersonIcon />
+            <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Profile" />
+          <ListItemText primary="Home" />
         </ListItem>
-
         <ListItem
           button
           onClick={() => navigateTo("dashboard")}
@@ -135,7 +135,7 @@ const MenuDrawer = ({
 
 const useStyles = makeStyles(theme => ({
   list: {
-    width: 250
+    width: 150
   },
   fullList: {
     width: "auto"
@@ -148,7 +148,8 @@ const useStyles = makeStyles(theme => ({
     fontWeight: theme.typography.fontWeightRegular
   },
   logoImg: {
-    margin: theme.spacing(3),
+    margin: theme.spacing(1),
+    alignSelf: "center",
     width: 150,
     height: "auto"
   },

@@ -1,17 +1,15 @@
 export const plans = [
+  // {
+  //   name: "Low",
+  //   offers: [
+  //     "Monthly stats email",
+  //     "Display your company logo",
+  //     "Pin ad for 7 days on main page"
+  //   ],
+  //   price: 39
+  // },
   {
-    id: "22132dsada",
-    planName: "Low",
-    offers: [
-      "Monthly stats email",
-      "Display your company logo",
-      "Pin ad for 7 days on main page"
-    ],
-    price: 39
-  },
-  {
-    id: "44223dsds",
-    planName: "Medium",
+    name: "Medium",
     offers: [
       "2x Social media posts",
       "Monthly stats email",
@@ -21,8 +19,7 @@ export const plans = [
     price: 49
   },
   {
-    id: "8493849sdhsj",
-    planName: "High",
+    name: "High",
     offers: [
       "Highlight your ad",
       "2x Social media posts",

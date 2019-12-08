@@ -301,13 +301,12 @@ const SignUp = props => {
           <Grid item xs={12}>
             <div className={classes.shadowPaper}>
               <img src={logo} alt="logo" className={classes.logo} />
-
               <Typography component="h1" variant="h6">
                 Sign Up
               </Typography>
               <form className={classes.form} noValidate>
                 <Grid container spacing={4} direction="row">
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       className={classes.textField}
                       variant="standard"
@@ -323,7 +322,7 @@ const SignUp = props => {
                       onChange={e => handleFirstNameChange(e)}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={12} sm={6}>
                     <TextField
                       className={classes.textField}
                       variant="standard"
@@ -448,14 +447,14 @@ const SignUp = props => {
 
 const useStyles = makeStyles(theme => ({
   image: {
-    height: "100vh",
-    backgroundImage: `url(${signUpImageBackground})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    "@media (max-height: 820px)": {
-      height: "auto"
-    }
+    // height: "100vh",
+    // backgroundImage: `url(${signUpImageBackground})`,
+    // backgroundRepeat: "no-repeat",
+    // backgroundSize: "cover",
+    // backgroundPosition: "center",
+    // "@media (max-height: 820px)": {
+    //   height: "auto"
+    // }
   },
   shadowPaper: {
     padding: theme.spacing(4),
@@ -469,7 +468,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
     },
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "0 0 200px 0px rgba(70, 9, 125, 0.33)"
+    boxShadow: "0 0 20px 0px rgba(70, 9, 125, 0.33)"
   },
   textField: {},
   logo: {

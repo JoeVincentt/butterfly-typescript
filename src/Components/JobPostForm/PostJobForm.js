@@ -35,8 +35,8 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(3);
-  // const {completed} =useContext(PaymentStateContext)
+  const [activeStep, setActiveStep] = useState(0);
+  const { paymentSuccess } = useContext(PaymentStateContext);
   const steps = getSteps();
 
   const handleNext = () => {
@@ -70,16 +70,18 @@ const PostJobForm = () => {
         <ArrowBack className={classes.extendedIconRightMargin} />
         Back
       </Fab>
-      <Fab
-        onClick={handleNext}
-        variant="extended"
-        size="medium"
-        className={classes.nextOrFinishButton}
-        aria-label="add"
-      >
-        {activeStep === steps.length - 1 ? "Finish" : "Next"}
-        <ArrowForward className={classes.extendedIconLeftMargin} />
-      </Fab>
+      {!paymentSuccess && activeStep === steps.length - 1 ? null : (
+        <Fab
+          onClick={handleNext}
+          variant="extended"
+          size="medium"
+          className={classes.nextOrFinishButton}
+          aria-label="add"
+        >
+          {activeStep === steps.length - 1 ? "Finish" : "Next"}
+          <ArrowForward className={classes.extendedIconLeftMargin} />
+        </Fab>
+      )}
     </Grid>
   );
 

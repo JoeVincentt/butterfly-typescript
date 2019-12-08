@@ -11,7 +11,10 @@ import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
 import Fab from "@material-ui/core/Fab";
 import GradientButton from "../Buttons/GradientButton";
-
+import HomeIcon from "@material-ui/icons/Home";
+import SpeedIcon from "@material-ui/icons/Speed";
+import { Button, Grid } from "@material-ui/core";
+import CategoryMenuButton from "./CategoryMenu";
 import {
   UserStateContext,
   UserDispatchContext
@@ -58,36 +61,57 @@ const Navbar = props => {
       />
       <AppBar position="fixed" elevation={1} className={classes.appBar}>
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-            onClick={() => {
-              setDrawerOpen(true);
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          <Hidden mdUp>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="menu"
+              onClick={() => {
+                setDrawerOpen(true);
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Hidden>
 
-          <div className={classes.title}>
-            <Link to="/">
-              <img
-                alt="ButterflyRemoteJobsLogo"
-                src={logo}
-                className={classes.logo}
-              />
-            </Link>
+          <div className={classes.buttonBar}>
+            <Hidden smDown>
+              <Grid container direction="row" alignItems="center">
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  <Button
+                    color="primary"
+                    className={classes.button}
+                    size="large"
+                    startIcon={<HomeIcon />}
+                  >
+                    Home
+                  </Button>
+                </Link>
+                {isLoggedIn && (
+                  <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                    <Button
+                      color="primary"
+                      className={classes.button}
+                      size="large"
+                      startIcon={<SpeedIcon />}
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
+                )}
+                <CategoryMenuButton />
+              </Grid>
+            </Hidden>
           </div>
 
+          <GradientButton
+            onClick={navigateToPostJobScreen}
+            size="medium"
+            labelName="postAJob"
+            text="Post A Job"
+          />
           <Hidden xsDown>
-            <GradientButton
-              onClick={navigateToPostJobScreen}
-              size="medium"
-              labelName="postAJob"
-              text="Post A Job"
-            />
-
             <Fab
               onClick={() => (isLoggedIn ? signOut() : navigateToLoginScreen())}
               color="inherit"
@@ -114,8 +138,11 @@ const useStyles = makeStyles(theme => ({
     boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.2)"
   },
 
-  title: {
+  buttonBar: {
     flexGrow: 1
+  },
+  button: {
+    margin: theme.spacing(1)
   },
   logo: {
     marginLeft: theme.spacing(2),

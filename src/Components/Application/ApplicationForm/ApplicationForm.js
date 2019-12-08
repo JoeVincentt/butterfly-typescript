@@ -114,8 +114,8 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
 
   const applyForPosition = () => {
     setLoading(true);
-    console.log(jobTitle, jobID, state.email, postedBy);
-    console.log("apply");
+    // console.log(jobTitle, jobID, state.email, postedBy);
+    // console.log("apply");
     // db.collection("applications")
     //   .doc(postedBy)
     //   .collection("applications")

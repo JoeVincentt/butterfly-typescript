@@ -6,9 +6,9 @@ import config from "./firebaseConfig";
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import { initializeApp, analytics } from "firebase/app";
 import "firebase/analytics";
-// import "firebase/auth";
-// import "firebase/firestore";
-// import "firebase/storage";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/storage";
 initializeApp(config);
 analytics();
 

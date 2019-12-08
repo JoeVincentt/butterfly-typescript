@@ -9,28 +9,34 @@ import GradientButton from "../../Buttons/GradientButton";
 
 import "./AdvertisementPlan.css";
 import colors from "../../../constants/colors";
-
 import { plans } from "../../../MockUpData/plans";
 import {
   PaymentDispatchContext,
   PaymentStateContext
 } from "../../../StateManagement/PaymentState";
+import { PostJobDispatchContext } from "../../../StateManagement/PostJobState";
 
 const AdvertisementPlan = () => {
   const classes = useStyles();
 
   const { basePrice } = useContext(PaymentStateContext);
   const dispatch = useContext(PaymentDispatchContext);
+  const dispatchPostJob = useContext(PostJobDispatchContext);
 
   const [active, setActive] = React.useState(null);
 
-  const selectPlan = (id, standardPrice) => {
-    setActive(id);
+  const selectPlan = (name, standardPrice) => {
+    setActive(name);
     const newPrice = Number(basePrice + standardPrice);
     dispatch({
       type: "field",
       fieldName: "price",
       payload: newPrice
+    });
+    dispatchPostJob({
+      type: "field",
+      fieldName: "advertisementPlan",
+      payload: name
     });
   };
 
@@ -38,14 +44,14 @@ const AdvertisementPlan = () => {
     return plans.map((plan, index) => (
       <Grid key={index} item xs={12} sm={8} md={4}>
         <Paper
-          id={active === plan.id ? "advertisement_plan" : null}
-          className={active !== plan.id ? classes.paper : classes.paperActive}
+          id={active === plan.name ? "advertisement_plan" : null}
+          className={active !== plan.name ? classes.paper : classes.paperActive}
           elevation={0}
         >
           <Grid container spacing={2} direction="column">
             <Grid item className={classes.textPlanNameContainer}>
               <Typography variant="h4" className={classes.textPlanName}>
-                {plan.planName.toUpperCase()}
+                {plan.name.toUpperCase()}
               </Typography>
             </Grid>
             <Grid item>
@@ -98,7 +104,7 @@ const AdvertisementPlan = () => {
 
             <Grid item>
               <GradientButton
-                onClick={() => selectPlan(plan.id, plan.price)}
+                onClick={() => selectPlan(plan.name, plan.price)}
                 labelName="advertisementPlan"
                 text="Choose Plan"
                 size="large"
