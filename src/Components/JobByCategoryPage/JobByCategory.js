@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import JobCard from "../JobCard/JobCard";
-import ButterflyLoader from "../Loader/ButterflyLoader";
+import { LinearProgress } from "@material-ui/core";
 
 const JobsFeed = ({ history, location }) => {
   const classes = useStyles();
@@ -86,11 +86,19 @@ const JobsFeed = ({ history, location }) => {
           />
         )
       );
+    } else {
+      return (
+        <Grid container justify="center">
+          <Typography variant="body1" color="textSecondary">
+            No job postings in this category. Please check again later.
+          </Typography>
+        </Grid>
+      );
     }
   };
 
   if (loading) {
-    return <ButterflyLoader />;
+    return <LinearProgress />;
   } else {
     return (
       <Grid container spacing={1} justify="center">
@@ -121,7 +129,7 @@ const useStyles = makeStyles(theme => ({
   categoryText: {
     border: "1px solid rgba(107, 19, 107, 0.2)",
     borderRadius: "2px",
-    boxShadow: "0px 0px 4px -1px rgba(107,19,107,1)",
+    // boxShadow: "0px 0px 4px -1px rgba(107,19,107,1)",
     padding: theme.spacing(2)
   }
 }));

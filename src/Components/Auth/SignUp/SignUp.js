@@ -458,7 +458,7 @@ const useStyles = makeStyles(theme => ({
   },
   shadowPaper: {
     padding: theme.spacing(4),
-    margin: theme.spacing(20),
+
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -468,7 +468,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
     },
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "0 0 20px 0px rgba(70, 9, 125, 0.33)"
+    boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
   },
   textField: {},
   logo: {

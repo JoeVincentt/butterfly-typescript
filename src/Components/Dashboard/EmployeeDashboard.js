@@ -18,91 +18,13 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
-
-import "./Dashboard.css";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { Button } from "@material-ui/core";
+import { convertTimestamp } from "../utils/convertTimestamp";
 
 import GradientButton from "../Buttons/GradientButton";
 import colors from "../../constants/colors";
-
-const createData = (id, jobId, appliedFor, company, dateApplied, status) => {
-  return {
-    id,
-    jobId,
-    appliedFor,
-    company,
-    dateApplied,
-    status
-  };
-};
-
-const rows = [
-  createData(
-    "ID1",
-    "jobID",
-
-    "React native Engineer",
-    "Apple",
-    1466769957914,
-    "Checked"
-  ),
-
-  createData(
-    "ID6",
-    "jobID",
-    "Angular1  Engineer",
-    "Microsoft",
-    1466367947914,
-    "Unchecked"
-  ),
-  createData(
-    "ID16",
-    "jobID",
-    "Angular  Engineer",
-    "Microsoft",
-    1466367967914,
-    "Unchecked"
-  ),
-  createData(
-    "ID11",
-    "jobID",
-    "Airnbn  Engineer",
-    "Microsoft",
-    1466267967914,
-    "Unchecked"
-  ),
-  createData(
-    "ID22",
-    "jobID",
-    "Blahblah  Engineer",
-    "Microsoft",
-    1466667967914,
-    "Unchecked"
-  ),
-
-  createData("ID3", "jobID", "Swift Engineer", "SpaceX", 1575348202, "Checked")
-];
-
-const convertTimestamp = unix_timestamp => {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec"
-  ];
-  const date = new Date(unix_timestamp * 1000).getDate();
-  const month = months[new Date(unix_timestamp * 1000).getMonth()];
-  const newDate = `${date} ${month}`;
-
-  return newDate;
-};
+import { withRouter } from "react-router";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -134,18 +56,18 @@ const headCells = [
   {
     id: "appliedFor",
     numeric: false,
-    disablePadding: true,
+    disablePadding: false,
     label: "Applied for"
   },
-  { id: "company", numeric: false, disablePadding: true, label: "Company" },
+  { id: "company", numeric: false, disablePadding: false, label: "Company" },
   {
     id: "dateApplied",
     numeric: true,
-    disablePadding: true,
+    disablePadding: false,
     label: "Date Applied"
   },
-  { id: "status", numeric: false, disablePadding: true, label: "Status" },
-  { id: "resume", numeric: false, disablePadding: true, label: "Resume" }
+  { id: "status", numeric: false, disablePadding: false, label: "Status" },
+  { id: "resume", numeric: false, disablePadding: false, label: "Resume" }
 ];
 
 function EnhancedTableHead(props) {
@@ -237,7 +159,7 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Dashboard
+          My Applications
         </Typography>
       )}
 
@@ -282,7 +204,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function EnhancedTable() {
+const EnhancedTable = props => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("dateApplied");
@@ -290,6 +212,71 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const createData = (id, jobId, appliedFor, company, dateApplied, status) => {
+    return {
+      id,
+      jobId,
+      appliedFor,
+      company,
+      dateApplied,
+      status
+    };
+  };
+
+  const rows = [
+    createData(
+      "ID1",
+      "jobID",
+
+      "React native Engineer",
+      "Apple",
+      1466769957914,
+      "Checked"
+    ),
+
+    createData(
+      "ID6",
+      "jobID",
+      "Angular1  Engineer",
+      "Microsoft",
+      1466367947914,
+      "Unchecked"
+    ),
+    createData(
+      "ID16",
+      "jobID",
+      "Angular  Engineer",
+      "Microsoft",
+      1466367967914,
+      "Unchecked"
+    ),
+    createData(
+      "ID11",
+      "jobID",
+      "Airnbn  Engineer",
+      "Microsoft",
+      1466267967914,
+      "Unchecked"
+    ),
+    createData(
+      "ID22",
+      "jobID",
+      "Blahblah  Engineer",
+      "Microsoft",
+      1466667967914,
+      "Unchecked"
+    ),
+
+    createData(
+      "ID3",
+      "jobID",
+      "Swift Engineer",
+      "SpaceX",
+      1575348202,
+      "Checked"
+    )
+  ];
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -347,6 +334,15 @@ export default function EnhancedTable() {
 
   return (
     <div className={classes.root}>
+      <Button
+        color="primary"
+        className={classes.button}
+        size="large"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => props.history.goBack()}
+      >
+        Dashboard Overview
+      </Button>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <div className={classes.tableWrapper}>
@@ -444,22 +440,29 @@ export default function EnhancedTable() {
         />
       </Paper>
       <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        control={
+          <Switch
+            checked={dense}
+            onChange={handleChangeDense}
+            color="primary"
+          />
+        }
         label="Minimize View"
       />
     </div>
   );
-}
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    margin: theme.spacing(3)
+    width: "auto",
+    flexGrow: 1,
+    margin: theme.spacing(1)
   },
   paper: {
-    width: "max-content",
-    marginBottom: theme.spacing(2),
-    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+    width: "auto",
+    marginBottom: theme.spacing(2)
+    // boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
   },
   table: {
     minWidth: 750
@@ -489,5 +492,10 @@ const useStyles = makeStyles(theme => ({
       transform: "translateZ(50px)",
       boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
     }
+  },
+  button: {
+    marginBottom: theme.spacing(2)
   }
 }));
+
+export default withRouter(EnhancedTable);

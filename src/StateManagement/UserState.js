@@ -42,7 +42,7 @@ export const loginReducer = (draft, action) => {
 const initialState = {
   isLoggedIn: true,
   modified: false,
-  uid: "uid",
+  uid: "Qid3BoZ9PkZNGa5pVfJWGt9fW3w2",
   firstName: "testName",
   lastName: "testLastName",
   email: "test@test.com",

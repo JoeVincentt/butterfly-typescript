@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import backgroundImage from "../../images/companybar.jpg";
+import backgroundImage from "../../images/companybar.webp";
 import logo from "../../images/logoFull.webp";
 import { Grid } from "@material-ui/core";
 

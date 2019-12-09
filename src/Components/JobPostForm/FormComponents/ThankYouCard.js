@@ -37,7 +37,7 @@ const ThankYouCard = props => {
                 text="Go to dashboard"
                 labelName="goToDash"
                 size="large"
-                onClick={() => props.history.push("/dashboard")}
+                onClick={() => props.history.push("/dashboard-overview")}
               />
             </Grid>
           </Grid>

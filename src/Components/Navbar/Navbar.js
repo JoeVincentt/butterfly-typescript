@@ -89,7 +89,10 @@ const Navbar = props => {
                   </Button>
                 </Link>
                 {isLoggedIn && (
-                  <Link to="/dashboard" style={{ textDecoration: "none" }}>
+                  <Link
+                    to="/dashboard-overview"
+                    style={{ textDecoration: "none" }}
+                  >
                     <Button
                       color="primary"
                       className={classes.button}

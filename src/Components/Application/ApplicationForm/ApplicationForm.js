@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import firebase from "firebase/app";
+import uuid from "uuid/v4";
 import "firebase/storage";
 import "firebase/firestore";
 import {
@@ -133,15 +134,19 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
     //     console.log("Error getting document:", error);
     //   });
 
+    const applicationID = uuid();
     //ADD APPLICATION TO EMPLOYER
     db.collection("applications-employer")
       .doc(postedBy)
       .collection("applications")
-      .doc()
+      .doc(applicationID)
       .set({
+        id: applicationID,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        date: Date.now(),
         jobID: jobID,
         jobTitle: jobTitle,
+        companyName: companyName,
         email: state.email,
         firstName: state.firstName,
         lastName: state.lastName,
@@ -162,15 +167,14 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
     db.collection("applications-employee")
       .doc(state.uid)
       .collection("applications")
-      .doc()
+      .doc(applicationID)
       .set({
+        id: applicationID,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        date: Date.now(),
         jobID: jobID,
         jobTitle: jobTitle,
         companyName: companyName,
-        email: state.email,
-        firstName: state.firstName,
-        lastName: state.lastName,
         resume: state.resume
       })
       .then(() => setLoading(false))
@@ -190,8 +194,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
           country: state.country,
           zipCode: state.zipCode,
           currentCareerLevel: state.currentCareerLevel,
-          resume: state.resume,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          resume: state.resume
         })
         .catch(error => {
           // console.log(error);

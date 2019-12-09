@@ -16,7 +16,9 @@ import SignUp from "./Auth/SignUp/SignUp";
 import PostJobForm from "./JobPostForm/PostJobForm";
 import JobsFeed from "./JobsFeed/JobsFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
-import Dashboard from "./Dashboard/Dashboard";
+import DashboardOverview from "./Dashboard/DashboardOverview";
+import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
+import EmployerDashboard from "./Dashboard/EmployerDashboard";
 import Subscribe from "./Pre-subscription/Subscribe";
 import JobByCategory from "./JobByCategoryPage/JobByCategory";
 import NoMatch from "./NoMatch";
@@ -55,8 +57,16 @@ const Content = props => {
             <PostJobForm />
           </Route>
 
-          <Route path="/dashboard">
-            <Dashboard />
+          <Route path="/dashboard-overview">
+            <DashboardOverview />
+          </Route>
+
+          <Route path="/dashboard-employee">
+            <EmployeeDashboard />
+          </Route>
+
+          <Route path="/dashboard-employer">
+            <EmployerDashboard />
           </Route>
 
           <Route path="/sign-in">

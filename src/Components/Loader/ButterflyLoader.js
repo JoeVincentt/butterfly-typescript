@@ -1,7 +1,7 @@
 import React from "react";
 
 import "./ButterflyLoader.css";
-import logo from "../../images/logo.png";
+import logo from "../../images/logo.webp";
 import { Grid } from "@material-ui/core";
 
 const ButterflyLoader = () => (

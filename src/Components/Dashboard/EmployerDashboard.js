@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { withRouter } from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -18,58 +21,12 @@ import Tooltip from "@material-ui/core/Tooltip";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
-
-import "./Dashboard.css";
-
-import GradientButton from "../Buttons/GradientButton";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { Button, LinearProgress } from "@material-ui/core";
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
+import { convertTimestamp } from "../utils/convertTimestamp";
 import colors from "../../constants/colors";
-
-const createData = (
-  candidateName,
-  appliedFor,
-  company,
-  contactNumber,
-  email,
-  status
-) => {
-  return {
-    candidateName,
-    appliedFor,
-    company,
-    contactNumber,
-    email,
-    status
-  };
-};
-
-const rows = [
-  createData(
-    "Brandon Doe",
-    "React native Engineer",
-    "Apple",
-    "+12053406600",
-    "email@email.com",
-    "Checked"
-  ),
-
-  createData(
-    "Jessica Neon",
-    "Angular  Engineer",
-    "Microsoft",
-    "+1605890669",
-    "new@email.com",
-    "Unchecked"
-  ),
-
-  createData(
-    "Emma Berry",
-    "Swift Engineer",
-    "SpaceX",
-    "+13053789009",
-    "mehere@email.com",
-    "Checked"
-  )
-];
+import { UserStateContext } from "../../StateManagement/UserState";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -101,25 +58,38 @@ const headCells = [
   {
     id: "candidateName",
     numeric: false,
-    disablePadding: true,
-    label: "Candidate Name"
+    disablePadding: false,
+    label: "Name"
   },
   {
-    id: "appliedFor",
+    id: "position",
     numeric: false,
-    disablePadding: true,
-    label: "Applied for"
+    disablePadding: false,
+    label: "Position"
   },
-  { id: "company", numeric: false, disablePadding: true, label: "Company" },
+  { id: "company", numeric: false, disablePadding: false, label: "Company" },
   {
-    id: "contactNumber",
-    numeric: true,
-    disablePadding: true,
-    label: "Contact No."
+    id: "country",
+    numeric: false,
+    disablePadding: false,
+    label: "Country"
   },
-  { id: "email", numeric: false, disablePadding: true, label: "Email" },
-  { id: "status", numeric: false, disablePadding: true, label: "Status" },
-  { id: "resume", numeric: false, disablePadding: true, label: "Resume" }
+  {
+    id: "zipCode",
+    numeric: false,
+    disablePadding: false,
+    label: "Zip Code"
+  },
+  {
+    id: "currentCareerLevel",
+    numeric: false,
+    disablePadding: false,
+    label: "Career Level"
+  },
+  { id: "email", numeric: false, disablePadding: false, label: "Email" },
+  { id: "date", numeric: true, disablePadding: false, label: "Date" },
+  { id: "status", numeric: false, disablePadding: false, label: "Status" },
+  { id: "resume", numeric: false, disablePadding: false, label: "Resume" }
 ];
 
 function EnhancedTableHead(props) {
@@ -211,13 +181,13 @@ const EnhancedTableToolbar = props => {
         </Typography>
       ) : (
         <Typography className={classes.title} variant="h6" id="tableTitle">
-          Dashboard
+          Applicants
         </Typography>
       )}
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton aria-label="delete" onClick={() => props.handleDelete()}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -256,14 +226,131 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired
 };
 
-export default function EnhancedTable() {
+const EnhancedTable = props => {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const db = firebase.firestore();
+
+  const state = useContext(UserStateContext);
+
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [loading, setLoading] = useState(true);
+  const [rows, setRow] = useState([]);
+
+  useEffect(() => {
+    let newRows = [];
+    db.collection("applications-employer")
+      .doc(state.uid)
+      .collection("applications")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          const data = doc.data();
+          newRows.push(
+            createData(
+              data.id,
+              `${data.firstName} ${data.lastName}`,
+              data.jobTitle,
+              data.companyName,
+              data.country,
+              data.zipCode,
+              data.currentCareerLevel,
+              data.email,
+              data.date,
+              data.status,
+              data.resume
+            )
+          );
+        });
+      })
+      .then(() => {
+        setRow(newRows);
+        setLoading(false);
+      })
+      .catch(function(error) {
+        setLoading(false);
+        console.log("Error getting document:", error);
+      });
+  }, []);
+
+  const createData = (
+    id,
+    candidateName,
+    appliedFor,
+    company,
+    country,
+    zipCode,
+    currentCareerLevel,
+    email,
+    date,
+    status,
+    resume
+  ) => {
+    return {
+      id,
+      candidateName,
+      appliedFor,
+      company,
+      country,
+      zipCode,
+      currentCareerLevel,
+      email,
+      date,
+      status,
+      resume
+    };
+  };
+
+  // const rows = [
+  //   createData(
+  //     "dsadasdasdasd",
+  //     "Brandon Doe",
+  //     "React native Engineer",
+  //     "Apple",
+  //     "United States",
+  //     "31100",
+  //     "Student",
+  //     "email@email.com",
+  //     1466769957914,
+  //     "Checked",
+  //     "resume url"
+  //   ),
+
+  //   createData(
+  //     "dasdasdasdasdasd",
+  //     "Jessica Neon",
+  //     "Angular  Engineer",
+  //     "Microsoft",
+  //     "United States",
+  //     "31100",
+  //     "Student",
+  //     "new@email.com",
+  //     1466714957914,
+  //     "Unchecked",
+  //     "resume url"
+  //   ),
+
+  //   createData(
+  //     "dasdasdasdasd",
+  //     "Emma Berry",
+  //     "Swift Engineer",
+  //     "SpaceX",
+  //     "United States",
+  //     "31100",
+  //     "Student",
+  //     "mehere@email.com",
+  //     1466762257914,
+  //     "Checked",
+  //     "resume url"
+  //   )
+  // ];
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -273,7 +360,7 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.candidateName);
+      const newSelecteds = rows.map(n => n.id);
 
       setSelected(newSelecteds);
       return;
@@ -281,12 +368,12 @@ export default function EnhancedTable() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -319,123 +406,165 @@ export default function EnhancedTable() {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <div className={classes.tableWrapper}>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.candidateName);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  const handleDelete = () => {
+    console.log("delete");
+    console.log(selected);
+  };
 
-                  return (
-                    <TableRow
-                      className={classes.hoverRow}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.candidateName}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={event =>
-                            handleClick(event, row.candidateName)
+  if (loading) {
+    return <LinearProgress />;
+  } else {
+    return (
+      <div className={classes.root}>
+        <Button
+          color="primary"
+          className={classes.button}
+          size="large"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => props.history.goBack()}
+        >
+          Dashboard Overview
+        </Button>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            handleDelete={handleDelete}
+          />
+          <div className={classes.tableWrapper}>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {stableSort(rows, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                      <TableRow
+                        className={classes.hoverRow}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onClick={event => handleClick(event, row.id)}
+                            checked={isItemSelected}
+                            inputProps={{ "aria-labelledby": labelId }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          align="left"
+                          style={{ padding: "1.2em" }}
+                        >
+                          {row.candidateName}
+                        </TableCell>
+                        <TableCell align="left">{row.appliedFor}</TableCell>
+                        <TableCell align="left">{row.company}</TableCell>
+                        <TableCell align="left">{row.country}</TableCell>
+                        <TableCell align="left">{row.zipCode}</TableCell>
+                        <TableCell align="left">
+                          {row.currentCareerLevel}
+                        </TableCell>
+                        <TableCell align="left">{row.email}</TableCell>
+                        <TableCell align="left">
+                          {convertTimestamp(row.date)}
+                        </TableCell>
+                        <TableCell
+                          align="left"
+                          className={
+                            row.status === "Checked"
+                              ? classes.resumeChecked
+                              : classes.resumeUnchecked
                           }
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align="left"
-                        style={{ padding: "1.2em" }}
-                      >
-                        {row.candidateName}
-                      </TableCell>
-                      <TableCell align="left">{row.appliedFor}</TableCell>
-                      <TableCell align="left">{row.company}</TableCell>
-                      <TableCell align="left">{row.contactNumber}</TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell
-                        align="left"
-                        className={
-                          row.status === "Checked"
-                            ? classes.resumeChecked
-                            : classes.resumeUnchecked
-                        }
-                      >
-                        {row.status}
-                      </TableCell>
-                      <TableCell align="left">
-                        {" "}
-                        <GradientButton
-                          size="small"
-                          text="Download"
-                          onClick={() => console.log("download")}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+                        >
+                          {row.status}
+                        </TableCell>
+                        <TableCell align="left">
+                          <a
+                            href={row.resume}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: "none" }}
+                          >
+                            <Button
+                              color="primary"
+                              // className={classes.button}
+                              size="large"
+                              startIcon={<OpenInBrowserIcon />}
+                            >
+                              Open
+                            </Button>
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={dense}
+              onChange={handleChangeDense}
+              color="primary"
+            />
+          }
+          label="Minimize View"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Minimize View"
-      />
-    </div>
-  );
-}
+      </div>
+    );
+  }
+};
 
 const useStyles = makeStyles(theme => ({
   root: {
-    width: "100%",
-    marginTop: theme.spacing(3),
+    width: "auto",
+    // marginTop: theme.spacing(3),
     flexGrow: 1,
-    overflow: "scroll"
+    // overflow: "scroll"
+    margin: theme.spacing(1)
   },
   paper: {
-    width: "max-content",
-    marginBottom: theme.spacing(2),
-    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+    width: "auto",
+    marginBottom: theme.spacing(2)
+    // boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
   },
   table: {
     minWidth: 750
@@ -465,5 +594,10 @@ const useStyles = makeStyles(theme => ({
       transform: "translateZ(50px)",
       boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
     }
+  },
+  button: {
+    marginBottom: theme.spacing(2)
   }
 }));
+
+export default withRouter(EnhancedTable);

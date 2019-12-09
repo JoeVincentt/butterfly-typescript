@@ -161,11 +161,12 @@ const _CardForm = props => {
 
   const createDataBaseInstanceOfPostedJob = () => {
     console.log("create job data");
+    const jobID = uuid();
     db.collection("jobs")
-      .doc()
+      .doc(jobID)
       .set({
         postedBy: userState.uid,
-        id: uuid(),
+        id: jobID,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         date: Date.now(),
         advertisementPlan: postJobState.advertisementPlan,

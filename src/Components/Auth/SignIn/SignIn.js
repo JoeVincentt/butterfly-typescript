@@ -85,7 +85,7 @@ const SignIn = props => {
                   resume: data.resume
                 }
               });
-              props.history.goBack();
+              props.history.push("/");
               return;
             } else {
               return;
@@ -132,7 +132,7 @@ const SignIn = props => {
               resume: data.resume
             }
           });
-          props.history.goBack();
+          props.history.push("/");
           return;
         } else {
           db.collection("subscriptions")
@@ -145,6 +145,8 @@ const SignIn = props => {
             .doc(uid)
             .set({
               uid: uid,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              date: Date.now(),
               firstName: firstName,
               lastName: lastName,
               email: email,
@@ -176,7 +178,7 @@ const SignIn = props => {
                       }
                     });
                     setLoading(false);
-                    props.history.goBack();
+                    props.history.push("/");
                   } else {
                   }
                 })
@@ -319,7 +321,7 @@ const useStyles = makeStyles(theme => ({
   },
   shadowPaper: {
     padding: theme.spacing(4),
-    margin: theme.spacing(20),
+
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -329,7 +331,7 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
     },
     backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "0 0 20px 0px rgba(70, 9, 125, 0.33)"
+    boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
   },
   logo: {
     width: "100px",
