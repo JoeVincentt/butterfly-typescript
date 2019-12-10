@@ -251,7 +251,7 @@ const EnhancedTable = props => {
       .then(querySnapshot => {
         querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
+          // console.log(doc.id, " => ", doc.data());
           const data = doc.data();
           newRows.push(
             createData(
@@ -307,50 +307,6 @@ const EnhancedTable = props => {
       resume
     };
   };
-
-  // const rows = [
-  //   createData(
-  //     "dsadasdasdasd",
-  //     "Brandon Doe",
-  //     "React native Engineer",
-  //     "Apple",
-  //     "United States",
-  //     "31100",
-  //     "Student",
-  //     "email@email.com",
-  //     1466769957914,
-  //     "Checked",
-  //     "resume url"
-  //   ),
-
-  //   createData(
-  //     "dasdasdasdasdasd",
-  //     "Jessica Neon",
-  //     "Angular  Engineer",
-  //     "Microsoft",
-  //     "United States",
-  //     "31100",
-  //     "Student",
-  //     "new@email.com",
-  //     1466714957914,
-  //     "Unchecked",
-  //     "resume url"
-  //   ),
-
-  //   createData(
-  //     "dasdasdasdasd",
-  //     "Emma Berry",
-  //     "Swift Engineer",
-  //     "SpaceX",
-  //     "United States",
-  //     "31100",
-  //     "Student",
-  //     "mehere@email.com",
-  //     1466762257914,
-  //     "Checked",
-  //     "resume url"
-  //   )
-  // ];
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -409,6 +365,28 @@ const EnhancedTable = props => {
   const handleDelete = () => {
     console.log("delete");
     console.log(selected);
+    let newRows = [...rows];
+    newRows = newRows.filter(row => {
+      if (!selected.includes(row.id)) {
+        return row;
+      } else {
+        db.collection("applications-employer")
+          .doc(state.uid)
+          .collection("applications")
+          .doc(row.id)
+          .delete()
+          .then(function() {
+            console.log("Document successfully deleted!");
+          })
+          .catch(function(error) {
+            console.error("Error removing document: ", error);
+          });
+
+        return null;
+      }
+    });
+    setRow(newRows);
+    setSelected([]);
   };
 
   if (loading) {
