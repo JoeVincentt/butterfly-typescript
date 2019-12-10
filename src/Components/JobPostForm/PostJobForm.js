@@ -70,7 +70,8 @@ const PostJobForm = () => {
         <ArrowBack className={classes.extendedIconRightMargin} />
         Back
       </Fab>
-      {!paymentSuccess && activeStep === steps.length - 1 ? null : (
+      {// !paymentSuccess &&
+      activeStep === steps.length - 1 ? null : (
         <Fab
           onClick={handleNext}
           variant="extended"

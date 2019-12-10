@@ -254,10 +254,13 @@ const useStyles = makeStyles(theme => ({
     // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
 
     "@media (max-width: 650px)": {
-      marginTop: "-30px",
+      marginTop: "-42px",
       margin: theme.spacing(0),
       width: 60,
-      height: 60
+      height: 60,
+      border: "1px solid rgba(107, 19, 107, 0.2)",
+      backgroundColor: "#fafafa",
+      padding: 4
     }
   },
   icon: {

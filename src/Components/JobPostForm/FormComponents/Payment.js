@@ -26,6 +26,7 @@ import {
   PaymentDispatchContext,
   PaymentStateContext
 } from "../../../StateManagement/PaymentState";
+import ThankYouCard from "./ThankYouCard";
 
 // You can customize your Elements to give it the look and feel of your site.
 const createOptions = () => {
@@ -195,143 +196,160 @@ const _CardForm = props => {
         // setError(true);
         // console.log(error);
       });
+
+    //UPDATE EMPLOYER DASHBOARD STATS
+    db.collection("dashboardStats")
+      .doc(userState.uid)
+      .update({
+        "employerStats.jobsPosted": firebase.firestore.FieldValue.increment(1)
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.log("Error updating document:", error);
+      });
   };
 
-  return (
-    <div>
-      <Grid container justify="flex-end" alignContent="center">
-        <Grid item>
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="flex-end"
-            alignContent="flex-end"
-            spacing={1}
-          >
-            <Grid item>
-              <Typography variant="subtitle1">Total Price:</Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="h6">{price}$</Typography>
+  if (paymentSuccess) {
+    return <ThankYouCard />;
+  } else {
+    return (
+      <div>
+        <Grid container justify="flex-end" alignContent="center">
+          <Grid item>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="flex-end"
+              alignContent="flex-end"
+              spacing={1}
+            >
+              <Grid item>
+                <Typography variant="subtitle1">Total Price:</Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h6">{price}$</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="firstName"
-            className={classes.textField}
-            label="First Name"
-            margin="normal"
-            variant="standard"
-            fullWidth
-            required
-            value={firstName}
-            onChange={e =>
-              dispatch({
-                type: "field",
-                fieldName: "firstName",
-                payload: e.target.value
-              })
-            }
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="lastName"
-            className={classes.textField}
-            label="Last Name"
-            margin="normal"
-            variant="standard"
-            fullWidth
-            required
-            value={lastName}
-            onChange={e =>
-              dispatch({
-                type: "field",
-                fieldName: "lastName",
-                payload: e.target.value
-              })
-            }
-          />
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="firstName"
+              className={classes.textField}
+              label="First Name"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={firstName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "firstName",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="lastName"
+              className={classes.textField}
+              label="Last Name"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={lastName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "lastName",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="companyName"
+              className={classes.textField}
+              label="Company Name"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={companyName}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "companyName",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="Email"
+              className={classes.textField}
+              label="Email"
+              margin="normal"
+              variant="standard"
+              fullWidth
+              required
+              value={email}
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "email",
+                  payload: e.target.value
+                })
+              }
+            />
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="companyName"
-            className={classes.textField}
-            label="Company Name"
-            margin="normal"
-            variant="standard"
-            fullWidth
-            required
-            value={companyName}
-            onChange={e =>
-              dispatch({
-                type: "field",
-                fieldName: "companyName",
-                payload: e.target.value
-              })
-            }
-          />
+        <Grid>
+          <Typography variant="h6" className={classes.spacing}>
+            Card Details
+          </Typography>
+          <CardElement onChange={handleChange} {...createOptions()} />
+          <div className="error" role="alert" style={{ color: "red" }}>
+            {errorMessage}
+          </div>
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="Email"
-            className={classes.textField}
-            label="Email"
-            margin="normal"
-            variant="standard"
-            fullWidth
-            required
-            value={email}
-            onChange={e =>
-              dispatch({
-                type: "field",
-                fieldName: "email",
-                payload: e.target.value
-              })
-            }
-          />
-        </Grid>
-      </Grid>
 
-      <Grid>
-        <Typography variant="h6" className={classes.spacing}>
-          Card Details
-        </Typography>
-        <CardElement onChange={handleChange} {...createOptions()} />
-        <div className="error" role="alert" style={{ color: "red" }}>
-          {errorMessage}
-        </div>
-      </Grid>
-
-      <Grid container justify="center" alignContent="center">
-        <Grid item className={classes.button}>
-          {loading ? (
-            <CircularProgress />
-          ) : (
-            <Fragment>
-              {paymentSuccess ? (
-                <Typography color="primary" variant="h6">
-                  Success!
-                </Typography>
-              ) : (
-                <GradientButton
-                  text="Submit Payment"
-                  size="large"
-                  labelName="stripePay"
-                  onClick={() => createToken()}
-                />
-              )}
-            </Fragment>
-          )}
+        <Grid container justify="center" alignContent="center">
+          <Grid item className={classes.button}>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <Fragment>
+                {paymentSuccess ? (
+                  <Typography color="primary" variant="h6">
+                    Success!
+                  </Typography>
+                ) : (
+                  <GradientButton
+                    text="Submit Payment"
+                    size="large"
+                    labelName="stripePay"
+                    onClick={() => createToken()}
+                  />
+                )}
+              </Fragment>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </div>
-  );
+      </div>
+    );
+  }
 };
 
 const CardForm = injectStripe(_CardForm);

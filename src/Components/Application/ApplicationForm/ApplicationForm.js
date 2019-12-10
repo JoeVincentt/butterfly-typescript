@@ -184,6 +184,39 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
         // console.log(error);
       });
 
+    //UPDATE EMPLOYEE DASHBOARD STATS
+    db.collection("dashboardStats")
+      .doc(state.uid)
+      .update({
+        "employeeStats.totalApplications": firebase.firestore.FieldValue.increment(
+          1
+        )
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.log("Error updating document:", error);
+      });
+
+    //UPDATE EMPLOYER DASHBOARD STATS
+    db.collection("dashboardStats")
+      .doc(postedBy)
+      .update({
+        "employerStats.totalApplicants": firebase.firestore.FieldValue.increment(
+          1
+        ),
+        "employerStats.newApplicants": firebase.firestore.FieldValue.increment(
+          1
+        )
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.log("Error updating document:", error);
+      });
+
     // //UPDATING PROFILE
     if (state.modified) {
       db.collection("users")

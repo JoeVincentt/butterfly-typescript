@@ -12,7 +12,7 @@ const ThankYouCard = props => {
   return (
     <Grid container justify="center" alignContent="center">
       <Grid item xs={12} sm={6}>
-        <Paper className={classes.paper}>
+        <Paper className={classes.paper} elevation={0}>
           <Grid
             container
             spacing={2}
@@ -51,8 +51,8 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     margin: theme.spacing(2),
-    textAlign: "center",
-    boxShadow: shadows.purpleShadow
+    textAlign: "center"
+    // boxShadow: shadows.purpleShadow
   },
   button: {
     marginTop: theme.spacing(2),

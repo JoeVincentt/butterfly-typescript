@@ -69,6 +69,10 @@ const Content = props => {
             <EmployerDashboard />
           </Route>
 
+          <Route path="/dashboard-employer-job-listings">
+            <EmployerDashboard />
+          </Route>
+
           <Route path="/sign-in">
             <SignIn />
           </Route>

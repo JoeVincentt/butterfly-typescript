@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
@@ -19,10 +21,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Button } from "@material-ui/core";
+import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
+import { Button, LinearProgress } from "@material-ui/core";
 import { convertTimestamp } from "../utils/convertTimestamp";
+import { UserStateContext } from "../../StateManagement/UserState";
 
-import GradientButton from "../Buttons/GradientButton";
 import colors from "../../constants/colors";
 import { withRouter } from "react-router";
 
@@ -57,16 +60,15 @@ const headCells = [
     id: "appliedFor",
     numeric: false,
     disablePadding: false,
-    label: "Applied for"
+    label: "Positions"
   },
   { id: "company", numeric: false, disablePadding: false, label: "Company" },
   {
     id: "dateApplied",
     numeric: true,
     disablePadding: false,
-    label: "Date Applied"
+    label: "Date"
   },
-  { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "resume", numeric: false, disablePadding: false, label: "Resume" }
 ];
 
@@ -165,7 +167,7 @@ const EnhancedTableToolbar = props => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton aria-label="delete" onClick={() => props.handleDelete()}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -206,6 +208,10 @@ EnhancedTableToolbar.propTypes = {
 
 const EnhancedTable = props => {
   const classes = useStyles();
+  const db = firebase.firestore();
+
+  const state = useContext(UserStateContext);
+
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("dateApplied");
   const [selected, setSelected] = React.useState([]);
@@ -213,70 +219,52 @@ const EnhancedTable = props => {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const createData = (id, jobId, appliedFor, company, dateApplied, status) => {
+  const [loading, setLoading] = useState(true);
+  const [rows, setRow] = useState([]);
+
+  useEffect(() => {
+    let newRows = [];
+    db.collection("applications-employee")
+      .doc(state.uid)
+      .collection("applications")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data());
+          const data = doc.data();
+          newRows.push(
+            createData(
+              data.id,
+              data.jobID,
+              data.jobTitle,
+              data.companyName,
+              data.date,
+              data.resume
+            )
+          );
+        });
+      })
+      .then(() => {
+        setRow(newRows);
+        setLoading(false);
+      })
+      .catch(function(error) {
+        setLoading(false);
+        console.log("Error getting document:", error);
+      });
+  }, []);
+
+  const createData = (id, jobID, position, company, date, resume) => {
     return {
       id,
-      jobId,
-      appliedFor,
+      jobID,
+      position,
       company,
-      dateApplied,
-      status
+      date,
+      resume
     };
   };
-
-  const rows = [
-    createData(
-      "ID1",
-      "jobID",
-
-      "React native Engineer",
-      "Apple",
-      1466769957914,
-      "Checked"
-    ),
-
-    createData(
-      "ID6",
-      "jobID",
-      "Angular1  Engineer",
-      "Microsoft",
-      1466367947914,
-      "Unchecked"
-    ),
-    createData(
-      "ID16",
-      "jobID",
-      "Angular  Engineer",
-      "Microsoft",
-      1466367967914,
-      "Unchecked"
-    ),
-    createData(
-      "ID11",
-      "jobID",
-      "Airnbn  Engineer",
-      "Microsoft",
-      1466267967914,
-      "Unchecked"
-    ),
-    createData(
-      "ID22",
-      "jobID",
-      "Blahblah  Engineer",
-      "Microsoft",
-      1466667967914,
-      "Unchecked"
-    ),
-
-    createData(
-      "ID3",
-      "jobID",
-      "Swift Engineer",
-      "SpaceX",
-      1575348202,
-      "Checked"
-    )
-  ];
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -294,12 +282,12 @@ const EnhancedTable = props => {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -332,125 +320,174 @@ const EnhancedTable = props => {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  return (
-    <div className={classes.root}>
-      <Button
-        color="primary"
-        className={classes.button}
-        size="large"
-        startIcon={<ArrowBackIcon />}
-        onClick={() => props.history.goBack()}
-      >
-        Dashboard Overview
-      </Button>
-      <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <div className={classes.tableWrapper}>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  const handleDelete = () => {
+    console.log("delete");
+    console.log(selected);
+    let newRows = [...rows];
+    newRows = newRows.filter(row => {
+      if (!selected.includes(row.id)) {
+        return row;
+      } else {
+        //DELETE DOCUMENT FROM DB
+        db.collection("applications-employee")
+          .doc(state.uid)
+          .collection("applications")
+          .doc(row.id)
+          .delete()
+          .then(function() {
+            console.log("Document successfully deleted!");
+          })
+          .catch(function(error) {
+            console.error("Error removing document: ", error);
+          });
 
-                  return (
-                    <TableRow
-                      className={classes.hoverRow}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          onClick={event => handleClick(event, row.id)}
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align="left"
-                        style={{ padding: "1.2em" }}
-                      >
-                        {row.appliedFor}
-                      </TableCell>
+        //UPDATE EMPLOYEE DASHBOARD STATS
+        db.collection("dashboardStats")
+          .doc(state.uid)
+          .update({
+            "employeeStats.totalApplications": firebase.firestore.FieldValue.increment(
+              -1
+            )
+          })
+          .then(() => {
+            console.log("Document successfully updated!");
+          })
+          .catch(error => {
+            console.log("Error updating document:", error);
+          });
 
-                      <TableCell align="left">{row.company}</TableCell>
-
-                      <TableCell align="left">
-                        {convertTimestamp(row.dateApplied)}
-                      </TableCell>
-                      <TableCell
-                        align="left"
-                        className={
-                          row.status === "Checked"
-                            ? classes.resumeChecked
-                            : classes.resumeUnchecked
-                        }
-                      >
-                        {row.status}
-                      </TableCell>
-                      <TableCell align="left">
-                        {" "}
-                        <GradientButton
-                          size="small"
-                          text="Download"
-                          onClick={() => console.log("download")}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={dense}
-            onChange={handleChangeDense}
-            color="primary"
+        return null;
+      }
+    });
+    setRow(newRows);
+    setSelected([]);
+  };
+  if (loading) {
+    return <LinearProgress />;
+  } else {
+    return (
+      <div className={classes.root}>
+        <Button
+          color="primary"
+          className={classes.button}
+          size="large"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => props.history.goBack()}
+        >
+          Dashboard Overview
+        </Button>
+        <Paper className={classes.paper}>
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            handleDelete={handleDelete}
           />
-        }
-        label="Minimize View"
-      />
-    </div>
-  );
+          <div className={classes.tableWrapper}>
+            <Table
+              className={classes.table}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              aria-label="enhanced table"
+            >
+              <EnhancedTableHead
+                classes={classes}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {stableSort(rows, getSorting(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                      <TableRow
+                        className={classes.hoverRow}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            onClick={event => handleClick(event, row.id)}
+                            checked={isItemSelected}
+                            inputProps={{ "aria-labelledby": labelId }}
+                          />
+                        </TableCell>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          align="left"
+                          style={{ padding: "1.2em" }}
+                        >
+                          {row.position}
+                        </TableCell>
+
+                        <TableCell align="left">{row.company}</TableCell>
+
+                        <TableCell align="left">
+                          {convertTimestamp(row.date)}
+                        </TableCell>
+
+                        <TableCell align="left">
+                          <a
+                            href={row.resume}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: "none" }}
+                          >
+                            <Button
+                              color="primary"
+                              // className={classes.button}
+                              size="large"
+                              startIcon={<OpenInBrowserIcon />}
+                            >
+                              Open
+                            </Button>
+                          </a>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={dense}
+              onChange={handleChangeDense}
+              color="primary"
+            />
+          }
+          label="Minimize View"
+        />
+      </div>
+    );
+  }
 };
 
 const useStyles = makeStyles(theme => ({
@@ -489,8 +526,7 @@ const useStyles = makeStyles(theme => ({
   },
   hoverRow: {
     "&:hover": {
-      transform: "translateZ(50px)",
-      boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+      backgroundColor: "ghostwhite"
     }
   },
   button: {

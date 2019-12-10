@@ -22,8 +22,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { Button, LinearProgress } from "@material-ui/core";
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import { Button, LinearProgress, Grid } from "@material-ui/core";
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import { convertTimestamp } from "../utils/convertTimestamp";
 import colors from "../../constants/colors";
 import { UserStateContext } from "../../StateManagement/UserState";
@@ -242,6 +245,22 @@ const EnhancedTable = props => {
   const [loading, setLoading] = useState(true);
   const [rows, setRow] = useState([]);
 
+  //reset New Applicants field
+  useEffect(() => {
+    db.collection("dashboardStats")
+      .doc(state.uid)
+      .update({
+        "employerStats.newApplicants": 0
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.log("Error updating document:", error);
+      });
+  }, []);
+
+  //fetch applicants
   useEffect(() => {
     let newRows = [];
     db.collection("applications-employer")
@@ -256,6 +275,7 @@ const EnhancedTable = props => {
           newRows.push(
             createData(
               data.id,
+              data.jobID,
               `${data.firstName} ${data.lastName}`,
               data.jobTitle,
               data.companyName,
@@ -282,6 +302,7 @@ const EnhancedTable = props => {
 
   const createData = (
     id,
+    jobID,
     candidateName,
     appliedFor,
     company,
@@ -295,6 +316,7 @@ const EnhancedTable = props => {
   ) => {
     return {
       id,
+      jobID,
       candidateName,
       appliedFor,
       company,
@@ -382,6 +404,21 @@ const EnhancedTable = props => {
             console.error("Error removing document: ", error);
           });
 
+        //UPDATE EMPLOYER DASHBOARD STATS
+        db.collection("dashboardStats")
+          .doc(state.uid)
+          .update({
+            "employerStats.totalApplicants": firebase.firestore.FieldValue.increment(
+              -1
+            )
+          })
+          .then(() => {
+            console.log("Document successfully updated!");
+          })
+          .catch(error => {
+            console.log("Error updating document:", error);
+          });
+
         return null;
       }
     });
@@ -389,20 +426,58 @@ const EnhancedTable = props => {
     setSelected([]);
   };
 
+  const updateStatusToChecked = (id, status) => {
+    if (status !== "checked") {
+      db.collection("applications-employer")
+        .doc(state.uid)
+        .collection("applications")
+        .doc(id)
+        .update({
+          status: "checked"
+        })
+        .then(function() {
+          let newRows = [...rows];
+          newRows.map(row => {
+            if (row.id === id) {
+              row.status = "checked";
+            }
+          });
+          setRow(newRows);
+          console.log("Document successfully updated!");
+        })
+        .catch(function(error) {
+          console.error("Error updating document: ", error);
+        });
+    } else {
+      return;
+    }
+  };
+
   if (loading) {
     return <LinearProgress />;
   } else {
     return (
       <div className={classes.root}>
-        <Button
-          color="primary"
-          className={classes.button}
-          size="large"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => props.history.goBack()}
-        >
-          Dashboard Overview
-        </Button>
+        <Grid container justify="space-between">
+          <Button
+            color="primary"
+            className={classes.button}
+            size="large"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => props.history.push("/dashboard-overview")}
+          >
+            Dashboard Overview
+          </Button>
+          <Button
+            color="primary"
+            className={classes.button}
+            size="large"
+            endIcon={<ArrowForwardIcon />}
+            onClick={() => props.history.goBack()}
+          >
+            See Jobs listings
+          </Button>
+        </Grid>
         <Paper className={classes.paper}>
           <EnhancedTableToolbar
             numSelected={selected.length}
@@ -471,12 +546,16 @@ const EnhancedTable = props => {
                         <TableCell
                           align="left"
                           className={
-                            row.status === "Checked"
+                            row.status === "checked"
                               ? classes.resumeChecked
                               : classes.resumeUnchecked
                           }
                         >
-                          {row.status}
+                          {row.status === "unchecked" ? (
+                            <CheckBoxOutlineBlankIcon />
+                          ) : (
+                            <CheckBoxIcon />
+                          )}
                         </TableCell>
                         <TableCell align="left">
                           <a
@@ -490,6 +569,9 @@ const EnhancedTable = props => {
                               // className={classes.button}
                               size="large"
                               startIcon={<OpenInBrowserIcon />}
+                              onClick={() =>
+                                updateStatusToChecked(row.id, row.status)
+                              }
                             >
                               Open
                             </Button>
@@ -569,8 +651,7 @@ const useStyles = makeStyles(theme => ({
   },
   hoverRow: {
     "&:hover": {
-      transform: "translateZ(50px)",
-      boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.3)"
+      backgroundColor: "ghostwhite"
     }
   },
   button: {
