@@ -209,6 +209,19 @@ const _CardForm = props => {
       .catch(error => {
         console.log("Error updating document:", error);
       });
+
+    //CREATE JOB STATS INSTANCE
+    db.collection("jobStats")
+      .doc(userState.uid)
+      .collection("jobStats")
+      .doc(jobID)
+      .set({
+        id: jobID,
+        logo: postJobState.logo,
+        title: postJobState.title,
+        views: 0,
+        applied: 0
+      });
   };
 
   if (paymentSuccess) {

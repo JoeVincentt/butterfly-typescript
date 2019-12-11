@@ -17,11 +17,13 @@ import PostJobForm from "./JobPostForm/PostJobForm";
 import JobsFeed from "./JobsFeed/JobsFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 import DashboardOverview from "./Dashboard/DashboardOverview";
-import EmployeeDashboard from "./Dashboard/EmployeeDashboard";
-import EmployerDashboard from "./Dashboard/EmployerDashboard";
-import Subscribe from "./Pre-subscription/Subscribe";
+import EmployeeDashboard from "./Dashboard/EmployeeDashboard/EmployeeDashboard";
+import ApplicantsList from "./Dashboard/EmployerDashboard/ApplicantsList";
+import JobListingsOverview from "./Dashboard/EmployerDashboard/JobListingsOverview";
 import JobByCategory from "./JobByCategoryPage/JobByCategory";
 import NoMatch from "./NoMatch";
+
+import Subscribe from "./Pre-subscription/Subscribe";
 
 import { jobs } from "../MockUpData/jobs";
 import colors from "../constants/colors";
@@ -65,12 +67,12 @@ const Content = props => {
             <EmployeeDashboard />
           </Route>
 
-          <Route path="/dashboard-employer">
-            <EmployerDashboard />
+          <Route path="/dashboard-employer/applicants-list">
+            <ApplicantsList />
           </Route>
 
-          <Route path="/dashboard-employer-job-listings">
-            <EmployerDashboard />
+          <Route path="/dashboard-employer/job-listings">
+            <JobListingsOverview />
           </Route>
 
           <Route path="/sign-in">

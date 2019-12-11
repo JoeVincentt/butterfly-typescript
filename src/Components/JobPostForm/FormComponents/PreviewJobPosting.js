@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  PostJobDispatchContext,
+  // PostJobDispatchContext,
   PostJobStateContext
 } from "../../../StateManagement/PostJobState";
 
 import JobDescriptionPage from "../../JobDescriptionPage/JobDescriptionPage";
-import ButterflyLoader from "../../Loader/ButterflyLoader";
+import { LinearProgress } from "@material-ui/core";
 
 const PreviewJobPosting = job => {
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ const PreviewJobPosting = job => {
 
   // return <div>preview</div>;
   if (loading) {
-    return <ButterflyLoader />;
+    return <LinearProgress />;
   } else {
     return <JobDescriptionPage job={state} />;
   }

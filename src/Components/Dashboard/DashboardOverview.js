@@ -61,8 +61,8 @@ const DashboardOverview = props => {
         </Grid>
         <Divider className={classes.divider} />
         <Grid item>
-          <Grid container direction="row" spacing={4} alignItems="center">
-            <Grid item>
+          <Grid container direction="row" spacing={1} alignItems="center">
+            <Grid item xs={12} sm={4}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -88,7 +88,7 @@ const DashboardOverview = props => {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item>
+            <Grid item xs={12} sm={4}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -116,7 +116,7 @@ const DashboardOverview = props => {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item>
+            <Grid item xs={12} sm={4}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -151,7 +151,9 @@ const DashboardOverview = props => {
             <Button
               color="primary"
               size="large"
-              onClick={() => props.history.push("/dashboard-employer")}
+              onClick={() =>
+                props.history.push("/dashboard-employer/job-listings")
+              }
             >
               Open
             </Button>
@@ -167,9 +169,15 @@ const DashboardOverview = props => {
           <Typography variant="h6">Employee Dashboard Overview</Typography>
         </Grid>
         <Divider className={classes.divider} />
-        <Grid item>
-          <Grid container direction="row" spacing={4} alignItems="center">
-            <Grid item>
+        <Grid>
+          <Grid
+            container
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            className={classes.employeeStatsBox}
+          >
+            <Grid item item xs={12} sm={4}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -245,6 +253,9 @@ const useStyles = makeStyles(theme => ({
   itemPaper: {
     padding: theme.spacing(2),
     border: "1px solid rgba(107, 19, 107, 0.2)"
+  },
+  employeeStatsBox: {
+    padding: theme.spacing(2)
   },
   workIconBox: {
     backgroundColor: "rgba(247, 119, 247, 0.3)",

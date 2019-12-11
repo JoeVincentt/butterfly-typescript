@@ -27,9 +27,9 @@ import { Button, LinearProgress, Grid } from "@material-ui/core";
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import { convertTimestamp } from "../utils/convertTimestamp";
-import colors from "../../constants/colors";
-import { UserStateContext } from "../../StateManagement/UserState";
+import { convertTimestamp } from "../../utils/convertTimestamp";
+import colors from "../../../constants/colors";
+import { UserStateContext } from "../../../StateManagement/UserState";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -472,10 +472,12 @@ const EnhancedTable = props => {
             color="primary"
             className={classes.button}
             size="large"
-            endIcon={<ArrowForwardIcon />}
-            onClick={() => props.history.goBack()}
+            // endIcon={<ArrowForwardIcon />}
+            onClick={() =>
+              props.history.push("/dashboard-employer/job-listings")
+            }
           >
-            See Jobs listings
+            go to Jobs listings
           </Button>
         </Grid>
         <Paper className={classes.paper}>

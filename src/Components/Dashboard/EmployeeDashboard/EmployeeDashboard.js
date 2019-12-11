@@ -23,10 +23,10 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import OpenInBrowserIcon from "@material-ui/icons/OpenInBrowser";
 import { Button, LinearProgress } from "@material-ui/core";
-import { convertTimestamp } from "../utils/convertTimestamp";
-import { UserStateContext } from "../../StateManagement/UserState";
+import { convertTimestamp } from "../../utils/convertTimestamp";
+import { UserStateContext } from "../../../StateManagement/UserState";
 
-import colors from "../../constants/colors";
+import colors from "../../../constants/colors";
 import { withRouter } from "react-router";
 
 function desc(a, b, orderBy) {

@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
 import JobDescriptionPage from "./JobDescriptionPage";
-import ButterflyLoader from "../Loader/ButterflyLoader";
+import { LinearProgress } from "@material-ui/core";
 
 const JobDescriptionPageRender = props => {
   const db = firebase.firestore();
@@ -41,7 +41,7 @@ const JobDescriptionPageRender = props => {
   };
 
   if (loading) {
-    return <ButterflyLoader />;
+    return <LinearProgress />;
   } else {
     return <JobDescriptionPage job={job} />;
   }

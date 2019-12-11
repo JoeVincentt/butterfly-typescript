@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import { Typography } from "@material-ui/core";
+import { Typography, LinearProgress } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import { convertTimestamp } from "../utils/convertTimestamp";
@@ -13,7 +13,6 @@ import colors from "../../constants/colors";
 import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
 import CompanyInfoCard from "./CompanyInfoCard";
-import ButterflyLoader from "../Loader/ButterflyLoader";
 import { UserStateContext } from "../../StateManagement/UserState";
 
 const JobDescriptionPage = ({ job }) => {
@@ -181,7 +180,7 @@ const JobDescriptionPage = ({ job }) => {
   return (
     <div className={classes.root}>
       {loading ? (
-        <ButterflyLoader />
+        <LinearProgress />
       ) : (
         <Grid container justify="center" alignContent="center">
           {/* Company Card */}
