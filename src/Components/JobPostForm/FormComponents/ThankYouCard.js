@@ -3,7 +3,6 @@ import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper, Button } from "@material-ui/core";
 import colors from "../../../constants/colors";
-import shadows from "../../../constants/shadows";
 import GradientButton from "../../Buttons/GradientButton";
 
 const ThankYouCard = props => {
@@ -52,7 +51,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     margin: theme.spacing(2),
     textAlign: "center"
-    // boxShadow: shadows.purpleShadow
   },
   button: {
     marginTop: theme.spacing(2),

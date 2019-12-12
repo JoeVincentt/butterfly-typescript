@@ -217,8 +217,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4)
   },
   rootPaper: {
-    padding: theme.spacing(2),
-    boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
+    padding: theme.spacing(2)
   },
   divider: {
     marginLeft: 5,

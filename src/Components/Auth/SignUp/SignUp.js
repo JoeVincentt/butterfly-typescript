@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
@@ -26,6 +27,8 @@ import signUpImageBackground from "../../../images/signUpInBackground.jpeg";
 const SignUp = props => {
   const classes = useStyles();
   const db = firebase.firestore();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
@@ -69,15 +72,8 @@ const SignUp = props => {
 
   //Validate form state callback
   useEffect(() => {
-    formValidation();
-  }, [
-    email,
-    password,
-    passwordConfirmation,
-    subscribeEmail,
-    lastName,
-    firstName
-  ]);
+    EmailAndPasswordValidation();
+  }, [email, password]);
 
   //Change Handlers
   const handleSubscribeToEmails = () => setSubscribeEmail(!subscribeEmail);
@@ -105,20 +101,31 @@ const SignUp = props => {
     setPasswordConfirmation("");
   };
 
-  const formValidation = () => {
+  const EmailAndPasswordValidation = () => {
     //Validate inputs
     let validateEmail = emailRegex.test(email.toLowerCase());
     let validatePasswordStrength = mediumStrengthPasswordRegex.test(
       password.trim()
     );
+    //Set Validation state
+    setEmailInvalid(!validateEmail);
+    setPasswordIsTooWeak(!validatePasswordStrength);
+  };
+
+  const formValidation = () => {
+    //Validate inputs
+    // let validateEmail = emailRegex.test(email.toLowerCase());
+    // let validatePasswordStrength = mediumStrengthPasswordRegex.test(
+    //   password.trim()
+    // );
     let passwordConfirmationMatch =
       password.trim() === passwordConfirmation.trim();
     let validFirstName = firstName.trim().length > 1;
     let validLastName = lastName.trim().length > 1;
 
-    //Set Validation state
-    setEmailInvalid(!validateEmail);
-    setPasswordIsTooWeak(!validatePasswordStrength);
+    // //Set Validation state
+    // setEmailInvalid(!validateEmail);
+    // setPasswordIsTooWeak(!validatePasswordStrength);
     setPasswordDoesNotMatch(!passwordConfirmationMatch);
 
     if (
@@ -166,6 +173,9 @@ const SignUp = props => {
         setSignUpErrorCode(error.code);
         setSignUpErrorMessage(error.message);
         setLoading(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
   };
 
@@ -199,6 +209,9 @@ const SignUp = props => {
         setSignInErrorCode(error.code);
         setSignInErrorMessage(error.message);
         setLoading(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
   };
   const createDatabaseInstanceOfTheUser = async uid => {
@@ -210,6 +223,19 @@ const SignUp = props => {
         })
         .catch(error => {});
     }
+    db.collection("dashboardStats")
+      .doc(uid)
+      .set({
+        employerStats: {
+          jobsPosted: 0,
+          totalApplicants: 0,
+          newApplicants: 0
+        },
+        employeeStats: {
+          totalApplications: 0
+        }
+      })
+      .catch(error => {});
     db.collection("users")
       .doc(uid)
       .set({
@@ -222,7 +248,11 @@ const SignUp = props => {
         currentCareerLevel: "",
         resume: ""
       })
-      .catch(error => {});
+      .catch(error => {
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
+      });
   };
 
   const createNewUserWithEmailAndPassword = async () => {
@@ -399,6 +429,9 @@ const SignUp = props => {
                   <FormControlLabel
                     control={
                       <Checkbox
+                        style={{
+                          color: !termsConditionsPrivacyPolicy && "red"
+                        }}
                         checked={termsConditionsPrivacyPolicy}
                         onChange={() => handleTermsConditionsPrivacyPolicy()}
                         value="termsAndPrivacy"

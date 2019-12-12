@@ -33,7 +33,7 @@ import { emailRegex } from "../utils/regex";
 
 import background from "../../images/pre-subscription.webp";
 import colors from "../../constants/colors";
-import shadows from "../../constants/shadows";
+// import shadows from "../../constants/shadows";
 
 const Copyright = () => {
   return (
@@ -386,8 +386,8 @@ const useStyles = makeStyles(theme => ({
   subscribersAmountBoxField: {
     margin: theme.spacing(2),
     padding: theme.spacing(2),
-    borderColor: colors.purple,
-    boxShadow: shadows.purpleShadow
+    borderColor: colors.purple
+    // boxShadow: shadows.purpleShadow
   },
   subscribersAmountText: {
     color: colors.purple

@@ -27,9 +27,7 @@ import { PostJobDispatchContext } from "../../../StateManagement/PostJobState";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 import { categoryList } from "../../../MockUpData/categoryList";
-
 import colors from "../../../constants/colors";
-import shadows from "../../../constants/shadows";
 
 const JobDescription = () => {
   const classes = useStyles();
@@ -228,7 +226,7 @@ const JobDescription = () => {
           .child(`${acceptedFiles[0].name}-${date}`)
           .getDownloadURL()
           .then(url => {
-            console.log(url);
+            // console.log(url);
             setLogo(url);
           })
           .catch(error => {});
@@ -323,7 +321,7 @@ const JobDescription = () => {
         direction="row"
       >
         <TextField
-          id={index.toString()}
+          id={uuidv4()}
           className={classes.textField}
           margin="normal"
           variant="outlined"
@@ -703,8 +701,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2)
   },
   paper: {
-    margin: theme.spacing(2),
-    boxShadow: shadows.purpleShadow
+    margin: theme.spacing(2)
   },
   innerPaper: {
     marginTop: theme.spacing(3),

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
@@ -12,6 +13,9 @@ import { LinearProgress } from "@material-ui/core";
 const JobsFeed = ({ jobs, history }) => {
   const classes = useStyles();
   const db = firebase.firestore();
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const [loading, setLoading] = useState(true);
   const [recentJobs, setRecentJobs] = useState([]);
   const [featuredJobs, setFeaturedJobs] = useState([]);
@@ -37,12 +41,13 @@ const JobsFeed = ({ jobs, history }) => {
       })
       .then(() => {
         setFeaturedJobs(jobs);
-        // console.log(jobs);
         setLoading(false);
       })
       .catch(error => {
         setLoading(false);
-        // console.log("Error getting documents: ", error);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
   };
   const getRecentJobs = () => {
@@ -56,7 +61,6 @@ const JobsFeed = ({ jobs, history }) => {
       .then(querySnapshot => {
         querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
           jobs.push(doc.data());
         });
       })
@@ -67,13 +71,13 @@ const JobsFeed = ({ jobs, history }) => {
       })
       .catch(error => {
         setLoading(false);
-        // console.log("Error getting documents: ", error);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
   };
 
   const navigateToJobDetails = id => {
-    // console.log(history);
-    // console.log(id);
     history.push({
       pathname: `/job-description/${id}`,
       state: {
@@ -165,7 +169,6 @@ const useStyles = makeStyles(theme => ({
   categoryText: {
     border: "1px solid rgba(107, 19, 107, 0.2)",
     borderRadius: "2px",
-    // boxShadow: "0px 0px 4px -1px rgba(107,19,107,1)",
     padding: theme.spacing(2)
   }
 }));

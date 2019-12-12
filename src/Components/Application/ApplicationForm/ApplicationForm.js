@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import uuid from "uuid/v4";
 import "firebase/storage";
@@ -33,6 +34,8 @@ import colors from "../../../constants/colors";
 const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
   const classes = useStyles();
   const db = firebase.firestore();
+  //Notifications
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   //Context
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
@@ -40,7 +43,6 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
   //DropZone Parameters
   const {
     acceptedFiles,
@@ -52,17 +54,15 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
     multiple: false,
     maxSize: 200000
   });
-
+  //Input Ref
   const inputLabel = useRef(null);
   const [labelWidth, setLabelWidth] = useState(0);
   useEffect(() => {
     setLabelWidth(inputLabel.current.offsetWidth);
   }, []);
-
   //Image Upload
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
-      // setLogo(acceptedFiles[0].preview);
       uploadToStorage();
     }
   }, [acceptedFiles, rejectedFiles]);
@@ -87,7 +87,9 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
       },
       error => {
         // error function ....
-        // console.log(error);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       },
       () => {
         // complete function ....
@@ -97,17 +99,16 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
           .child(`${state.firstName}-${state.lastName}-resume-${date}`)
           .getDownloadURL()
           .then(url => {
-            // console.log(url);
             dispatch({
               type: "field",
               fieldName: "resume",
               payload: url
             });
-
-            // setResume(url);
           })
           .catch(error => {
-            // console.log(error);
+            enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+              variant: "error"
+            });
           });
       }
     );
@@ -115,27 +116,8 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
 
   const applyForPosition = () => {
     setLoading(true);
-    // console.log(jobTitle, jobID, state.email, postedBy);
-    // console.log("apply");
-    // db.collection("applications")
-    //   .doc(postedBy)
-    //   .collection("applications")
-    //   .get()
-    //   .then(docs => {
-    //     console.log(docs);
-    //     // if (docs.exists) {
-    //     //   console.log("Document data:", doc.data());
-    //     // } else {
-    //     //   // doc.data() will be undefined in this case
-    //     //   console.log("No such document!");
-    //     // }
-    //   })
-    //   .catch(function(error) {
-    //     console.log("Error getting document:", error);
-    //   });
-
     const applicationID = uuid();
-    //ADD APPLICATION TO EMPLOYER
+    //ADD APPLICATION TO EMPLOYER DASHBOARD
     db.collection("applications-employer")
       .doc(postedBy)
       .collection("applications")
@@ -159,11 +141,12 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
       .then(() => setLoading(false))
       .catch(error => {
         setLoading(false);
-        setError(true);
-        // console.log(error);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
 
-    //ADD APPLICATION TO EMPLOYEE
+    //ADD APPLICATION TO EMPLOYEE DASHBOARD
     db.collection("applications-employee")
       .doc(state.uid)
       .collection("applications")
@@ -180,8 +163,9 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
       .then(() => setLoading(false))
       .catch(error => {
         setLoading(false);
-        setError(true);
-        // console.log(error);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
 
     //UPDATE EMPLOYEE DASHBOARD STATS
@@ -193,10 +177,10 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
         )
       })
       .then(() => {
-        console.log("Document successfully updated!");
+        // console.log("Document successfully updated!");
       })
       .catch(error => {
-        console.log("Error updating document:", error);
+        // console.log("Error updating document:", error);
       });
 
     //UPDATE EMPLOYER DASHBOARD STATS
@@ -217,7 +201,22 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
         console.log("Error updating document:", error);
       });
 
-    // //UPDATING PROFILE
+    //UPDATE JOB STATS
+    db.collection("jobStats")
+      .doc(postedBy)
+      .collection("jobStats")
+      .doc(jobID)
+      .update({
+        applied: firebase.firestore.FieldValue.increment(1)
+      })
+      .then(() => {
+        // console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        // console.log("Error updating document:", error);
+      });
+
+    //UPDATING PROFILE
     if (state.modified) {
       db.collection("users")
         .doc(state.uid)
@@ -533,7 +532,6 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     // padding: theme.spacing(4, 2),
-    // boxShadow: shadows.purpleShadow
   },
   margin: {
     margin: theme.spacing(2)

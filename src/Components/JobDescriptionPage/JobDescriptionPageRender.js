@@ -29,7 +29,22 @@ const JobDescriptionPageRender = props => {
         if (querySnapshot.size > 0) {
           // Contents of first document
           // console.log(querySnapshot.docs[0].data());
-          setJob(querySnapshot.docs[0].data());
+          const job = querySnapshot.docs[0].data();
+          setJob(job);
+          //UPDATE JOB STATS
+          db.collection("jobStats")
+            .doc(job.postedBy)
+            .collection("jobStats")
+            .doc(job.id)
+            .update({
+              views: firebase.firestore.FieldValue.increment(1)
+            })
+            .then(() => {
+              console.log("Document successfully updated!");
+            })
+            .catch(error => {
+              console.log("Error updating document:", error);
+            });
           setLoading(false);
         } else {
           // console.log("No such document!");

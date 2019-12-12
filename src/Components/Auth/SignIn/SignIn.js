@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Link, withRouter } from "react-router-dom";
@@ -24,6 +25,7 @@ const SignIn = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   //Use context
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
@@ -93,11 +95,17 @@ const SignIn = props => {
           })
           .catch(error => {
             setLoading(false);
+            enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+              variant: "error"
+            });
             // console.log("Error getting document:", error);
           });
       })
       .catch(error => {
         // Handle Errors here.
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
         setLoading(false);
         setSignInError(true);
         setSignInErrorCode(error.code);
@@ -139,6 +147,19 @@ const SignIn = props => {
             .doc(uid)
             .set({
               email: email
+            })
+            .catch(error => {});
+          db.collection("dashboardStats")
+            .doc(uid)
+            .set({
+              employerStats: {
+                jobsPosted: 0,
+                totalApplicants: 0,
+                newApplicants: 0
+              },
+              employeeStats: {
+                totalApplications: 0
+              }
             })
             .catch(error => {});
           db.collection("users")
@@ -184,15 +205,27 @@ const SignIn = props => {
                 })
                 .catch(error => {
                   setLoading(false);
+                  enqueueSnackbar(
+                    "Oops! Something went wrong! Please try again.",
+                    {
+                      variant: "error"
+                    }
+                  );
                 });
             })
             .catch(error => {
               setLoading(false);
+              enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+                variant: "error"
+              });
             });
         }
       })
       .catch(error => {
         setLoading(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
         // console.log("Error getting document:", error);
       });
   };
@@ -309,19 +342,8 @@ const SignIn = props => {
 };
 
 const useStyles = makeStyles(theme => ({
-  image: {
-    // height: "100vh",
-    // backgroundImage: `url(${signInImageBackground})`,
-    // backgroundRepeat: "no-repeat",
-    // backgroundSize: "cover",
-    // backgroundPosition: "center",
-    // "@media (max-height: 820px)": {
-    //   height: "auto"
-    // }
-  },
   shadowPaper: {
     padding: theme.spacing(4),
-
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

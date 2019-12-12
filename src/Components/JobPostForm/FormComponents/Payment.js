@@ -17,8 +17,6 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-
-import shadows from "../../../constants/shadows";
 import GradientButton from "../../Buttons/GradientButton";
 import { UserStateContext } from "../../../StateManagement/UserState";
 import { PostJobStateContext } from "../../../StateManagement/PostJobState";
@@ -389,8 +387,7 @@ const Payment = props => {
 const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
-    margin: theme.spacing(1),
-    boxShadow: shadows.purpleShadow
+    margin: theme.spacing(1)
   },
 
   button: {

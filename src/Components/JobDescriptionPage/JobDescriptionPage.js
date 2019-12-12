@@ -37,14 +37,14 @@ const JobDescriptionPage = ({ job }) => {
   const renderDate = date => (
     <Grid container direction="row" justify="space-between" alignItems="center">
       <Grid item>
-        <Grid container direction="row" justify="space-around">
-          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+        <Grid container direction="row" spacing={1}>
+          <Typography variant="h6" color="primary">
             {job.fullTimePosition && "Full-Time"}
           </Typography>
-          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+          <Typography variant="h6" color="primary">
             {job.partTimePosition && "Part-Time"}
           </Typography>
-          <Typography variant="h6" color="primary" style={{ marginRight: 4 }}>
+          <Typography variant="h6" color="primary">
             {job.contractPosition && "Contract"}
           </Typography>
         </Grid>
@@ -118,12 +118,15 @@ const JobDescriptionPage = ({ job }) => {
   };
 
   const renderListProperty = (args, name) => {
-    if (args.length > 0) {
+    let fields = args.filter(field =>
+      field.trim().length !== 0 ? field : null
+    );
+    if (fields.length > 0) {
       return (
         <Grid container spacing={2} item xs={12} direction="column">
           <Typography className={classes.listTitle}>{name}</Typography>
           <ul>
-            {args.map((item, index) => (
+            {fields.map((item, index) => (
               <li key={index} className={classes.listItem}>
                 {item}
               </li>
@@ -241,8 +244,7 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(4),
     margin: theme.spacing(1),
-    color: theme.palette.text.secondary,
-    boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.2)"
+    color: theme.palette.text.secondary
   },
   highlightPaper: {
     padding: theme.spacing(10),
