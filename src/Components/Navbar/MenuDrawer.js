@@ -50,14 +50,26 @@ const MenuDrawer = ({
     setDrawerOpen(false);
   };
 
+  const navigateToCategory = (event, category) => {
+    setDrawerOpen(false);
+    let categoryID = category.toLowerCase();
+    history.push({
+      pathname: `/job-by-category/${categoryID}`,
+      state: {
+        categoryID,
+        category
+      }
+    });
+  };
+
   const renderCategoryList = categoryList =>
     categoryList.map((category, index) => (
       <div
         key={index}
         className={classes.list}
         role="presentation"
-        onClick={() => setDrawerOpen(false)}
-        onKeyDown={() => setDrawerOpen(false)}
+        onClick={e => navigateToCategory(e, category)}
+        onKeyDown={e => navigateToCategory(e, category)}
       >
         <ListItem button key={index}>
           <ListItemText primary={category} />
@@ -72,7 +84,7 @@ const MenuDrawer = ({
           button
           color="primary"
           onClick={() => navigateTo("")}
-          onKeyDown={() => navigateTo("/")}
+          onKeyDown={() => navigateTo("")}
         >
           <ListItemIcon>
             <HomeIcon />
@@ -81,8 +93,8 @@ const MenuDrawer = ({
         </ListItem>
         <ListItem
           button
-          onClick={() => navigateTo("dashboard")}
-          onKeyDown={() => navigateTo("dashboard")}
+          onClick={() => navigateTo("dashboard-overview")}
+          onKeyDown={() => navigateTo("dashboard-overview")}
         >
           <ListItemIcon>
             <SpeedIcon />

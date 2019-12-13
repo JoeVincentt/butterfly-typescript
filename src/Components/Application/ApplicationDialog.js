@@ -34,6 +34,7 @@ const ApplicationDialog = ({
           jobID={id}
           postedBy={postedBy}
           companyName={companyName}
+          handleClose={handleClose}
         />
       );
     } else {

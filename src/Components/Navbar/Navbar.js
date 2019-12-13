@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -30,6 +31,8 @@ const Navbar = props => {
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const { isLoggedIn } = state;
 
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -44,6 +47,9 @@ const Navbar = props => {
       .signOut()
       .then(() => {
         // Sign-out successful.
+        enqueueSnackbar("Successfully logged out", {
+          variant: "warning"
+        });
         dispatch({ type: "logOut" });
       })
       .catch(function(error) {

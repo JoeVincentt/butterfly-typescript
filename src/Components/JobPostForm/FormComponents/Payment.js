@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect, Fragment } from "react";
+import { useSnackbar } from "notistack";
 import axios from "axios";
 import uuid from "uuid/v4";
 import firebase from "firebase/app";
@@ -50,6 +51,8 @@ const _CardForm = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const userState = useContext(UserStateContext);
   const postJobState = useContext(PostJobStateContext);
   const {
@@ -63,7 +66,6 @@ const _CardForm = props => {
   const dispatch = useContext(PaymentDispatchContext);
 
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     dispatch({
@@ -85,7 +87,9 @@ const _CardForm = props => {
 
   const handleChange = ({ error }) => {
     if (error) {
-      setErrorMessage(error.message);
+      enqueueSnackbar(`${error.message}`, {
+        variant: "error"
+      });
     }
   };
 
@@ -97,19 +101,25 @@ const _CardForm = props => {
         .createToken()
         .then(payload => {
           if (payload.error) {
+            enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+              variant: "error"
+            });
+            setLoading(false);
             // console.log(payload.error);
           } else if (payload.token) {
             // console.log("[token]", payload.token);
             handlePaymentRequest(payload.token.id);
           }
         })
-
         .catch(error => {
+          enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+            variant: "error"
+          });
           setLoading(false);
-          console.log(error);
+          // console.log(error);
         });
     } else {
-      console.log("Stripe.js hasn't loaded yet.");
+      // console.log("Stripe.js hasn't loaded yet.");
       setLoading(false);
     }
   };
@@ -133,7 +143,8 @@ const _CardForm = props => {
     });
     console.log(response);
     if (response.data.success === true) {
-      console.log("success transaction");
+      // console.log("success transaction");
+
       dispatch({
         type: "field",
         fieldName: "paymentSuccess",
@@ -144,16 +155,15 @@ const _CardForm = props => {
       setLoading(false);
     }
     if (response.data.success === false) {
-      console.log("failed transaction");
+      // console.log("failed transaction");
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
       dispatch({
         type: "field",
         fieldName: "paymentSuccess",
         payload: false
       });
-      setErrorMessage("Error Occurred. Please try again.");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 3000);
       setLoading(false);
     }
   };
@@ -188,8 +198,17 @@ const _CardForm = props => {
         compensation: postJobState.compensation,
         additionalInformation: postJobState.additionalInformation
       })
-      .then(() => setLoading(false))
+      .then(() => {
+        enqueueSnackbar("Congratulations! Job Posted Successfully.", {
+          variant: "success"
+        });
+
+        setLoading(false);
+      })
       .catch(error => {
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
         setLoading(false);
         // setError(true);
         // console.log(error);
@@ -256,6 +275,7 @@ const _CardForm = props => {
               variant="standard"
               fullWidth
               required
+              disabled={loading}
               value={firstName}
               onChange={e =>
                 dispatch({
@@ -275,6 +295,7 @@ const _CardForm = props => {
               variant="standard"
               fullWidth
               required
+              disabled={loading}
               value={lastName}
               onChange={e =>
                 dispatch({
@@ -295,6 +316,7 @@ const _CardForm = props => {
               variant="standard"
               fullWidth
               required
+              disabled={loading}
               value={companyName}
               onChange={e =>
                 dispatch({
@@ -314,6 +336,7 @@ const _CardForm = props => {
               variant="standard"
               fullWidth
               required
+              disabled={loading}
               value={email}
               onChange={e =>
                 dispatch({
@@ -331,9 +354,6 @@ const _CardForm = props => {
             Card Details
           </Typography>
           <CardElement onChange={handleChange} {...createOptions()} />
-          <div className="error" role="alert" style={{ color: "red" }}>
-            {errorMessage}
-          </div>
         </Grid>
 
         <Grid container justify="center" alignContent="center">
@@ -342,11 +362,7 @@ const _CardForm = props => {
               <CircularProgress />
             ) : (
               <Fragment>
-                {paymentSuccess ? (
-                  <Typography color="primary" variant="h6">
-                    Success!
-                  </Typography>
-                ) : (
+                {!paymentSuccess && (
                   <GradientButton
                     text="Submit Payment"
                     size="large"

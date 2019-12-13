@@ -6,6 +6,7 @@ import { Link, withRouter } from "react-router-dom";
 import Zoom from "@material-ui/core/Zoom";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,10 +17,7 @@ import {
 } from "../../../StateManagement/UserState";
 
 import GradientButton from "../../Buttons/GradientButton";
-import logo from "../../../images/logo.png";
-import "./SignIn.css";
-
-import signInImageBackground from "../../../images/signUpInBackground.jpeg";
+import logo from "../../../images/logo.webp";
 
 const SignIn = props => {
   const classes = useStyles();
@@ -88,6 +86,9 @@ const SignIn = props => {
                 }
               });
               props.history.push("/");
+              enqueueSnackbar("Successfully logged in ", {
+                variant: "success"
+              });
               return;
             } else {
               return;
@@ -139,6 +140,9 @@ const SignIn = props => {
               currentCareerLevel: data.currentCareerLevel,
               resume: data.resume
             }
+          });
+          enqueueSnackbar("Successfully logged in ", {
+            variant: "success"
           });
           props.history.push("/");
           return;
@@ -199,6 +203,9 @@ const SignIn = props => {
                       }
                     });
                     setLoading(false);
+                    enqueueSnackbar("Successfully logged in ", {
+                      variant: "success"
+                    });
                     props.history.push("/");
                   } else {
                   }
@@ -270,11 +277,11 @@ const SignIn = props => {
       <Grid container direction="column" justify="center" alignItems="center">
         <Zoom in={zoomIn} style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}>
           <Grid item xs={12}>
-            <div className={classes.shadowPaper}>
-              <img src={logo} alt="logo" className={classes.logo} />
+            <Paper className={classes.shadowPaper}>
+              {/* <img src={logo} alt="logo" className={classes.logo} />
               <Typography component="h1" variant="h6">
                 Sign In
-              </Typography>
+              </Typography> */}
               <form className={classes.form} noValidate>
                 <TextField
                   className={classes.textField}
@@ -287,6 +294,7 @@ const SignIn = props => {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  disabled={loading}
                   value={email}
                   onChange={e => handleEmailChange(e)}
                 />
@@ -301,6 +309,7 @@ const SignIn = props => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  disabled={loading}
                   value={password}
                   onChange={e => handlePasswordChange(e)}
                 />
@@ -311,7 +320,9 @@ const SignIn = props => {
 
                 <Grid item className={classes.submit}>
                   <GradientButton
-                    onClick={() => signInWithEmailAndPassword()}
+                    onClick={() =>
+                      loading ? () => {} : signInWithEmailAndPassword()
+                    }
                     text="Login"
                     labelName="loginButton"
                     size="large"
@@ -333,7 +344,7 @@ const SignIn = props => {
                   </Grid>
                 </Grid>
               </form>
-            </div>
+            </Paper>
           </Grid>
         </Zoom>
       </Grid>
@@ -352,8 +363,8 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(5),
       padding: theme.spacing(2)
     },
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
+    backgroundColor: "rgba(255, 255, 255, 0.7)"
+    // boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
   },
   logo: {
     width: "100px",

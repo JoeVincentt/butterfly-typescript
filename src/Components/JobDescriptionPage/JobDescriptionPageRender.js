@@ -4,12 +4,14 @@ import "firebase/firestore";
 import { withRouter } from "react-router-dom";
 import JobDescriptionPage from "./JobDescriptionPage";
 import { LinearProgress } from "@material-ui/core";
+import NoMatch from "../404 Page/NoMatch";
 
 const JobDescriptionPageRender = props => {
   const db = firebase.firestore();
 
   const [job, setJob] = useState({});
   const [loading, setLoading] = useState(true);
+  const [jobDoesNotExist, setJobDoesNotExist] = useState(false);
 
   useEffect(() => {
     // console.log(props.match.params.id);
@@ -48,6 +50,8 @@ const JobDescriptionPageRender = props => {
           setLoading(false);
         } else {
           // console.log("No such document!");
+          setJobDoesNotExist(true);
+          setLoading(false);
         }
       })
       .catch(error => {
@@ -57,6 +61,8 @@ const JobDescriptionPageRender = props => {
 
   if (loading) {
     return <LinearProgress />;
+  } else if (jobDoesNotExist) {
+    return <NoMatch />;
   } else {
     return <JobDescriptionPage job={job} />;
   }

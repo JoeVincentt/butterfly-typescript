@@ -31,7 +31,13 @@ import listOfCountries from "./FormComponents/ListOfCountries";
 import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
 import colors from "../../../constants/colors";
 
-const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
+const ApplicationForm = ({
+  jobTitle,
+  jobID,
+  postedBy,
+  companyName,
+  handleClose
+}) => {
   const classes = useStyles();
   const db = firebase.firestore();
   //Notifications
@@ -138,7 +144,13 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
         resume: state.resume,
         status: "unchecked"
       })
-      .then(() => setLoading(false))
+      .then(() => {
+        enqueueSnackbar("Application sent successfully", {
+          variant: "success"
+        });
+        handleClose();
+        setLoading(false);
+      })
       .catch(error => {
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
@@ -288,6 +300,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                     label="First Name"
                     variant="standard"
                     fullWidth
+                    disabled={loading}
                     value={state.firstName}
                     onChange={e =>
                       dispatch({
@@ -306,6 +319,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                     label="Last Name"
                     variant="standard"
                     fullWidth
+                    disabled={loading}
                     value={state.lastName}
                     onChange={e =>
                       dispatch({
@@ -330,6 +344,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                       labelId="country-select-label"
                       id="country"
                       labelWidth={labelWidth}
+                      disabled={loading}
                       value={state.country}
                       onChange={e =>
                         dispatch({
@@ -359,6 +374,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                     variant="standard"
                     type="number"
                     fullWidth
+                    disabled={loading}
                     value={state.zipCode}
                     onChange={e =>
                       dispatch({
@@ -386,6 +402,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                       labelId="currentCareerLevel-select-label"
                       id="currentCareerLevel"
                       labelWidth={labelWidth}
+                      disabled={loading}
                       value={state.currentCareerLevel}
                       onChange={e =>
                         dispatch({
@@ -416,7 +433,7 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                       rel="noopener noreferrer"
                       style={{ textDecoration: "none" }}
                     >
-                      <Button color="primary" size="large">
+                      <Button color="primary" size="large" disabled={loading}>
                         <DescriptionIcon style={{ marginRight: 3 }} />
                         Current Resume
                       </Button>
@@ -509,13 +526,13 @@ const ApplicationForm = ({ jobTitle, jobID, postedBy, companyName }) => {
                       />
                     )}
                   </Grid>
-                  <Grid container justify="center" alignItems="center">
+                  {/* <Grid container justify="center" alignItems="center">
                     {error && (
                       <Typography variant="caption" color="secondary">
                         Error Occurred. Please try again later.
                       </Typography>
                     )}
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
             </Grid>

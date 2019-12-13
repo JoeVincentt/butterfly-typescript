@@ -90,7 +90,8 @@ const JobsFeed = ({ history, location }) => {
       return (
         <Grid container justify="center">
           <Typography variant="body1" color="textSecondary">
-            No job postings in this category. Please check again later.
+            No job postings in this category available. Please check again
+            later.
           </Typography>
         </Grid>
       );
@@ -102,7 +103,7 @@ const JobsFeed = ({ history, location }) => {
   } else {
     return (
       <Grid container spacing={1} justify="center">
-        <Grid item xs={4} className={classes.categoryBox}>
+        <Grid item xs={12} className={classes.categoryBox}>
           <Grid container justify="center" alignContent="center">
             <Typography variant="h5" className={classes.categoryText}>
               {location.state.category}

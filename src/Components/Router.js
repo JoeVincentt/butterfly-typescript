@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { ProtectedRoute } from "./utils/ProtectedRoute";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
 import { Container } from "@material-ui/core";
@@ -21,7 +22,7 @@ import EmployeeDashboard from "./Dashboard/EmployeeDashboard/EmployeeDashboard";
 import ApplicantsList from "./Dashboard/EmployerDashboard/ApplicantsList";
 import JobListingsOverview from "./Dashboard/EmployerDashboard/JobListingsOverview";
 import JobByCategory from "./JobByCategoryPage/JobByCategory";
-import NoMatch from "./NoMatch";
+import NoMatch from "./404 Page/NoMatch";
 
 import Subscribe from "./Pre-subscription/Subscribe";
 
@@ -47,42 +48,45 @@ const Content = props => {
             <JobsFeed jobs={jobs} />
           </Route>
 
-          <Route path="/job-description/:id">
+          <Route exact path="/job-description/:id">
             <JobDescriptionPageRender />
           </Route>
 
-          <Route path="/job-by-category/:categoryID">
+          <Route exact path="/job-by-category/:categoryID">
             <JobByCategory />
           </Route>
 
-          <Route path="/post-a-job">
-            <PostJobForm />
-          </Route>
+          <ProtectedRoute exact path="/post-a-job" component={PostJobForm} />
+          <ProtectedRoute
+            exact
+            path="/dashboard-overview"
+            component={DashboardOverview}
+          />
+          <ProtectedRoute
+            exact
+            path="/dashboard-employee"
+            component={EmployeeDashboard}
+          />
+          <ProtectedRoute
+            exact
+            path="/dashboard-employer/applicants-list"
+            component={ApplicantsList}
+          />
+          <ProtectedRoute
+            exact
+            path="/dashboard-employer/job-listings"
+            component={JobListingsOverview}
+          />
 
-          <Route path="/dashboard-overview">
-            <DashboardOverview />
-          </Route>
-
-          <Route path="/dashboard-employee">
-            <EmployeeDashboard />
-          </Route>
-
-          <Route path="/dashboard-employer/applicants-list">
-            <ApplicantsList />
-          </Route>
-
-          <Route path="/dashboard-employer/job-listings">
-            <JobListingsOverview />
-          </Route>
-
-          <Route path="/sign-in">
+          <Route exact path="/sign-in">
             <SignIn />
           </Route>
 
-          <Route path="/sign-up">
+          <Route exact path="/sign-up">
             <SignUp />
           </Route>
-          <Route component={NoMatch} />
+
+          <Route path="*" component={NoMatch} />
         </Switch>
 
         <ScrollToTheTop {...props}>

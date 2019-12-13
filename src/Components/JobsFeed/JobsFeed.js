@@ -120,7 +120,8 @@ const JobsFeed = ({ jobs, history }) => {
       return (
         <Grid container justify="center">
           <Typography variant="body1" color="textSecondary">
-            No job postings in this category. Please check again later.
+            No job postings in this category available. Please check again
+            later.
           </Typography>
         </Grid>
       );
@@ -132,8 +133,13 @@ const JobsFeed = ({ jobs, history }) => {
   } else {
     return (
       <Grid container spacing={1} justify="center">
-        <Grid item xs={4} className={classes.categoryBox}>
-          <Grid container justify="center" alignContent="center">
+        <Grid item xs={12} className={classes.categoryBox}>
+          <Grid
+            container
+            justify="center"
+            alignContent="center"
+            className={classes.titleBox}
+          >
             <Typography variant="h5" className={classes.categoryText}>
               Featured
             </Typography>
@@ -142,8 +148,13 @@ const JobsFeed = ({ jobs, history }) => {
         <Grid item xs={12}>
           {renderJobsFeed(featuredJobs)}
         </Grid>
-        <Grid item xs={8} sm={4} className={classes.categoryBox}>
-          <Grid container justify="center" alignContent="center">
+        <Grid item xs={12} className={classes.categoryBox}>
+          <Grid
+            container
+            justify="center"
+            alignContent="center"
+            className={classes.titleBox}
+          >
             <Typography variant="h5" className={classes.categoryText}>
               Recently Posted
             </Typography>
@@ -170,6 +181,9 @@ const useStyles = makeStyles(theme => ({
     border: "1px solid rgba(107, 19, 107, 0.2)",
     borderRadius: "2px",
     padding: theme.spacing(2)
+  },
+  titleBox: {
+    marginTop: theme.spacing(14)
   }
 }));
 

@@ -7,7 +7,7 @@ import Grid from "@material-ui/core/Grid";
 import Zoom from "@material-ui/core/Zoom";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControlLabel } from "@material-ui/core";
+import { FormControlLabel, Paper } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
@@ -18,11 +18,7 @@ import {
 
 import GradientButton from "../../Buttons/GradientButton";
 import { emailRegex, mediumStrengthPasswordRegex } from "../../utils/regex";
-import logo from "../../../images/logo.png";
-
-import "./SignUp.css";
-
-import signUpImageBackground from "../../../images/signUpInBackground.jpeg";
+import logo from "../../../images/logo.webp";
 
 const SignUp = props => {
   const classes = useStyles();
@@ -201,6 +197,9 @@ const SignUp = props => {
           }
         });
         setLoading(false);
+        enqueueSnackbar("Successfully logged in ", {
+          variant: "success"
+        });
         props.history.push("/");
       })
       .catch(error => {
@@ -266,6 +265,9 @@ const SignUp = props => {
     if (valid) {
       createNewUserWithEmailAndPassword();
     } else {
+      enqueueSnackbar("Please fill all the required fields.", {
+        variant: "error"
+      });
       return;
     }
   };
@@ -329,11 +331,11 @@ const SignUp = props => {
       <Grid container direction="column" justify="center" alignItems="center">
         <Zoom in={zoomIn} style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}>
           <Grid item xs={12}>
-            <div className={classes.shadowPaper}>
-              <img src={logo} alt="logo" className={classes.logo} />
+            <Paper className={classes.shadowPaper}>
+              {/* <img src={logo} alt="logo" className={classes.logo} />
               <Typography component="h1" variant="h6">
                 Sign Up
-              </Typography>
+              </Typography> */}
               <form className={classes.form} noValidate>
                 <Grid container spacing={4} direction="row">
                   <Grid item xs={12} sm={6}>
@@ -348,6 +350,7 @@ const SignUp = props => {
                       name="firstName"
                       autoComplete="firstName"
                       autoFocus
+                      disabled={loading}
                       value={firstName}
                       onChange={e => handleFirstNameChange(e)}
                     />
@@ -364,6 +367,7 @@ const SignUp = props => {
                       name="lastName"
                       autoComplete="lastName"
                       autoFocus
+                      disabled={loading}
                       value={lastName}
                       onChange={e => handleLastNameChange(e)}
                     />
@@ -380,6 +384,7 @@ const SignUp = props => {
                   name="email"
                   autoComplete="email"
                   autoFocus
+                  disabled={loading}
                   value={email}
                   onChange={e => handleEmailChange(e)}
                 />
@@ -394,6 +399,7 @@ const SignUp = props => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
+                  disabled={loading}
                   value={password}
                   onChange={e => handlePasswordChange(e)}
                 />
@@ -407,6 +413,7 @@ const SignUp = props => {
                   label="Password Confirmation"
                   type="password"
                   id="passwordConfirmation"
+                  disabled={loading}
                   value={passwordConfirmation}
                   onChange={e => handlePasswordConfirmationChange(e)}
                 />
@@ -415,6 +422,7 @@ const SignUp = props => {
                   <FormControlLabel
                     control={
                       <Checkbox
+                        disabled={loading}
                         checked={subscribeEmail}
                         onChange={() => handleSubscribeToEmails()}
                         value="subscribeEmail"
@@ -432,6 +440,7 @@ const SignUp = props => {
                         style={{
                           color: !termsConditionsPrivacyPolicy && "red"
                         }}
+                        disabled={loading}
                         checked={termsConditionsPrivacyPolicy}
                         onChange={() => handleTermsConditionsPrivacyPolicy()}
                         value="termsAndPrivacy"
@@ -470,7 +479,7 @@ const SignUp = props => {
                   </Grid>
                 </Grid>
               </form>
-            </div>
+            </Paper>
           </Grid>
         </Zoom>
       </Grid>
@@ -500,8 +509,10 @@ const useStyles = makeStyles(theme => ({
       marginTop: theme.spacing(5),
       padding: theme.spacing(2)
     },
-    backgroundColor: "rgba(255, 255, 255, 0.7)",
-    boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
+    backgroundColor: "rgba(255, 255, 255, 0.7)"
+  },
+  checkBox: {
+    color: "grey"
   },
   textField: {},
   logo: {

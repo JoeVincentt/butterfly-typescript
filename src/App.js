@@ -1,13 +1,12 @@
 import React from "react";
 import {
   createMuiTheme,
-  makeStyles,
   ThemeProvider,
   responsiveFontSizes
 } from "@material-ui/core/styles";
 import { SnackbarProvider } from "notistack";
-import { orange, purple } from "@material-ui/core/colors";
-import Content from "./Components/Content";
+import { purple } from "@material-ui/core/colors";
+import Content from "./Components/Router";
 import { UserStateProvider } from "./StateManagement/UserState";
 import { PostJobStateProvider } from "./StateManagement/PostJobState";
 import { PaymentStateProvider } from "./StateManagement/PaymentState";
@@ -25,9 +24,7 @@ let theme = createMuiTheme({
   palette: {
     primary: purple
   },
-  status: {
-    danger: orange[500]
-  },
+  status: {},
   typography: {}
 });
 
