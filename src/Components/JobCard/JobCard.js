@@ -8,6 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import BusinessIcon from "@material-ui/icons/Business";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+import DateRangeIcon from "@material-ui/icons/DateRange";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
 
@@ -27,7 +28,8 @@ const JobCard = ({
   logo,
   date,
   advertisementPlan,
-  navigateToJobDetails
+  navigateToJobDetails,
+  jobType
 }) => {
   const classes = useStyles();
   const state = useContext(UserStateContext);
@@ -87,12 +89,25 @@ const JobCard = ({
 
   const renderCompanyDetails = () => (
     <Grid
+      style={{ marginBottom: 20 }}
       spacing={1}
       container
       direction="row"
       justify="flex-start"
       alignItems="flex-end"
     >
+      <Grid item>
+        <Grid container direction="row" alignItems="flex-end">
+          <Grid item>
+            <DateRangeIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1" color="textSecondary">
+              {jobType}
+            </Typography>
+          </Grid>
+        </Grid>
+      </Grid>
       <Grid item>
         <Grid container direction="row" alignItems="flex-end">
           <Grid item>
@@ -154,7 +169,7 @@ const JobCard = ({
 
   return (
     <Grid container justify="center">
-      <Grid item xs={12} sm={12} md={10}>
+      <Grid item xs={12} sm={12} md={9} lg={8}>
         <Paper
           id="job-card"
           className={
@@ -172,6 +187,7 @@ const JobCard = ({
               >
                 {renderLogoImage()}
                 {renderTimePostedSmallScreen()}
+
                 <Grid item xs>
                   <Grid container>
                     <Grid item xs>
@@ -246,13 +262,17 @@ const useStyles = makeStyles(theme => ({
     cursor: "pointer"
   },
   bigAvatar: {
-    margin: theme.spacing(3),
+    margin: theme.spacing(2),
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     width: 100,
     height: 100,
     // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
 
+    "@media (max-width: 750px)": {
+      width: 70,
+      height: 70
+    },
     "@media (max-width: 650px)": {
       marginTop: "-42px",
       margin: theme.spacing(0),

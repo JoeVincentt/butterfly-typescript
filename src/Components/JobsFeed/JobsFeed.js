@@ -3,12 +3,17 @@ import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
-import { convertTimestamp } from "../utils/convertTimestamp";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import JobCard from "../JobCard/JobCard";
-import { LinearProgress } from "@material-ui/core";
+import {
+  LinearProgress,
+  Button,
+  Box,
+  CircularProgress
+} from "@material-ui/core";
+import { renderJobsFeed } from "./utils/renderJobsFeed";
 
 const JobsFeed = ({ jobs, history }) => {
   const classes = useStyles();
@@ -17,6 +22,7 @@ const JobsFeed = ({ jobs, history }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(true);
+  const [loadingMoreJobs, setLoadingMoreJobs] = useState(true);
   const [recentJobs, setRecentJobs] = useState([]);
   const [featuredJobs, setFeaturedJobs] = useState([]);
 
@@ -86,44 +92,26 @@ const JobsFeed = ({ jobs, history }) => {
     });
   };
 
-  const renderJobsFeed = jobs => {
-    if (jobs.length !== 0) {
-      return jobs.map(
-        (
-          {
-            id,
-            title,
-            postedBy,
-            companyLocation,
-            companyName,
-            logo,
-            date,
-            advertisementPlan
-          },
-          index
-        ) => (
-          <JobCard
-            key={id}
-            id={id}
-            postedBy={postedBy}
-            title={title}
-            companyLocation={companyLocation}
-            companyName={companyName}
-            logo={logo}
-            advertisementPlan={advertisementPlan}
-            date={convertTimestamp(date)}
-            navigateToJobDetails={() => navigateToJobDetails(id)}
-          />
-        )
+  const renderSeeMoreButton = (handleLoad, loading) => {
+    if (loading) {
+      return (
+        <Box textAlign="center">
+          <CircularProgress />
+        </Box>
       );
     } else {
       return (
-        <Grid container justify="center">
-          <Typography variant="body1" color="textSecondary">
-            No job postings in this category available. Please check again
-            later.
-          </Typography>
-        </Grid>
+        <Box textAlign="center">
+          <Button
+            color="primary"
+            className={classes.button}
+            size="large"
+            endIcon={<ExpandMoreOutlinedIcon />}
+            onClick={() => handleLoad()}
+          >
+            see more
+          </Button>
+        </Box>
       );
     }
   };
@@ -146,7 +134,8 @@ const JobsFeed = ({ jobs, history }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {renderJobsFeed(featuredJobs)}
+          {renderJobsFeed(featuredJobs, navigateToJobDetails)}
+          {renderSeeMoreButton()}
         </Grid>
         <Grid item xs={12} className={classes.categoryBox}>
           <Grid
@@ -161,7 +150,7 @@ const JobsFeed = ({ jobs, history }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {renderJobsFeed(recentJobs)}
+          {renderJobsFeed(recentJobs, navigateToJobDetails)}
         </Grid>
       </Grid>
     );

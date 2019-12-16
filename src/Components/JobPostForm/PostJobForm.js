@@ -13,6 +13,7 @@ import CustomStepper from "./FormComponents/CustomStepper";
 import ThankYouCard from "./FormComponents/ThankYouCard";
 import "./PostJobForm.css";
 import { PaymentStateContext } from "../../StateManagement/PaymentState";
+import { PostJobStateContext } from "../../StateManagement/PostJobState";
 
 const getSteps = () => {
   return ["Description", "Preview", "Advertisement Plan", "Payment"];
@@ -37,9 +38,36 @@ const PostJobForm = () => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const { paymentSuccess } = useContext(PaymentStateContext);
+  const jobState = useContext(PostJobStateContext);
+
   const steps = getSteps();
 
+  const saveJobDraft = () => {
+    let jobDraft = {
+      logo: jobState.logo,
+      companyName: jobState.companyName,
+      companyLocation: jobState.companyLocation,
+      companyWebsite: jobState.companyWebsite,
+      companyAbout: jobState.companyAbout,
+      title: jobState.title,
+      category: jobState.category,
+      jobType: jobState.jobType,
+      about: jobState.about,
+      highlights: jobState.highlights,
+      responsibilities: jobState.responsibilities,
+      educationAndExperience: jobState.educationAndExperience,
+      skills: jobState.skills,
+      benefits: jobState.benefits,
+      compensation: jobState.compensation,
+      additionalInformation: jobState.additionalInformation
+    };
+    localStorage.setItem("jobDraft", JSON.stringify(jobDraft));
+  };
+
   const handleNext = () => {
+    if (activeStep === 0) {
+      saveJobDraft();
+    }
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 

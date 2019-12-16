@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from "react";
 import { useImmerReducer } from "use-immer";
+import { convertTimestamp } from "../Components/utils/convertTimestamp";
 
 export const postJobReducer = (draft, action) => {
   switch (action.type) {
@@ -15,9 +16,7 @@ export const postJobReducer = (draft, action) => {
       draft.companyAbout = action.payload.companyAbout;
       draft.title = action.payload.title;
       draft.category = action.payload.category;
-      draft.fullTimePosition = action.payload.fullTimePosition;
-      draft.partTimePosition = action.payload.partTimePosition;
-      draft.contractPosition = action.payload.contractPosition;
+      draft.jobType = action.payload.jobType;
       draft.about = action.payload.about;
       draft.highlights = action.payload.highlights;
       draft.responsibilities = action.payload.responsibilities;
@@ -28,6 +27,24 @@ export const postJobReducer = (draft, action) => {
       draft.additionalInformation = action.payload.additionalInformation;
       return;
     }
+    case "resetJobDescription": {
+      draft.logo = "";
+      draft.companyName = "";
+      draft.companyLocation = "";
+      draft.companyWebsite = "";
+      draft.companyAbout = "";
+      draft.title = "";
+      draft.category = "";
+      draft.jobType = "Full-Time";
+      draft.about = "";
+      draft.responsibilities = [""];
+      draft.educationAndExperience = [""];
+      draft.skills = [""];
+      draft.benefits = [""];
+      draft.compensation = [""];
+      draft.additionalInformation = "";
+      return;
+    }
     default:
       return;
   }
@@ -35,7 +52,7 @@ export const postJobReducer = (draft, action) => {
 
 const initialState = {
   id: "draftJobPosting",
-  date: "15 OCT",
+  date: convertTimestamp(Date.now()),
   advertisementPlan: "",
   logo: "",
   companyName: "",
@@ -44,9 +61,7 @@ const initialState = {
   companyAbout: "",
   title: "",
   category: "",
-  fullTimePosition: true,
-  partTimePosition: false,
-  contractPosition: false,
+  jobType: "Full-Time",
   about: "",
   highlights: [""],
   responsibilities: [""],

@@ -22,8 +22,14 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormLabel from "@material-ui/core/FormLabel";
+import StyledRadio from "../../Buttons/StyledRadio";
 import { useDropzone } from "react-dropzone";
-import { PostJobDispatchContext } from "../../../StateManagement/PostJobState";
+import {
+  PostJobDispatchContext,
+  PostJobStateContext
+} from "../../../StateManagement/PostJobState";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 import { categoryList } from "../../../MockUpData/categoryList";
@@ -34,31 +40,7 @@ const JobDescription = () => {
   //Use context
   const { uid } = useContext(UserStateContext);
   const dispatch = useContext(PostJobDispatchContext);
-
-  //Company Info State
-  const [logo, setLogo] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyLocation, setCompanyLocation] = useState("");
-  const [companyWebsite, setCompanyWebsite] = useState("");
-  const [companyAbout, setCompanyAbout] = useState("");
-
-  //Position Description State
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = React.useState("");
-  const [fullTimePosition, setFullTimePosition] = useState(false);
-  const [partTimePosition, setPartTimePosition] = useState(false);
-  const [contractPosition, setContractPosition] = useState(false);
-  const [about, setAbout] = useState("");
-  const [highlightsFields, setHighlightsFields] = useState([""]);
-  const [responsibilityFields, setResponsibilityFields] = useState([""]);
-  const [
-    educationAndExperienceFields,
-    setEducationAndExperienceFields
-  ] = useState([""]);
-  const [skillsFields, setSkillsFields] = useState([""]);
-  const [benefitsFields, setBenefitsFields] = useState([""]);
-  const [compensationFields, setCompensationFields] = useState([""]);
-  const [additionalInformation, setAdditionalInformation] = useState("");
+  const jobState = useContext(PostJobStateContext);
 
   //Functional State
   const [progress, setProgress] = useState(null);
@@ -88,49 +70,11 @@ const JobDescription = () => {
       )
   });
 
-  //Setting State if Draft Object exists
+  // Setting State if Draft Object exists
   useEffect(() => {
     const jobDraft = JSON.parse(localStorage.getItem("jobDraft"));
     if (jobDraft !== null) {
-      const {
-        logo,
-        companyName,
-        companyLocation,
-        companyWebsite,
-        companyAbout,
-        title,
-        category,
-        fullTimePosition,
-        partTimePosition,
-        contractPosition,
-        about,
-        highlights,
-        responsibilities,
-        educationAndExperience,
-        skills,
-        benefits,
-        compensation,
-        additionalInformation
-      } = jobDraft;
-      setLogo(logo);
-      setCompanyName(companyName);
-      setCompanyLocation(companyLocation);
-      setCompanyWebsite(companyWebsite);
-      setCompanyAbout(companyAbout);
-      setTitle(title);
-      setCategory(category);
-      setFullTimePosition(fullTimePosition);
-      setPartTimePosition(partTimePosition);
-      setContractPosition(contractPosition);
-      setAbout(about);
-      setHighlightsFields(highlights);
-      setResponsibilityFields(responsibilities);
-      setEducationAndExperienceFields(educationAndExperience);
-      setSkillsFields(skills);
-      setBenefitsFields(benefits);
-      setCompensationFields(compensation);
-      setAdditionalInformation(additionalInformation);
-
+      console.log(jobDraft);
       dispatch({
         type: "setJobDescription",
         payload: jobDraft
@@ -138,63 +82,23 @@ const JobDescription = () => {
     }
   }, []);
 
-  //Setting Global State And Local Storage Draft Object
-  useEffect(() => {
-    let jobDraft = {
-      logo: logo,
-      companyName: companyName,
-      companyLocation: companyLocation,
-      companyWebsite: companyWebsite,
-      companyAbout: companyAbout,
-      title: title,
-      category: category,
-      fullTimePosition: fullTimePosition,
-      partTimePosition: partTimePosition,
-      contractPosition: contractPosition,
-      about: about,
-      highlights: highlightsFields,
-      responsibilities: responsibilityFields,
-      educationAndExperience: educationAndExperienceFields,
-      skills: skillsFields,
-      benefits: benefitsFields,
-      compensation: compensationFields,
-      additionalInformation: additionalInformation
-    };
-    localStorage.setItem("jobDraft", JSON.stringify(jobDraft));
-    dispatch({
-      type: "setJobDescription",
-      payload: jobDraft
-    });
-  }, [
-    logo,
-    companyName,
-    companyLocation,
-    companyWebsite,
-    companyAbout,
-    title,
-    category,
-    fullTimePosition,
-    partTimePosition,
-    contractPosition,
-    about,
-    highlightsFields,
-    responsibilityFields,
-    educationAndExperienceFields,
-    skillsFields,
-    benefitsFields,
-    compensationFields,
-    additionalInformation
-  ]);
-
   //Image Upload
   useEffect(() => {
     if (acceptedFiles.length !== 0) {
-      setLogo(acceptedFiles[0].preview);
+      dispatch({
+        type: "field",
+        fieldName: "logo",
+        payload: acceptedFiles[0].preview
+      });
       uploadToStorage();
       // console.log(acceptedFiles[0].preview);
     }
     if (rejectedFiles.length !== 0) {
-      setLogo("");
+      dispatch({
+        type: "field",
+        fieldName: "logo",
+        payload: ""
+      });
     }
   }, [acceptedFiles, rejectedFiles]);
 
@@ -227,7 +131,11 @@ const JobDescription = () => {
           .getDownloadURL()
           .then(url => {
             // console.log(url);
-            setLogo(url);
+            dispatch({
+              type: "field",
+              fieldName: "logo",
+              payload: url
+            });
           })
           .catch(error => {});
       }
@@ -235,49 +143,46 @@ const JobDescription = () => {
   };
 
   const clearAllFields = () => {
-    setLogo("");
-    setCompanyName("");
-    setCompanyLocation("");
-    setCompanyWebsite("");
-    setCompanyAbout("");
-    setTitle("");
-    setCategory("");
-    setFullTimePosition(false);
-    setPartTimePosition(false);
-    setContractPosition(false);
-    setAbout("");
-    setHighlightsFields([""]);
-    setResponsibilityFields([""]);
-    setEducationAndExperienceFields([""]);
-    setSkillsFields([""]);
-    setBenefitsFields([""]);
-    setCompensationFields([""]);
-    setAdditionalInformation("");
+    dispatch({
+      type: "resetJobDescription"
+    });
   };
 
-  const addFieldFunc = (fields, setFunction) => {
-    setFunction([...fields, ""]);
+  const addFieldFunc = (fields, fieldName) => {
+    dispatch({
+      type: "field",
+      fieldName: fieldName,
+      payload: [...fields, ""]
+    });
     // console.log(fields);
   };
 
-  const removeFieldFunc = (fields, setFunction, i) => {
+  const removeFieldFunc = (fields, fieldName, i) => {
     if (fields.length > 0) {
       const arr = fields.filter((value, index) => index !== fields.length - 1);
-      setFunction([...arr]);
+      dispatch({
+        type: "field",
+        fieldName: fieldName,
+        payload: [...arr]
+      });
     } else {
       return;
     }
   };
 
-  const handleDynamicFieldChange = (e, index, fields, setFunction) => {
+  const handleDynamicFieldChange = (e, index, fields, fieldName) => {
     // e.preventDefault();
     let arr = [...fields];
     arr[index] = e.target.value;
-    setFunction([...arr]);
+    dispatch({
+      type: "field",
+      fieldName: fieldName,
+      payload: [...arr]
+    });
     // console.log(fields);
   };
 
-  const renderDynamicFieldName = (name, fields, setFunction) => (
+  const renderDynamicFieldName = (name, fields, fieldName) => (
     <Grid
       container
       direction="row"
@@ -294,7 +199,7 @@ const JobDescription = () => {
           <IconButton
             className={classes.addNRemoveButtons}
             size="small"
-            onClick={() => removeFieldFunc(fields, setFunction)}
+            onClick={() => removeFieldFunc(fields, fieldName)}
           >
             <Remove />
           </IconButton>
@@ -303,7 +208,7 @@ const JobDescription = () => {
         <IconButton
           className={classes.addNRemoveButtons}
           size="medium"
-          onClick={() => addFieldFunc(fields, setFunction)}
+          onClick={() => addFieldFunc(fields, fieldName)}
         >
           <Add className={classes.addFieldButton} />
         </IconButton>
@@ -311,7 +216,7 @@ const JobDescription = () => {
     </Grid>
   );
 
-  const renderDynamicFields = (fields, setFunction) =>
+  const renderDynamicFields = (fields, fieldName) =>
     fields.map((field, index) => (
       <Grid
         key={index}
@@ -328,9 +233,7 @@ const JobDescription = () => {
           fullWidth
           color="primary"
           value={fields[index]}
-          onChange={e =>
-            handleDynamicFieldChange(e, index, fields, setFunction)
-          }
+          onChange={e => handleDynamicFieldChange(e, index, fields, fieldName)}
         />
       </Grid>
     ));
@@ -419,9 +322,9 @@ const JobDescription = () => {
                     justify="center"
                     alignItems="center"
                   >
-                    {logo !== "" && (
+                    {jobState.logo !== "" && (
                       <img
-                        src={logo}
+                        src={jobState.logo}
                         alt="logo"
                         className={classes.bigAvatar}
                       />
@@ -449,8 +352,14 @@ const JobDescription = () => {
           fullWidth
           required
           color="primary"
-          value={companyName}
-          onChange={e => setCompanyName(e.target.value)}
+          value={jobState.companyName}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "companyName",
+              payload: e.target.value
+            })
+          }
         />
         <TextField
           id="companyLocation"
@@ -460,8 +369,14 @@ const JobDescription = () => {
           variant="outlined"
           fullWidth
           color="primary"
-          value={companyLocation}
-          onChange={e => setCompanyLocation(e.target.value)}
+          value={jobState.companyLocation}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "companyLocation",
+              payload: e.target.value
+            })
+          }
         />
         <TextField
           id="companyWebsite"
@@ -471,8 +386,14 @@ const JobDescription = () => {
           variant="outlined"
           fullWidth
           color="primary"
-          value={companyWebsite}
-          onChange={e => setCompanyWebsite(e.target.value)}
+          value={jobState.companyWebsite}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "companyWebsite",
+              payload: e.target.value
+            })
+          }
         />
         <TextField
           id="companyAbout"
@@ -483,8 +404,14 @@ const JobDescription = () => {
           multiline
           rows={4}
           fullWidth
-          value={companyAbout}
-          onChange={e => setCompanyAbout(e.target.value)}
+          value={jobState.companyAbout}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "companyAbout",
+              payload: e.target.value
+            })
+          }
         />
       </Grid>
     );
@@ -502,8 +429,14 @@ const JobDescription = () => {
           fullWidth
           required
           color="primary"
-          value={title}
-          onChange={e => setTitle(e.target.value)}
+          value={jobState.title}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "title",
+              payload: e.target.value
+            })
+          }
         />
 
         <FormControl variant="outlined" className={classes.formControl}>
@@ -513,8 +446,14 @@ const JobDescription = () => {
           <Select
             labelId="category"
             id="categoryPick"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
+            value={jobState.category}
+            onChange={e =>
+              dispatch({
+                type: "field",
+                fieldName: "category",
+                payload: e.target.value
+              })
+            }
             labelWidth={labelWidth}
           >
             <MenuItem value="All Other">
@@ -530,46 +469,43 @@ const JobDescription = () => {
           </Select>
         </FormControl>
 
-        <Grid container justify="flex-start" style={{ maxWidth: "80%" }}>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={fullTimePosition}
-                  onChange={() => setFullTimePosition(!fullTimePosition)}
-                  value="full-time"
-                  color="primary"
-                />
+        <Grid container justify="flex-start" style={{ maxWidth: "79%" }}>
+          <FormControl component="fieldset">
+            <RadioGroup
+              row
+              value={jobState.jobType}
+              aria-label="Full-Time"
+              name="customized-radios"
+              onChange={e =>
+                dispatch({
+                  type: "field",
+                  fieldName: "jobType",
+                  payload: e.target.value
+                })
               }
-              label="Full-Time"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={partTimePosition}
-                  onChange={() => setPartTimePosition(!partTimePosition)}
-                  value="part-time"
-                  color="primary"
-                />
-              }
-              label="Part-Time"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={contractPosition}
-                  onChange={() => setContractPosition(!contractPosition)}
-                  value="contract"
-                  color="primary"
-                />
-              }
-              label="Contract"
-            />
-          </FormGroup>
+            >
+              <FormControlLabel
+                value="Full-Time"
+                control={<StyledRadio />}
+                label="Full-Time"
+              />
+
+              <FormControlLabel
+                value="Part-Time"
+                control={<StyledRadio />}
+                label="Part-Time"
+              />
+              <FormControlLabel
+                value="Contract"
+                control={<StyledRadio />}
+                label="Contract"
+              />
+            </RadioGroup>
+          </FormControl>
         </Grid>
 
         <TextField
-          id="aboutPosition"
+          id="about"
           className={classes.textField}
           label="About"
           margin="normal"
@@ -577,8 +513,14 @@ const JobDescription = () => {
           multiline
           rows={4}
           fullWidth
-          value={about}
-          onChange={e => setAbout(e.target.value)}
+          value={jobState.about}
+          onChange={e =>
+            dispatch({
+              type: "field",
+              fieldName: "about",
+              payload: e.target.value
+            })
+          }
         />
       </Grid>
     );
@@ -594,8 +536,14 @@ const JobDescription = () => {
       multiline
       rows={4}
       fullWidth
-      value={additionalInformation}
-      onChange={e => setAdditionalInformation(e.target.value)}
+      value={jobState.additionalInformation}
+      onChange={e =>
+        dispatch({
+          type: "field",
+          fieldName: "additionalInformation",
+          payload: e.target.value
+        })
+      }
     />
   );
 
@@ -639,52 +587,52 @@ const JobDescription = () => {
               {/* Job Highlights */}
               {renderDynamicFieldName(
                 "Job Highlights",
-                highlightsFields,
-                setHighlightsFields
+                jobState.highlights,
+                "highlights"
               )}
-              {renderDynamicFields(highlightsFields, setHighlightsFields)}
+              {renderDynamicFields(jobState.highlights, "highlights")}
 
               {/* Job Responsibilities */}
               {renderDynamicFieldName(
                 "Responsibilities",
-                responsibilityFields,
-                setResponsibilityFields
+                jobState.responsibilities,
+                "responsibilities"
               )}
               {renderDynamicFields(
-                responsibilityFields,
-                setResponsibilityFields
+                jobState.responsibilities,
+                "responsibilities"
               )}
 
               {/* Education and Experience */}
               {renderDynamicFieldName(
                 "Education and Experience",
-                educationAndExperienceFields,
-                setEducationAndExperienceFields
+                jobState.educationAndExperience,
+                "educationAndExperience"
               )}
               {renderDynamicFields(
-                educationAndExperienceFields,
-                setEducationAndExperienceFields
+                jobState.educationAndExperience,
+                "educationAndExperience"
               )}
 
               {/* Skills */}
-              {renderDynamicFieldName("Skills", skillsFields, setSkillsFields)}
-              {renderDynamicFields(skillsFields, setSkillsFields)}
+              {renderDynamicFieldName("Skills", jobState.skills, "skills")}
+              {renderDynamicFields(jobState.skills, "skills")}
 
               {/* Benefits */}
               {renderDynamicFieldName(
                 "Benefits",
-                benefitsFields,
-                setBenefitsFields
+                jobState.benefits,
+                "benefits"
               )}
-              {renderDynamicFields(benefitsFields, setBenefitsFields)}
+              {renderDynamicFields(jobState.benefits, "benefits")}
 
               {/* Compensation */}
               {renderDynamicFieldName(
                 "Compensation",
-                compensationFields,
-                setCompensationFields
+                jobState.compensation,
+                "compensation"
               )}
-              {renderDynamicFields(compensationFields, setCompensationFields)}
+              {renderDynamicFields(jobState.compensation, "compensation")}
 
               {/* Additional Information */}
               {renderAdditionalInformation()}

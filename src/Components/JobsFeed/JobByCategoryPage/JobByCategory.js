@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
-import { convertTimestamp } from "../utils/convertTimestamp";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import JobCard from "../JobCard/JobCard";
 import { LinearProgress } from "@material-ui/core";
+import { renderJobsFeed } from "../utils/renderJobsFeed";
 
 const JobsFeed = ({ history, location }) => {
   const classes = useStyles();
@@ -56,48 +55,6 @@ const JobsFeed = ({ history, location }) => {
     });
   };
 
-  const renderJobsFeed = jobs => {
-    if (jobs.length !== 0) {
-      return jobs.map(
-        (
-          {
-            id,
-            title,
-            postedBy,
-            companyLocation,
-            companyName,
-            logo,
-            date,
-            advertisementPlan
-          },
-          index
-        ) => (
-          <JobCard
-            key={id}
-            id={id}
-            postedBy={postedBy}
-            title={title}
-            companyLocation={companyLocation}
-            companyName={companyName}
-            logo={logo}
-            advertisementPlan={advertisementPlan}
-            date={convertTimestamp(date)}
-            navigateToJobDetails={() => navigateToJobDetails(id)}
-          />
-        )
-      );
-    } else {
-      return (
-        <Grid container justify="center">
-          <Typography variant="body1" color="textSecondary">
-            No job postings in this category available. Please check again
-            later.
-          </Typography>
-        </Grid>
-      );
-    }
-  };
-
   if (loading) {
     return <LinearProgress />;
   } else {
@@ -111,7 +68,7 @@ const JobsFeed = ({ history, location }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {renderJobsFeed(jobsInCategory)}
+          {renderJobsFeed(jobsInCategory, navigateToJobDetails)}
         </Grid>
       </Grid>
     );
