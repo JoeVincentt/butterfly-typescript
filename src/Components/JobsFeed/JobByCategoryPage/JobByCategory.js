@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
@@ -7,12 +8,26 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { LinearProgress } from "@material-ui/core";
 import { renderJobsFeed } from "../utils/renderJobsFeed";
+import SeeMoreButton from "../../Buttons/SeeMoreButton";
 
 const JobsFeed = ({ history, location }) => {
   const classes = useStyles();
   const db = firebase.firestore();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
   const [loading, setLoading] = useState(true);
-  const [jobsInCategory, setJobs] = useState([]);
+  //Featured Jobs State
+  const [loadingMoreInCategoryJobs, setLoadingMoreInCategoryJobs] = useState(
+    false
+  );
+  const [lastVisibleInCategoryJob, setLastVisibleInCategoryJob] = useState(
+    null
+  );
+  const [
+    noMoreJobsInCategoryCategory,
+    setNoMoreJobsInCategoryCategory
+  ] = useState(false);
+  const [inCategoryJobs, setInCategoryJobs] = useState([]);
 
   useEffect(() => {
     // this.props.location.state
@@ -25,8 +40,11 @@ const JobsFeed = ({ history, location }) => {
     let jobs = [];
     db.collection("jobs")
       .where("category", "==", location.state.categoryID)
+      .limit(10)
       .get()
       .then(querySnapshot => {
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleInCategoryJob(lastVisible);
         querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
           // console.log(doc.id, " => ", doc.data());
@@ -34,13 +52,48 @@ const JobsFeed = ({ history, location }) => {
         });
       })
       .then(() => {
-        setJobs(jobs);
+        setInCategoryJobs(jobs);
         // console.log(jobs);
         setLoading(false);
       })
       .catch(error => {
         setLoading(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
         // console.log("Error getting documents: ", error);
+      });
+  };
+
+  const loadMoreInCategoryJobs = () => {
+    setLoadingMoreInCategoryJobs(true);
+    let jobs = [...inCategoryJobs];
+    db.collection("jobs")
+      .where("category", "==", location.state.categoryID)
+      .startAfter(lastVisibleInCategoryJob)
+      .limit(10)
+      .get()
+      .then(querySnapshot => {
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleInCategoryJob(lastVisible);
+        if (lastVisible === undefined) {
+          setNoMoreJobsInCategoryCategory(true);
+        }
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data());
+          jobs.push(doc.data());
+        });
+      })
+      .then(() => {
+        setInCategoryJobs(jobs);
+        setLoadingMoreInCategoryJobs(false);
+      })
+      .catch(error => {
+        setLoadingMoreInCategoryJobs(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
       });
   };
 
@@ -68,7 +121,12 @@ const JobsFeed = ({ history, location }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {renderJobsFeed(jobsInCategory, navigateToJobDetails)}
+          {renderJobsFeed(inCategoryJobs, navigateToJobDetails)}
+          <SeeMoreButton
+            handleLoad={() => loadMoreInCategoryJobs()}
+            loading={loadingMoreInCategoryJobs}
+            noMoreJobs={noMoreJobsInCategoryCategory}
+          />
         </Grid>
       </Grid>
     );

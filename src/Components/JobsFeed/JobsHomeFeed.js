@@ -5,15 +5,10 @@ import "firebase/firestore";
 import { withRouter } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  LinearProgress,
-  Button,
-  Box,
-  CircularProgress
-} from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import { renderJobsFeed } from "./utils/renderJobsFeed";
+import SeeMoreButton from "../Buttons/SeeMoreButton";
 
 const JobsFeed = ({ jobs, history }) => {
   const classes = useStyles();
@@ -22,9 +17,23 @@ const JobsFeed = ({ jobs, history }) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(true);
-  const [loadingMoreJobs, setLoadingMoreJobs] = useState(true);
-  const [recentJobs, setRecentJobs] = useState([]);
+
+  //Featured Jobs State
+  const [loadingMoreFeaturedJobs, setLoadingMoreFeaturedJobs] = useState(false);
+  const [lastVisibleFeaturedJob, setLastVisibleFeaturedJob] = useState(null);
+  const [
+    noMoreJobsInFeaturedCategory,
+    setNoMoreJobsInFeaturedCategory
+  ] = useState(false);
   const [featuredJobs, setFeaturedJobs] = useState([]);
+
+  //Recent Jobs State
+  const [loadingMoreRecentJobs, setLoadingMoreRecentJobs] = useState(false);
+  const [lastVisibleRecentJob, setLastVisibleRecentJob] = useState(null);
+  const [noMoreJobsInRecentCategory, setNoMoreJobsInRecentCategory] = useState(
+    false
+  );
+  const [recentJobs, setRecentJobs] = useState([]);
 
   useEffect(() => {
     getRecentJobs();
@@ -35,10 +44,12 @@ const JobsFeed = ({ jobs, history }) => {
     let jobs = [];
     db.collection("jobs")
       .where("advertisementPlan", "==", "High")
-      // .orderBy("date", "desc")
-      .limit(10)
+      .orderBy("date", "desc")
+      .limit(5)
       .get()
       .then(querySnapshot => {
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleFeaturedJob(lastVisible);
         querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
           // console.log(doc.id, " => ", doc.data());
@@ -50,22 +61,59 @@ const JobsFeed = ({ jobs, history }) => {
         setLoading(false);
       })
       .catch(error => {
+        // console.log(error);
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
           variant: "error"
         });
       });
   };
+
+  const loadMoreFeaturedJobs = () => {
+    setLoadingMoreFeaturedJobs(true);
+    let jobs = [...featuredJobs];
+    db.collection("jobs")
+      .where("advertisementPlan", "==", "High")
+      .orderBy("date", "desc")
+      .startAfter(lastVisibleFeaturedJob)
+      .limit(5)
+      .get()
+      .then(querySnapshot => {
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleFeaturedJob(lastVisible);
+        if (lastVisible === undefined) {
+          setNoMoreJobsInFeaturedCategory(true);
+        }
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data());
+          jobs.push(doc.data());
+        });
+      })
+      .then(() => {
+        setFeaturedJobs(jobs);
+        setLoadingMoreFeaturedJobs(false);
+      })
+      .catch(error => {
+        setLoadingMoreFeaturedJobs(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
+      });
+  };
+
   const getRecentJobs = () => {
     let sevenDaysFromNow = Date.now() - 604800000;
     let jobs = [];
     db.collection("jobs")
       .where("date", ">=", sevenDaysFromNow)
       .orderBy("date", "desc")
-      .limit(10)
+      .limit(5)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(function(doc) {
+          var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+          setLastVisibleRecentJob(lastVisible);
           // doc.data() is never undefined for query doc snapshots
           jobs.push(doc.data());
         });
@@ -73,10 +121,44 @@ const JobsFeed = ({ jobs, history }) => {
       .then(() => {
         setRecentJobs(jobs);
         // console.log(jobs);
-        setLoading(false);
+        setLoadingMoreRecentJobs(false);
       })
       .catch(error => {
-        setLoading(false);
+        setLoadingMoreRecentJobs(false);
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
+      });
+  };
+
+  const loadMoreRecentJobs = () => {
+    setLoadingMoreRecentJobs(true);
+    let sevenDaysFromNow = Date.now() - 604800000;
+    let jobs = [...recentJobs];
+    db.collection("jobs")
+      .where("date", ">=", sevenDaysFromNow)
+      .orderBy("date", "desc")
+      .startAfter(lastVisibleRecentJob)
+      .limit(5)
+      .get()
+      .then(querySnapshot => {
+        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+        setLastVisibleRecentJob(lastVisible);
+        if (lastVisible === undefined) {
+          setNoMoreJobsInRecentCategory(true);
+        }
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data());
+          jobs.push(doc.data());
+        });
+      })
+      .then(() => {
+        setRecentJobs(jobs);
+        setLoadingMoreRecentJobs(false);
+      })
+      .catch(error => {
+        setLoadingMoreRecentJobs(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
           variant: "error"
         });
@@ -90,30 +172,6 @@ const JobsFeed = ({ jobs, history }) => {
         id
       }
     });
-  };
-
-  const renderSeeMoreButton = (handleLoad, loading) => {
-    if (loading) {
-      return (
-        <Box textAlign="center">
-          <CircularProgress />
-        </Box>
-      );
-    } else {
-      return (
-        <Box textAlign="center">
-          <Button
-            color="primary"
-            className={classes.button}
-            size="large"
-            endIcon={<ExpandMoreOutlinedIcon />}
-            onClick={() => handleLoad()}
-          >
-            see more
-          </Button>
-        </Box>
-      );
-    }
   };
 
   if (loading) {
@@ -135,7 +193,11 @@ const JobsFeed = ({ jobs, history }) => {
         </Grid>
         <Grid item xs={12}>
           {renderJobsFeed(featuredJobs, navigateToJobDetails)}
-          {renderSeeMoreButton()}
+          <SeeMoreButton
+            handleLoad={() => loadMoreFeaturedJobs()}
+            loading={loadingMoreFeaturedJobs}
+            noMoreJobs={noMoreJobsInFeaturedCategory}
+          />
         </Grid>
         <Grid item xs={12} className={classes.categoryBox}>
           <Grid
@@ -151,6 +213,11 @@ const JobsFeed = ({ jobs, history }) => {
         </Grid>
         <Grid item xs={12}>
           {renderJobsFeed(recentJobs, navigateToJobDetails)}
+          <SeeMoreButton
+            handleLoad={() => loadMoreRecentJobs()}
+            loading={loadingMoreRecentJobs}
+            noMoreJobs={noMoreJobsInRecentCategory}
+          />
         </Grid>
       </Grid>
     );

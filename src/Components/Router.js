@@ -11,7 +11,7 @@ import ScrollToTheTop from "./ScrollToTheTop";
 
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
-import JobsFeed from "./JobsFeed/JobsFeed";
+import JobsFeed from "./JobsFeed/JobsHomeFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 
 import Subscribe from "./Pre-subscription/Subscribe";
