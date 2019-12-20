@@ -28,7 +28,8 @@ import {
 import GradientButton from "../../Buttons/GradientButton";
 
 import listOfCountries from "./FormComponents/ListOfCountries";
-import listOfCurrentCareerLevel from "./FormComponents/ListOfCurrentCareerLevel";
+import listOfYearsOfExperience from "./FormComponents/ListOfYearsOfExperience";
+import listOfTimezones from "./FormComponents/ListOfTimezones";
 import colors from "../../../constants/colors";
 
 const ApplicationForm = ({
@@ -140,7 +141,8 @@ const ApplicationForm = ({
         lastName: state.lastName,
         country: state.country,
         zipCode: state.zipCode,
-        currentCareerLevel: state.currentCareerLevel,
+        yearsOfExperience: state.yearsOfExperience,
+        timezone: state.timezone,
         resume: state.resume,
         status: "unchecked"
       })
@@ -237,7 +239,8 @@ const ApplicationForm = ({
           lastName: state.lastName,
           country: state.country,
           zipCode: state.zipCode,
-          currentCareerLevel: state.currentCareerLevel,
+          timezone: state.timezone,
+          yearsOfExperience: state.yearsOfExperience,
           resume: state.resume
         })
         .catch(error => {
@@ -386,28 +389,25 @@ const ApplicationForm = ({
                   />
                 </Grid>
 
-                {/* Current Career Level */}
-                <Grid item xs={12}>
+                {/* Timezone */}
+                <Grid item xs={12} sm={6}>
                   <FormControl
                     variant="standard"
                     className={classes.formControl}
                   >
-                    <InputLabel
-                      ref={inputLabel}
-                      id="currentCareerLevel-input-label"
-                    >
-                      Current Career Level
+                    <InputLabel ref={inputLabel} id="timezone-input-label">
+                      Timezone
                     </InputLabel>
                     <Select
-                      labelId="currentCareerLevel-select-label"
-                      id="currentCareerLevel"
+                      labelId="timezone-select-label"
+                      id="timezone"
                       labelWidth={labelWidth}
                       disabled={loading}
-                      value={state.currentCareerLevel}
+                      value={state.timezone}
                       onChange={e =>
                         dispatch({
                           type: "field",
-                          fieldName: "currentCareerLevel",
+                          fieldName: "timezone",
                           payload: e.target.value
                         })
                       }
@@ -415,9 +415,47 @@ const ApplicationForm = ({
                       <MenuItem value="">
                         <em>None</em>
                       </MenuItem>
-                      {listOfCurrentCareerLevel.map((level, index) => (
-                        <MenuItem key={index} value={level}>
-                          {level}
+                      {listOfTimezones.map((timezone, index) => (
+                        <MenuItem key={index} value={timezone.offset}>
+                          {timezone.offset} - {timezone.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* Years Of Experience */}
+                <Grid item xs={12} sm={6}>
+                  <FormControl
+                    variant="standard"
+                    className={classes.formControl}
+                  >
+                    <InputLabel
+                      ref={inputLabel}
+                      id="yearsOfExperience-input-label"
+                    >
+                      Years of Relevant Experience
+                    </InputLabel>
+                    <Select
+                      labelId="yearsOfExperience-select-label"
+                      id="yearsOfExperience"
+                      labelWidth={labelWidth}
+                      disabled={loading}
+                      value={state.yearsOfExperience}
+                      onChange={e =>
+                        dispatch({
+                          type: "field",
+                          fieldName: "yearsOfExperience",
+                          payload: e.target.value
+                        })
+                      }
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      {listOfYearsOfExperience.map((years, index) => (
+                        <MenuItem key={index} value={years.value}>
+                          {years.name}
                         </MenuItem>
                       ))}
                     </Select>

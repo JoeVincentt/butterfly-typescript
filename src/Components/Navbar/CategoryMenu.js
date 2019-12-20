@@ -8,7 +8,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import CategoryIcon from "@material-ui/icons/Category";
-import { categoryList } from "../../MockUpData/categoryList";
+import { categoryList } from "../../AdditionalResources/categoryList";
 import { makeStyles } from "@material-ui/core/styles";
 
 const CategoryMenu = ({ history }) => {

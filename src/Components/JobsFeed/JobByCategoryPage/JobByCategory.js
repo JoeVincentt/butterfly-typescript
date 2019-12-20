@@ -40,6 +40,7 @@ const JobsFeed = ({ history, location }) => {
     let jobs = [];
     db.collection("jobs")
       .where("category", "==", location.state.categoryID)
+      .where("status", "==", "active")
       .limit(10)
       .get()
       .then(querySnapshot => {
@@ -57,6 +58,7 @@ const JobsFeed = ({ history, location }) => {
         setLoading(false);
       })
       .catch(error => {
+        // console.log(error);
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
           variant: "error"
@@ -70,6 +72,7 @@ const JobsFeed = ({ history, location }) => {
     let jobs = [...inCategoryJobs];
     db.collection("jobs")
       .where("category", "==", location.state.categoryID)
+      .where("status", "==", "active")
       .startAfter(lastVisibleInCategoryJob)
       .limit(10)
       .get()
@@ -122,11 +125,13 @@ const JobsFeed = ({ history, location }) => {
         </Grid>
         <Grid item xs={12}>
           {renderJobsFeed(inCategoryJobs, navigateToJobDetails)}
-          <SeeMoreButton
-            handleLoad={() => loadMoreInCategoryJobs()}
-            loading={loadingMoreInCategoryJobs}
-            noMoreJobs={noMoreJobsInCategoryCategory}
-          />
+          {inCategoryJobs.length > 0 && (
+            <SeeMoreButton
+              handleLoad={() => loadMoreInCategoryJobs()}
+              loading={loadingMoreInCategoryJobs}
+              noMoreJobs={noMoreJobsInCategoryCategory}
+            />
+          )}
         </Grid>
       </Grid>
     );

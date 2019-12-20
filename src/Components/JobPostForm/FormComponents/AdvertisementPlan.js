@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -6,15 +6,16 @@ import { Typography, Divider } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 
 import GradientButton from "../../Buttons/GradientButton";
-
-import "./AdvertisementPlan.css";
 import colors from "../../../constants/colors";
-import { plans } from "../../../MockUpData/plans";
+import { plans } from "../../../AdditionalResources/plans";
 import {
   PaymentDispatchContext,
   PaymentStateContext
 } from "../../../StateManagement/PaymentState";
-import { PostJobDispatchContext } from "../../../StateManagement/PostJobState";
+import {
+  PostJobDispatchContext,
+  PostJobStateContext
+} from "../../../StateManagement/PostJobState";
 
 const AdvertisementPlan = () => {
   const classes = useStyles();
@@ -22,8 +23,13 @@ const AdvertisementPlan = () => {
   const { basePrice } = useContext(PaymentStateContext);
   const dispatch = useContext(PaymentDispatchContext);
   const dispatchPostJob = useContext(PostJobDispatchContext);
+  const jobState = useContext(PostJobStateContext);
 
   const [active, setActive] = React.useState(null);
+
+  useEffect(() => {
+    setActive(jobState.advertisementPlan);
+  }, []);
 
   const selectPlan = (name, standardPrice) => {
     setActive(name);
@@ -44,7 +50,6 @@ const AdvertisementPlan = () => {
     return plans.map((plan, index) => (
       <Grid key={index} item xs={12} sm={8} md={4}>
         <Paper
-          id={active === plan.name ? "advertisement_plan" : null}
           className={active !== plan.name ? classes.paper : classes.paperActive}
           elevation={0}
         >
@@ -68,12 +73,6 @@ const AdvertisementPlan = () => {
                 </Grid>
                 <Grid item>
                   <Typography variant="h3">{plan.price}</Typography>
-                </Grid>
-                <Divider />
-                <Grid item>
-                  <Typography color="textSecondary" variant="caption">
-                    / MONTH
-                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -127,9 +126,7 @@ const AdvertisementPlan = () => {
 
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1,
-    margin: theme.spacing(1),
-    padding: theme.spacing(1)
+    minHeight: "500px"
   },
   paper: {
     padding: theme.spacing(1),
@@ -141,8 +138,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     margin: theme.spacing(1),
     textAlign: "center",
-    boxShadow: "0 0 20px 0px rgba(107, 19, 107, 0.4)",
-    transform: "scale(1.02)"
+    backgroundColor: "#faeef4"
   },
   textPlanName: {
     color: colors.pinkLight

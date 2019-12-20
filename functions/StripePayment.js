@@ -1,5 +1,6 @@
 exports.stripePayment = function(request, response, stripe) {
   //   console.log(request.body);
+  //add additional check for job posting
   stripe.charges
     .create({
       amount: request.body.amount * 100,
@@ -15,11 +16,11 @@ exports.stripePayment = function(request, response, stripe) {
       }
     })
     .then(charge => {
-      console.log(charge);
+      console.log("Stripe Payment Charge", charge);
       return response.send({ data: charge, success: true });
     })
     .catch(error => {
-      console.log(error);
+      console.log("Stripe Payment Error:", error);
       return response.send({ data: error, success: false });
     });
 };

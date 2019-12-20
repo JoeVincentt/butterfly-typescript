@@ -8,13 +8,13 @@ import {
   Paper,
   Divider,
   Button,
-  LinearProgress
+  LinearProgress,
+  Box
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 const JobListingOverview = ({ history }) => {
@@ -187,6 +187,13 @@ const JobListingOverview = ({ history }) => {
             go to Application
           </Button>
         </Grid>
+        {jobs.length <= 0 && (
+          <Box textAlign="center">
+            <Typography variant="body1" color="textSecondary">
+              You did not post any jobs yet.
+            </Typography>
+          </Box>
+        )}
         <Grid container justify="flex-start" alignContent="center" spacing={3}>
           {jobs.map((job, index) => (
             <Grid key={job.id} item xs={12} md={3} className={classes.paperBox}>

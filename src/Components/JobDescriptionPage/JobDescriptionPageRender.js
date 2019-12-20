@@ -26,6 +26,7 @@ const JobDescriptionPageRender = props => {
     // console.log(id);
     db.collection("jobs")
       .where("id", "==", id)
+      .where("status", "==", "active")
       .get()
       .then(querySnapshot => {
         if (querySnapshot.size > 0) {
@@ -55,7 +56,7 @@ const JobDescriptionPageRender = props => {
         }
       })
       .catch(error => {
-        // console.log("Error getting document:", error);
+        console.log("Error getting document:", error);
       });
   };
 

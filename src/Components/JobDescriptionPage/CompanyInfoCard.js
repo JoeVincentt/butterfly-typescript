@@ -62,6 +62,11 @@ const CompanyInfoCard = ({
           </Grid>
         </Grid>
       </Grid>
+      <Grid item xs={11}>
+        <Typography variant="body1" color="textSecondary">
+          {companyAbout}
+        </Typography>
+      </Grid>
       {companyWebsite !== null && companyWebsite !== "" && (
         <Grid item>
           <Grid container justify="center">

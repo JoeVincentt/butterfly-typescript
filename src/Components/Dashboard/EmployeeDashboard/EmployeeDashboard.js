@@ -60,11 +60,11 @@ const headCells = [
     id: "appliedFor",
     numeric: false,
     disablePadding: false,
-    label: "Positions"
+    label: "Position"
   },
   { id: "company", numeric: false, disablePadding: false, label: "Company" },
   {
-    id: "dateApplied",
+    id: "date",
     numeric: true,
     disablePadding: false,
     label: "Date"
@@ -213,7 +213,7 @@ const EnhancedTable = props => {
   const state = useContext(UserStateContext);
 
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("dateApplied");
+  const [orderBy, setOrderBy] = React.useState("date");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);

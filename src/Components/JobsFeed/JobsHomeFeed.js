@@ -43,7 +43,8 @@ const JobsFeed = ({ jobs, history }) => {
   const getFeaturedJobs = () => {
     let jobs = [];
     db.collection("jobs")
-      .where("advertisementPlan", "==", "High")
+      .where("advertisementPlan", "==", "Marathon")
+      .where("status", "==", "active")
       .orderBy("date", "desc")
       .limit(5)
       .get()
@@ -61,7 +62,7 @@ const JobsFeed = ({ jobs, history }) => {
         setLoading(false);
       })
       .catch(error => {
-        // console.log(error);
+        console.log(error);
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
           variant: "error"
@@ -73,7 +74,8 @@ const JobsFeed = ({ jobs, history }) => {
     setLoadingMoreFeaturedJobs(true);
     let jobs = [...featuredJobs];
     db.collection("jobs")
-      .where("advertisementPlan", "==", "High")
+      .where("advertisementPlan", "==", "Marathon")
+      .where("status", "==", "active")
       .orderBy("date", "desc")
       .startAfter(lastVisibleFeaturedJob)
       .limit(5)
@@ -107,6 +109,7 @@ const JobsFeed = ({ jobs, history }) => {
     let jobs = [];
     db.collection("jobs")
       .where("date", ">=", sevenDaysFromNow)
+      .where("status", "==", "active")
       .orderBy("date", "desc")
       .limit(5)
       .get()
@@ -124,6 +127,7 @@ const JobsFeed = ({ jobs, history }) => {
         setLoadingMoreRecentJobs(false);
       })
       .catch(error => {
+        // console.log(error);
         setLoadingMoreRecentJobs(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
           variant: "error"
@@ -137,6 +141,7 @@ const JobsFeed = ({ jobs, history }) => {
     let jobs = [...recentJobs];
     db.collection("jobs")
       .where("date", ">=", sevenDaysFromNow)
+      .where("status", "==", "active")
       .orderBy("date", "desc")
       .startAfter(lastVisibleRecentJob)
       .limit(5)
@@ -193,11 +198,13 @@ const JobsFeed = ({ jobs, history }) => {
         </Grid>
         <Grid item xs={12}>
           {renderJobsFeed(featuredJobs, navigateToJobDetails)}
-          <SeeMoreButton
-            handleLoad={() => loadMoreFeaturedJobs()}
-            loading={loadingMoreFeaturedJobs}
-            noMoreJobs={noMoreJobsInFeaturedCategory}
-          />
+          {featuredJobs.length > 0 && (
+            <SeeMoreButton
+              handleLoad={() => loadMoreFeaturedJobs()}
+              loading={loadingMoreFeaturedJobs}
+              noMoreJobs={noMoreJobsInFeaturedCategory}
+            />
+          )}
         </Grid>
         <Grid item xs={12} className={classes.categoryBox}>
           <Grid
@@ -213,11 +220,13 @@ const JobsFeed = ({ jobs, history }) => {
         </Grid>
         <Grid item xs={12}>
           {renderJobsFeed(recentJobs, navigateToJobDetails)}
-          <SeeMoreButton
-            handleLoad={() => loadMoreRecentJobs()}
-            loading={loadingMoreRecentJobs}
-            noMoreJobs={noMoreJobsInRecentCategory}
-          />
+          {recentJobs.length > 0 && (
+            <SeeMoreButton
+              handleLoad={() => loadMoreRecentJobs()}
+              loading={loadingMoreRecentJobs}
+              noMoreJobs={noMoreJobsInRecentCategory}
+            />
+          )}
         </Grid>
       </Grid>
     );
@@ -239,7 +248,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2)
   },
   titleBox: {
-    marginTop: theme.spacing(14)
+    marginTop: theme.spacing(10)
   }
 }));
 

@@ -35,31 +35,14 @@ const JobDescriptionPage = ({ job }) => {
   }, []);
 
   const renderDate = date => (
-    <Grid container direction="row" justify="space-between" alignItems="center">
+    <Grid container direction="row" justify="flex-end" alignItems="center">
       <Grid item>
-        <Grid container direction="row" spacing={1}>
-          <Typography variant="h6" color="primary">
-            {job.fullTimePosition && "Full-Time"}
-          </Typography>
-          <Typography variant="h6" color="primary">
-            {job.partTimePosition && "Part-Time"}
-          </Typography>
-          <Typography variant="h6" color="primary">
-            {job.contractPosition && "Contract"}
-          </Typography>
-        </Grid>
+        <AccessTimeIcon className={classes.icon} />
       </Grid>
       <Grid item>
-        <Grid container direction="row" justify="flex-end" alignItems="center">
-          <Grid item>
-            <AccessTimeIcon className={classes.icon} />
-          </Grid>
-          <Grid item>
-            <Typography variant="subtitle2" className={classes.spacing}>
-              {convertTimestamp(date)}
-            </Typography>
-          </Grid>
-        </Grid>
+        <Typography variant="subtitle2" className={classes.spacing}>
+          {convertTimestamp(date)}
+        </Typography>
       </Grid>
     </Grid>
   );
@@ -71,35 +54,6 @@ const JobDescriptionPage = ({ job }) => {
           <Typography variant="h5" className={classes.spacing}>
             {title}
           </Typography>
-        </Grid>
-      );
-    }
-  };
-
-  const renderJobHighlights = highlights => {
-    if (highlights.length > 0) {
-      return (
-        <Grid
-          container
-          spacing={2}
-          item
-          xs={12}
-          direction="row"
-          style={{ marginLeft: 2 }}
-        >
-          {highlights.map((highlight, index) => (
-            <Fab
-              key={index}
-              disableRipple
-              variant="extended"
-              size="medium"
-              color="primary"
-              aria-label="highlight"
-              className={classes.highlightPaper}
-            >
-              {highlight.toUpperCase()}
-            </Fab>
-          ))}
         </Grid>
       );
     }
@@ -203,15 +157,20 @@ const JobDescriptionPage = ({ job }) => {
               {renderDate(job.date)}
               {renderJobTitle(job.title)}
               {renderJobAbout(job.about)}
-              {renderJobHighlights(job.highlights)}
               {renderListProperty(job.responsibilities, "Responsibilities")}
               {renderListProperty(
                 job.educationAndExperience,
                 "Education and Experience"
               )}
               {renderListProperty(job.skills, "Skills")}
-              {renderListProperty(job.benefits, "Benefits")}
-              {renderListProperty(job.compensation, "Compensation")}
+              {renderListProperty(
+                job.compensationAndBenefits,
+                "Compensation And Benefits"
+              )}
+              {renderListProperty(
+                job.hiringProcessSteps,
+                "Hiring Process Steps"
+              )}
               {renderAdditionalInformation(job.additionalInformation)}
 
               {renderApplyButton()}
@@ -245,22 +204,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(4),
     margin: theme.spacing(1),
     color: theme.palette.text.secondary
-  },
-  highlightPaper: {
-    padding: theme.spacing(10),
-    margin: theme.spacing(2),
-    marginLeft: theme.spacing(0),
-    textAlign: "center",
-    color: colors.purple,
-    boxShadow: "none",
-    backgroundColor: "rgba(107, 19, 107, 0.1)",
-    "&:hover": {
-      cursor: "auto",
-      backgroundColor: "rgba(107, 19, 107, 0.1)"
-    },
-    "&:active": {
-      boxShadow: "0 0 10px 0px rgba(107, 19, 107, 0.1)"
-    }
   },
   additionalInformationBox: {
     padding: theme.spacing(2),

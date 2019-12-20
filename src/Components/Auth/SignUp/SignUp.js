@@ -192,7 +192,8 @@ const SignUp = props => {
             email: email,
             country: "",
             zipCode: "",
-            currentCareerLevel: "",
+            timezone: "",
+            yearsOfExperience: "",
             resume: ""
           }
         });
@@ -244,7 +245,8 @@ const SignUp = props => {
         email: email,
         country: "",
         zipCode: "",
-        currentCareerLevel: "",
+        timezone: "",
+        yearsOfExperience: "",
         resume: ""
       })
       .catch(error => {

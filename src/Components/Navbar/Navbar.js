@@ -1,6 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
+import "firebase/firestore";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -21,25 +22,67 @@ import {
   UserDispatchContext
 } from "../../StateManagement/UserState";
 
-import logo from "../../images/logo_horizontal.png";
 import colors from "../../constants/colors";
 import MenuDrawer from "./MenuDrawer";
 
 const Navbar = props => {
   const classes = useStyles();
+  const db = firebase.firestore();
 
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
-
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
   const { isLoggedIn } = state;
-
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const navigateToPostJobScreen = () => props.history.push("/post-a-job");
 
   const navigateToLoginScreen = () => props.history.push("/sign-in");
+
+  useEffect(() => {
+    checkIfSignedIn();
+  }, []);
+
+  const checkIfSignedIn = () => {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        if (state.uid === "") {
+          // User is signed in.
+          const { uid } = user;
+          db.collection("users")
+            .doc(uid)
+            .get()
+            .then(doc => {
+              if (doc.exists) {
+                //set state
+                //get profile and update global state
+                let data = doc.data();
+                dispatch({
+                  type: "login",
+                  payload: {
+                    uid: uid,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    email: data.email,
+                    country: data.country,
+                    zipCode: data.zipCode,
+                    timezone: data.timezone,
+                    yearsOfExperience: data.yearsOfExperience,
+                    resume: data.resume
+                  }
+                });
+              }
+              props.history.push("/");
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        }
+      } else {
+        // No user is signed in.
+      }
+    });
+  };
 
   const signOut = () => {
     firebase

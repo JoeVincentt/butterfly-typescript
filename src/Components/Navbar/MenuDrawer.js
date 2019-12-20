@@ -13,8 +13,8 @@ import SpeedIcon from "@material-ui/icons/Speed";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Divider, Collapse } from "@material-ui/core";
 import { ExpandLess, ExpandMore } from "@material-ui/icons";
-import logo from "../../images/logoFull.webp";
-import { categoryList } from "../../MockUpData/categoryList";
+import logo from "../../images/logoFull.png";
+import { categoryList } from "../../AdditionalResources/categoryList";
 
 const MenuDrawer = ({
   setDrawerOpen,

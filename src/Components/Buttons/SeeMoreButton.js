@@ -30,6 +30,10 @@ const SeeMoreButton = ({ handleLoad, loading, noMoreJobs }) => {
   }
 };
 
-const useStyles = makeStyles(theme => ({}));
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(2)
+  }
+}));
 
 export default SeeMoreButton;

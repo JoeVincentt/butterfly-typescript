@@ -17,7 +17,6 @@ import { UserStateContext } from "../../StateManagement/UserState";
 import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
 import colors from "../../constants/colors";
-// import "./Style/Card.css";
 
 const JobCard = ({
   id,
@@ -173,7 +172,9 @@ const JobCard = ({
         <Paper
           id="job-card"
           className={
-            advertisementPlan === "High" ? classes.paperHighAd : classes.paper
+            advertisementPlan === "Marathon"
+              ? classes.paperHighAd
+              : classes.paper
           }
           elevation={0}
         >

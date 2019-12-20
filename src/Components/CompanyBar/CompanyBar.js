@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import backgroundImage from "../../images/companybar.webp";
-import logo from "../../images/logoFull.webp";
+import backgroundImage from "../../images/companybar.jpg";
+import logo from "../../images/logoFull.png";
 import { Grid } from "@material-ui/core";
 
 const CompanyBar = () => {
@@ -32,6 +32,10 @@ const useStyles = makeStyles(theme => ({
     backgroundPosition: "center",
     "@media (max-width: 750px)": {
       height: "auto",
+      backgroundPosition: "right"
+    },
+    "@media (min-width: 1800px)": {
+      height: "500px",
       backgroundPosition: "right"
     }
   },

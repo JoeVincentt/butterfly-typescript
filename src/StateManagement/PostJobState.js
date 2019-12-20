@@ -18,12 +18,11 @@ export const postJobReducer = (draft, action) => {
       draft.category = action.payload.category;
       draft.jobType = action.payload.jobType;
       draft.about = action.payload.about;
-      draft.highlights = action.payload.highlights;
+      draft.hiringProcessSteps = action.payload.hiringProcessSteps;
       draft.responsibilities = action.payload.responsibilities;
       draft.educationAndExperience = action.payload.educationAndExperience;
       draft.skills = action.payload.skills;
-      draft.benefits = action.payload.benefits;
-      draft.compensation = action.payload.compensation;
+      draft.compensationAndBenefits = action.payload.compensationAndBenefits;
       draft.additionalInformation = action.payload.additionalInformation;
       return;
     }
@@ -40,8 +39,7 @@ export const postJobReducer = (draft, action) => {
       draft.responsibilities = [""];
       draft.educationAndExperience = [""];
       draft.skills = [""];
-      draft.benefits = [""];
-      draft.compensation = [""];
+      draft.compensationAndBenefits = [""];
       draft.additionalInformation = "";
       return;
     }
@@ -53,7 +51,7 @@ export const postJobReducer = (draft, action) => {
 const initialState = {
   id: "draftJobPosting",
   date: convertTimestamp(Date.now()),
-  advertisementPlan: "",
+  advertisementPlan: "Marathon",
   logo: "",
   companyName: "",
   companyLocation: "",
@@ -63,12 +61,11 @@ const initialState = {
   category: "",
   jobType: "Full-Time",
   about: "",
-  highlights: [""],
+  hiringProcessSteps: [""],
   responsibilities: [""],
   educationAndExperience: [""],
   skills: [""],
-  benefits: [""],
-  compensation: [""],
+  compensationAndBenefits: [""],
   additionalInformation: ""
 };
 

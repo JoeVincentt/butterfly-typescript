@@ -84,10 +84,16 @@ const headCells = [
     label: "Zip Code"
   },
   {
-    id: "currentCareerLevel",
+    id: "timezone",
     numeric: false,
     disablePadding: false,
-    label: "Career Level"
+    label: "Timezone"
+  },
+  {
+    id: "yearsOfExperience",
+    numeric: true,
+    disablePadding: false,
+    label: "Years of Experience"
   },
   { id: "email", numeric: false, disablePadding: false, label: "Email" },
   { id: "date", numeric: true, disablePadding: false, label: "Date" },
@@ -281,7 +287,8 @@ const EnhancedTable = props => {
               data.companyName,
               data.country,
               data.zipCode,
-              data.currentCareerLevel,
+              data.timezone,
+              data.yearsOfExperience,
               data.email,
               data.date,
               data.status,
@@ -308,7 +315,8 @@ const EnhancedTable = props => {
     company,
     country,
     zipCode,
-    currentCareerLevel,
+    timezone,
+    yearsOfExperience,
     email,
     date,
     status,
@@ -322,7 +330,8 @@ const EnhancedTable = props => {
       company,
       country,
       zipCode,
-      currentCareerLevel,
+      timezone,
+      yearsOfExperience,
       email,
       date,
       status,
@@ -538,8 +547,9 @@ const EnhancedTable = props => {
                         <TableCell align="left">{row.company}</TableCell>
                         <TableCell align="left">{row.country}</TableCell>
                         <TableCell align="left">{row.zipCode}</TableCell>
+                        <TableCell align="left">{row.timezone}</TableCell>
                         <TableCell align="left">
-                          {row.currentCareerLevel}
+                          {row.yearsOfExperience}
                         </TableCell>
                         <TableCell align="left">{row.email}</TableCell>
                         <TableCell align="left">

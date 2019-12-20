@@ -32,7 +32,7 @@ import {
 } from "../../../StateManagement/PostJobState";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
-import { categoryList } from "../../../MockUpData/categoryList";
+import { categoryList } from "../../../AdditionalResources/categoryList";
 import colors from "../../../constants/colors";
 
 const JobDescription = () => {
@@ -584,14 +584,6 @@ const JobDescription = () => {
               alignContent="center"
               className={classes.containerForDynamicFields}
             >
-              {/* Job Highlights */}
-              {renderDynamicFieldName(
-                "Job Highlights",
-                jobState.highlights,
-                "highlights"
-              )}
-              {renderDynamicFields(jobState.highlights, "highlights")}
-
               {/* Job Responsibilities */}
               {renderDynamicFieldName(
                 "Responsibilities",
@@ -618,21 +610,27 @@ const JobDescription = () => {
               {renderDynamicFieldName("Skills", jobState.skills, "skills")}
               {renderDynamicFields(jobState.skills, "skills")}
 
-              {/* Benefits */}
+              {/* Compensation && Benefits*/}
               {renderDynamicFieldName(
-                "Benefits",
-                jobState.benefits,
-                "benefits"
+                "Compensation and Benefits",
+                jobState.compensationAndBenefits,
+                "compensationAndBenefits"
               )}
-              {renderDynamicFields(jobState.benefits, "benefits")}
+              {renderDynamicFields(
+                jobState.compensationAndBenefits,
+                "compensationAndBenefits"
+              )}
 
-              {/* Compensation */}
+              {/* Job Hiring Process Steps  */}
               {renderDynamicFieldName(
-                "Compensation",
-                jobState.compensation,
-                "compensation"
+                "Hiring Process Steps",
+                jobState.hiringProcessSteps,
+                "hiringProcessSteps"
               )}
-              {renderDynamicFields(jobState.compensation, "compensation")}
+              {renderDynamicFields(
+                jobState.hiringProcessSteps,
+                "hiringProcessSteps"
+              )}
 
               {/* Additional Information */}
               {renderAdditionalInformation()}

@@ -25,8 +25,8 @@ const initialState = {
   lastName: "",
   email: "",
   companyName: "",
-  price: 199,
-  basePrice: 199,
+  price: 119,
+  basePrice: 0,
   paymentSuccess: false
 };
 

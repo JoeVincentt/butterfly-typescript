@@ -43,12 +43,11 @@ const SignIn = props => {
 
   useEffect(() => {
     setZoomIn(true);
-    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
-      // setIsSignedIn(!!user);
-    });
-
+    // const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+    //   // setIsSignedIn(!!user);
+    // });
     return () => {
-      unregisterAuthObserver();
+      // unregisterAuthObserver();
       setZoomIn(false);
       setLoading(false);
     };
@@ -81,7 +80,8 @@ const SignIn = props => {
                   email: data.email,
                   country: data.country,
                   zipCode: data.zipCode,
-                  currentCareerLevel: data.currentCareerLevel,
+                  timezone: data.timezone,
+                  yearsOfExperience: data.yearsOfExperience,
                   resume: data.resume
                 }
               });
@@ -137,7 +137,8 @@ const SignIn = props => {
               email: data.email,
               country: data.country,
               zipCode: data.zipCode,
-              currentCareerLevel: data.currentCareerLevel,
+              timezone: data.timezone,
+              yearsOfExperience: data.yearsOfExperience,
               resume: data.resume
             }
           });
@@ -177,7 +178,8 @@ const SignIn = props => {
               email: email,
               country: "",
               zipCode: "",
-              currentCareerLevel: "",
+              timezone: "",
+              yearsOfExperience: "",
               resume: ""
             })
             .then(() => {
@@ -198,7 +200,8 @@ const SignIn = props => {
                         email: data.email,
                         country: data.country,
                         zipCode: data.zipCode,
-                        currentCareerLevel: data.currentCareerLevel,
+                        timezone: data.timezone,
+                        yearsOfExperience: data.yearsOfExperience,
                         resume: data.resume
                       }
                     });

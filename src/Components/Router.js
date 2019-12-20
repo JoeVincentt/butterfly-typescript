@@ -1,5 +1,6 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,15 +9,13 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Fab from "@material-ui/core/Fab";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ScrollToTheTop from "./ScrollToTheTop";
-
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
-import JobsFeed from "./JobsFeed/JobsHomeFeed";
+import JobsHomeFeed from "./JobsFeed/JobsHomeFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 
 import Subscribe from "./Pre-subscription/Subscribe";
 
-import { jobs } from "../MockUpData/jobs";
 import colors from "../constants/colors";
 
 const JobDescriptionPageRender = React.lazy(() =>
@@ -40,18 +39,18 @@ const JobListingsOverview = React.lazy(() =>
 const JobByCategory = React.lazy(() =>
   import("./JobsFeed/JobByCategoryPage/JobByCategory")
 );
-const NoMatch = React.lazy(() => import("./404 Page/NoMatch"));
+const About = React.lazy(() => import("./Footer/FooterComponents/About"));
+const ContactUs = React.lazy(() =>
+  import("./Footer/FooterComponents/ContactUs")
+);
+// const PrivacyPolicy = React.lazy(() =>
+//   import("./Footer/FooterComponents/PrivacyPolicy")
+// );
+// const TermsAndConditions = React.lazy(() =>
+//   import("./Footer/FooterComponents/TermsAndConditions")
+// );
 
-// import JobDescriptionPageRender from "./JobDescriptionPage/JobDescriptionPageRender";
-// import SignIn from "./Auth/SignIn/SignIn";
-// import SignUp from "./Auth/SignUp/SignUp";
-// import PostJobForm from "./JobPostForm/PostJobForm";
-// import DashboardOverview from "./Dashboard/DashboardOverview";
-// import EmployeeDashboard from "./Dashboard/EmployeeDashboard/EmployeeDashboard";
-// import ApplicantsList from "./Dashboard/EmployerDashboard/ApplicantsList";
-// import JobListingsOverview from "./Dashboard/EmployerDashboard/JobListingsOverview";
-// import JobByCategory from "./JobsFeed/JobByCategoryPage/JobByCategory";
-// import NoMatch from "./404 Page/NoMatch";
+const NoMatch = React.lazy(() => import("./404 Page/NoMatch"));
 
 const Content = props => {
   const classes = useStyles();
@@ -76,17 +75,27 @@ const Content = props => {
             <Subscribe />
           </Route> */}
 
-            <Route exact path="/">
-              <JobsFeed jobs={jobs} />
-            </Route>
-
-            <Route exact path="/job-description/:id">
-              <JobDescriptionPageRender />
-            </Route>
-
-            <Route exact path="/job-by-category/:categoryID">
-              <JobByCategory />
-            </Route>
+            <Route exact path="/" component={JobsHomeFeed} />
+            <Route exact path="/about" component={About} />
+            <Route exact path="/contact-us" component={ContactUs} />
+            {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />
+            <Route
+              exact
+              path="/terms-and-conditions"
+              component={TermsAndConditions}
+            /> */}
+            <Route exact path="/sign-in" component={SignIn} />
+            <Route exact path="/sign-up" component={SignUp} />
+            <Route
+              exact
+              path="/job-description/:id"
+              component={JobDescriptionPageRender}
+            />
+            <Route
+              exact
+              path="/job-by-category/:categoryID"
+              component={JobByCategory}
+            />
 
             <ProtectedRoute exact path="/post-a-job" component={PostJobForm} />
             <ProtectedRoute
@@ -109,15 +118,6 @@ const Content = props => {
               path="/dashboard-employer/job-listings"
               component={JobListingsOverview}
             />
-
-            <Route exact path="/sign-in">
-              <SignIn />
-            </Route>
-
-            <Route exact path="/sign-up">
-              <SignUp />
-            </Route>
-
             <Route path="*" component={NoMatch} />
           </Switch>
 

@@ -178,6 +178,7 @@ const _CardForm = props => {
         id: jobID,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         date: Date.now(),
+        status: "active",
         advertisementPlan: postJobState.advertisementPlan,
         logo: postJobState.logo,
         companyName: postJobState.companyName,
@@ -188,12 +189,11 @@ const _CardForm = props => {
         category: postJobState.category,
         jobType: postJobState.jobType,
         about: postJobState.about,
-        highlights: postJobState.highlights,
+        hiringProcessSteps: postJobState.hiringProcessSteps,
         responsibilities: postJobState.responsibilities,
         educationAndExperience: postJobState.educationAndExperience,
         skills: postJobState.skills,
-        benefits: postJobState.benefits,
-        compensation: postJobState.compensation,
+        compensationAndBenefits: postJobState.compensationAndBenefits,
         additionalInformation: postJobState.additionalInformation
       })
       .then(() => {
@@ -232,6 +232,7 @@ const _CardForm = props => {
       .doc(jobID)
       .set({
         id: jobID,
+        status: "active",
         logo: postJobState.logo,
         title: postJobState.title,
         views: 0,

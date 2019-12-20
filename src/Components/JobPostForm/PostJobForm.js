@@ -36,7 +36,7 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(2);
   const { paymentSuccess } = useContext(PaymentStateContext);
   const jobState = useContext(PostJobStateContext);
 
@@ -53,12 +53,11 @@ const PostJobForm = () => {
       category: jobState.category,
       jobType: jobState.jobType,
       about: jobState.about,
-      highlights: jobState.highlights,
+      hiringProcessSteps: jobState.hiringProcessSteps,
       responsibilities: jobState.responsibilities,
       educationAndExperience: jobState.educationAndExperience,
       skills: jobState.skills,
-      benefits: jobState.benefits,
-      compensation: jobState.compensation,
+      compensationAndBenefits: jobState.compensationAndBenefits,
       additionalInformation: jobState.additionalInformation
     };
     localStorage.setItem("jobDraft", JSON.stringify(jobDraft));
@@ -87,17 +86,19 @@ const PostJobForm = () => {
       alignItems="center"
       className={classes.buttonContainer}
     >
-      <Fab
-        disabled={activeStep === 0}
-        onClick={handleBack}
-        variant="extended"
-        size="medium"
-        aria-label="add"
-        className={classes.backButton}
-      >
-        <ArrowBack className={classes.extendedIconRightMargin} />
-        Back
-      </Fab>
+      {paymentSuccess ? null : (
+        <Fab
+          disabled={activeStep === 0}
+          onClick={handleBack}
+          variant="extended"
+          size="medium"
+          aria-label="add"
+          className={classes.backButton}
+        >
+          <ArrowBack className={classes.extendedIconRightMargin} />
+          Back
+        </Fab>
+      )}
       {// !paymentSuccess &&
       activeStep === steps.length - 1 ? null : (
         <Fab

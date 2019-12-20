@@ -17,7 +17,8 @@ export const loginReducer = (draft, action) => {
       draft.email = action.payload.email;
       draft.country = action.payload.country;
       draft.zipCode = action.payload.zipCode;
-      draft.currentCareerLevel = action.payload.currentCareerLevel;
+      draft.timezone = action.payload.timezone;
+      draft.yearsOfExperience = action.payload.yearsOfExperience;
       draft.resume = action.payload.resume;
       return;
     }
@@ -30,7 +31,8 @@ export const loginReducer = (draft, action) => {
       draft.email = "";
       draft.country = "";
       draft.zipCode = "";
-      draft.currentCareerLevel = "";
+      draft.timezone = "";
+      draft.yearsOfExperience = "";
       draft.resume = "";
       return;
     }
@@ -40,15 +42,16 @@ export const loginReducer = (draft, action) => {
 };
 
 const initialState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   modified: false,
-  uid: "Qid3BoZ9PkZNGa5pVfJWGt9fW3w2",
-  firstName: "testName",
-  lastName: "testLastName",
-  email: "test@test.com",
+  uid: "",
+  firstName: "",
+  lastName: "",
+  email: "",
   country: "",
   zipCode: "",
-  currentCareerLevel: "",
+  timezone: "",
+  yearsOfExperience: "",
   resume: ""
 };
 
