@@ -34,8 +34,8 @@ const DashboardOverview = React.lazy(() =>
 const EmployeeDashboard = React.lazy(() =>
   import("./Dashboard/EmployeeDashboard/EmployeeDashboard")
 );
-const ApplicantsList = React.lazy(() =>
-  import("./Dashboard/EmployerDashboard/ApplicantsList")
+const ApplicantsListRender = React.lazy(() =>
+  import("./Dashboard/EmployerDashboard/ApplicantsListRender")
 );
 const JobListingsOverview = React.lazy(() =>
   import("./Dashboard/EmployerDashboard/JobListingsOverview")
@@ -114,8 +114,8 @@ const Content = props => {
             />
             <ProtectedRoute
               exact
-              path="/dashboard-employer/applicants-list"
-              component={ApplicantsList}
+              path="/dashboard-employer/applicants-list/:jobID"
+              component={ApplicantsListRender}
             />
             <ProtectedRoute
               exact

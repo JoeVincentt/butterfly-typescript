@@ -149,16 +149,34 @@ const JobListingOverview = ({ history }) => {
             </Grid>
           </Grid>
         </Grid>
+        <Grid container direction="row" justify="space-between">
+          <Grid item>
+            <Grid container justify="flex-start">
+              <Button
+                color="primary"
+                className={classes.button}
+                size="large"
+                // endIcon={<ArrowForwardIcon />}
+                onClick={() => {
+                  console.log(id);
+                  history.push(`/dashboard-employer/applicants-list/${id}`);
+                }}
+              >
+                Applicants
+              </Button>
+            </Grid>
+          </Grid>
 
-        <Grid item>
-          <Grid container justify="flex-end">
-            <Button
-              color="primary"
-              size="large"
-              onClick={() => navigateToJobDetails(id)}
-            >
-              Open job Posting
-            </Button>
+          <Grid item>
+            <Grid container justify="flex-end">
+              <Button
+                color="primary"
+                size="large"
+                onClick={() => navigateToJobDetails(id)}
+              >
+                Open
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
@@ -183,17 +201,6 @@ const JobListingOverview = ({ history }) => {
               onClick={() => history.push("/dashboard-overview")}
             >
               Dashboard Overview
-            </Button>
-            <Button
-              color="primary"
-              className={classes.button}
-              size="large"
-              // endIcon={<ArrowForwardIcon />}
-              onClick={() =>
-                history.push("/dashboard-employer/applicants-list")
-              }
-            >
-              go to Application
             </Button>
           </Grid>
           {jobs.length <= 0 && (

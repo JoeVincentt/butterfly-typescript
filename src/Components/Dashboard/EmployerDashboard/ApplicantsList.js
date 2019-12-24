@@ -252,6 +252,12 @@ const EnhancedTable = props => {
   const [loading, setLoading] = useState(true);
   const [rows, setRow] = useState([]);
 
+  useEffect(() => {
+    setRow(props.rows);
+    setLoading(false);
+    return () => {};
+  }, []);
+
   //reset New Applicants field
   useEffect(() => {
     db.collection("dashboardStats")
@@ -266,79 +272,6 @@ const EnhancedTable = props => {
         console.log("Error updating document:", error);
       });
   }, []);
-
-  //fetch applicants
-  useEffect(() => {
-    let newRows = [];
-    db.collection("applications-employer")
-      .doc(state.uid)
-      .collection("applications")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          const data = doc.data();
-          newRows.push(
-            createData(
-              data.id,
-              data.jobID,
-              `${data.firstName} ${data.lastName}`,
-              data.jobTitle,
-              data.companyName,
-              data.country,
-              data.zipCode,
-              data.timezone,
-              data.yearsOfExperience,
-              data.email,
-              data.date,
-              data.status,
-              data.resume
-            )
-          );
-        });
-      })
-      .then(() => {
-        setRow(newRows);
-        setLoading(false);
-      })
-      .catch(function(error) {
-        setLoading(false);
-        console.log("Error getting document:", error);
-      });
-  }, []);
-
-  const createData = (
-    id,
-    jobID,
-    candidateName,
-    appliedFor,
-    company,
-    country,
-    zipCode,
-    timezone,
-    yearsOfExperience,
-    email,
-    date,
-    status,
-    resume
-  ) => {
-    return {
-      id,
-      jobID,
-      candidateName,
-      appliedFor,
-      company,
-      country,
-      zipCode,
-      timezone,
-      yearsOfExperience,
-      email,
-      date,
-      status,
-      resume
-    };
-  };
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -472,26 +405,17 @@ const EnhancedTable = props => {
           <title>Applicants</title>
         </Helmet>
         <div className={classes.root}>
-          <Grid container justify="space-between">
+          <Grid container justify="flex-start">
             <Button
               color="primary"
               className={classes.button}
               size="large"
               startIcon={<ArrowBackIcon />}
-              onClick={() => props.history.push("/dashboard-overview")}
-            >
-              Dashboard Overview
-            </Button>
-            <Button
-              color="primary"
-              className={classes.button}
-              size="large"
-              // endIcon={<ArrowForwardIcon />}
               onClick={() =>
                 props.history.push("/dashboard-employer/job-listings")
               }
             >
-              go to Jobs listings
+              Job Listing
             </Button>
           </Grid>
           <Paper className={classes.paper}>
