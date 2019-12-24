@@ -1,8 +1,9 @@
-exports.stripePayment = function(request, response, stripe) {
+exports.stripePayment = async function(request, response, stripe) {
   //   console.log(request.body);
   //add additional check for job posting
-  stripe.charges
-    .create({
+
+  try {
+    const charge = await stripe.charges.create({
       amount: request.body.amount * 100,
       currency: "usd",
       source: request.body.token,
@@ -14,13 +15,11 @@ exports.stripePayment = function(request, response, stripe) {
         email: request.body.email,
         companyName: request.body.companyName
       }
-    })
-    .then(charge => {
-      console.log("Stripe Payment Charge", charge);
-      return response.send({ data: charge, success: true });
-    })
-    .catch(error => {
-      console.log("Stripe Payment Error:", error);
-      return response.send({ data: error, success: false });
     });
+    console.log("Stripe Payment Charge", charge);
+    return response.send({ data: charge, success: true });
+  } catch (error) {
+    console.log("Stripe Payment Error:", error);
+    return response.send({ data: error, success: false });
+  }
 };

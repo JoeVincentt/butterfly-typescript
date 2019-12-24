@@ -11,7 +11,7 @@ import LocationOnIcon from "@material-ui/icons/LocationOn";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Hidden from "@material-ui/core/Hidden";
 import withWidth from "@material-ui/core/withWidth";
-
+import defaultLogo from "../../images/defaultLogo.jpg";
 import { UserStateContext } from "../../StateManagement/UserState";
 
 import ApplicationDialog from "../Application/ApplicationDialog";
@@ -44,8 +44,12 @@ const JobCard = ({
   };
 
   const renderLogoImage = () => (
-    <Grid item xs={6} sm={2} xl={1}>
-      <img alt="Company Logo" src={logo} className={classes.bigAvatar} />
+    <Grid item xs={6} sm={1} md={1} lg={1} xl={1}>
+      <img
+        alt="Company Logo"
+        src={logo.length <= 0 ? defaultLogo : logo}
+        className={classes.bigAvatar}
+      />
     </Grid>
   );
 
@@ -168,7 +172,7 @@ const JobCard = ({
 
   return (
     <Grid container justify="center">
-      <Grid item xs={12} sm={12} md={9} lg={8}>
+      <Grid item xs={12}>
         <Paper
           id="job-card"
           className={
@@ -234,13 +238,12 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 2),
     margin: theme.spacing(1),
     border: "1px solid rgba(107, 19, 107, 0.2)",
-    "@media (max-width: 750px)": {
-      padding: theme.spacing(2),
-      marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(0)
-    },
+
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(0),
+
     "&:hover": {
-      // boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
       backgroundColor: "ghostwhite"
     }
   },
@@ -249,13 +252,12 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     border: "1px solid rgba(107, 19, 107, 0.2)",
     backgroundColor: "#faeef4",
-    "@media (max-width: 750px)": {
-      padding: theme.spacing(2),
-      marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(0)
-    },
+
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(0),
+
     "&:hover": {
-      // boxShadow: "inset 10px 0px 3px -4px rgba(204,4,204,1)"
       backgroundColor: "ghostwhite"
     }
   },
@@ -269,16 +271,22 @@ const useStyles = makeStyles(theme => ({
     width: 100,
     height: 100,
     // boxShadow: "0px 0px 9px -1px rgba(107,19,107,1)",
-
-    "@media (max-width: 750px)": {
-      width: 70,
-      height: 70
-    },
-    "@media (max-width: 650px)": {
+    "@media (max-width: 600px)": {
       marginTop: "-42px",
       margin: theme.spacing(0),
       width: 60,
       height: 60,
+      borderRadius: "4px",
+      border: "1px solid rgba(107, 19, 107, 0.2)",
+      backgroundColor: "#fafafa",
+      padding: 4
+    },
+    "@media (min-width: 600px)": {
+      marginLeft: "-50px",
+      margin: theme.spacing(0),
+      width: 80,
+      height: 80,
+      borderRadius: "4px",
       border: "1px solid rgba(107, 19, 107, 0.2)",
       backgroundColor: "#fafafa",
       padding: 4

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import uuidv4 from "uuid/v4";
+import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/storage";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,13 +18,10 @@ import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import RadioGroup from "@material-ui/core/RadioGroup";
-import FormLabel from "@material-ui/core/FormLabel";
 import StyledRadio from "../../Buttons/StyledRadio";
 import { useDropzone } from "react-dropzone";
 import {
@@ -41,7 +39,8 @@ const JobDescription = () => {
   const { uid } = useContext(UserStateContext);
   const dispatch = useContext(PostJobDispatchContext);
   const jobState = useContext(PostJobStateContext);
-
+  //Notifications
+  const { enqueueSnackbar } = useSnackbar();
   //Functional State
   const [progress, setProgress] = useState(null);
 
@@ -61,7 +60,7 @@ const JobDescription = () => {
   } = useDropzone({
     accept: "image/*",
     multiple: false,
-    maxSize: 200000,
+    maxSize: 50000,
     onDrop: acceptedFiles =>
       acceptedFiles.map(file =>
         Object.assign(file, {
@@ -74,7 +73,7 @@ const JobDescription = () => {
   useEffect(() => {
     const jobDraft = JSON.parse(localStorage.getItem("jobDraft"));
     if (jobDraft !== null) {
-      console.log(jobDraft);
+      // console.log(jobDraft);
       dispatch({
         type: "setJobDescription",
         payload: jobDraft
@@ -135,6 +134,9 @@ const JobDescription = () => {
               type: "field",
               fieldName: "logo",
               payload: url
+            });
+            enqueueSnackbar("Image Uploaded.", {
+              variant: "success"
             });
           })
           .catch(error => {});
@@ -270,7 +272,13 @@ const JobDescription = () => {
     return (
       <Grid container alignContent="center" justify="center">
         {/* Company Picture */}
-        <Grid item xs={10} sm={6} className={classes.dragAndDropContainer}>
+        <Grid
+          item
+          xs={10}
+          sm={8}
+          md={6}
+          className={classes.dragAndDropContainer}
+        >
           <Paper elevation={0} className={classes.dragAndDropPaper}>
             <Grid
               container
@@ -309,8 +317,8 @@ const JobDescription = () => {
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    (Recommended size is 100px x 100px, 200KB MAX Size )
+                  <Typography variant="caption" color="textSecondary">
+                    (Recommended size is 100px x 100px, 50KB MAX Size )
                   </Typography>
                 </Grid>
 
@@ -469,7 +477,7 @@ const JobDescription = () => {
           </Select>
         </FormControl>
 
-        <Grid container justify="flex-start" style={{ maxWidth: "79%" }}>
+        <Grid container justify="flex-start" className={classes.radioButtons}>
           <FormControl component="fieldset">
             <RadioGroup
               row
@@ -647,7 +655,10 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2)
   },
   paper: {
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
+    "@media (max-width: 650px)": {
+      margin: theme.spacing(0)
+    }
   },
   innerPaper: {
     marginTop: theme.spacing(3),
@@ -660,22 +671,41 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     marginHorizontal: theme.spacing(1),
-    maxWidth: "80%"
+    maxWidth: "80%",
+    "@media (max-width: 650px)": {
+      maxWidth: "100%"
+    }
+  },
+  radioButtons: {
+    margin: theme.spacing(1),
+    maxWidth: "79%",
+    "@media (max-width: 650px)": {
+      minWidth: "99%"
+    }
   },
   formControl: {
     minWidth: "80%",
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
+    "@media (max-width: 650px)": {
+      minWidth: "100%"
+    }
   },
   addNRemoveButtons: {
     margin: theme.spacing(1)
   },
   fieldNameContainer: {
     marginLeft: "5%",
-    marginBottom: -20
+    marginBottom: -20,
+    "@media (max-width: 650px)": {
+      marginLeft: 0
+    }
   },
   addAndRemoveButtonsContainer: {
-    marginRight: "5%"
+    marginRight: "5%",
+    "@media (max-width: 650px)": {
+      marginRight: -16
+    }
   },
   addFieldButton: {
     color: colors.grey,
@@ -687,6 +717,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1)
   },
   dragAndDropPaper: {
+    padding: theme.spacing(2),
     border: "1px solid rgba(107, 19, 107, 0.2)"
   },
   uploadIcon: {

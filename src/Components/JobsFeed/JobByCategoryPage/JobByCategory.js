@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
@@ -115,25 +116,30 @@ const JobsFeed = ({ history, location }) => {
     return <LinearProgress />;
   } else {
     return (
-      <Grid container spacing={1} justify="center">
-        <Grid item xs={12} className={classes.categoryBox}>
-          <Grid container justify="center" alignContent="center">
-            <Typography variant="h5" className={classes.categoryText}>
-              {location.state.category}
-            </Typography>
+      <React.Fragment>
+        <Helmet>
+          <title>{`${location.state.category}`}</title>
+        </Helmet>
+        <Grid container justify="center">
+          <Grid item xs={12} className={classes.categoryBox}>
+            <Grid container justify="center" alignContent="center">
+              <Typography variant="h4" className={classes.categoryText}>
+                {location.state.category}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
+            {renderJobsFeed(inCategoryJobs, navigateToJobDetails)}
+            {inCategoryJobs.length > 0 && (
+              <SeeMoreButton
+                handleLoad={() => loadMoreInCategoryJobs()}
+                loading={loadingMoreInCategoryJobs}
+                noMoreJobs={noMoreJobsInCategoryCategory}
+              />
+            )}
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          {renderJobsFeed(inCategoryJobs, navigateToJobDetails)}
-          {inCategoryJobs.length > 0 && (
-            <SeeMoreButton
-              handleLoad={() => loadMoreInCategoryJobs()}
-              loading={loadingMoreInCategoryJobs}
-              noMoreJobs={noMoreJobsInCategoryCategory}
-            />
-          )}
-        </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 };
@@ -148,8 +154,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3)
   },
   categoryText: {
-    border: "1px solid rgba(107, 19, 107, 0.2)",
-    borderRadius: "2px",
+    // border: "1px solid rgba(107, 19, 107, 0.2)",
+    // borderRadius: "2px",
     // boxShadow: "0px 0px 4px -1px rgba(107,19,107,1)",
     padding: theme.spacing(2)
   }

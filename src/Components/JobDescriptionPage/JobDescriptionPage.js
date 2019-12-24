@@ -4,18 +4,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import { Typography, LinearProgress } from "@material-ui/core";
-import Fab from "@material-ui/core/Fab";
+import DateRangeIcon from "@material-ui/icons/DateRange";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import { convertTimestamp } from "../utils/convertTimestamp";
-
+import { Helmet } from "react-helmet";
 import colors from "../../constants/colors";
 
+import ShareButtons from "./Components/ShareButtons";
 import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
-import CompanyInfoCard from "./CompanyInfoCard";
+import CompanyInfoCard from "./Components/CompanyInfoCard";
 import { UserStateContext } from "../../StateManagement/UserState";
 
-const JobDescriptionPage = ({ job }) => {
+const JobDescriptionPage = ({ job, history }) => {
   const classes = useStyles();
 
   const { isLoggedIn } = useContext(UserStateContext);
@@ -34,15 +35,41 @@ const JobDescriptionPage = ({ job }) => {
     setLoading(false);
   }, []);
 
-  const renderDate = date => (
-    <Grid container direction="row" justify="flex-end" alignItems="center">
+  const renderDateAndJobType = (date, jobType) => (
+    <Grid container justify="space-between">
       <Grid item>
-        <AccessTimeIcon className={classes.icon} />
+        <Grid
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="flex-end"
+        >
+          <Grid item>
+            <DateRangeIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1" color="textSecondary">
+              {jobType}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
       <Grid item>
-        <Typography variant="subtitle2" className={classes.spacing}>
-          {convertTimestamp(date)}
-        </Typography>
+        <Grid
+          container
+          direction="row"
+          justify="flex-end"
+          alignItems="flex-end"
+        >
+          <Grid item>
+            <AccessTimeIcon className={classes.icon} />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1" color="textSecondary">
+              {convertTimestamp(date)}
+            </Typography>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );
@@ -139,54 +166,67 @@ const JobDescriptionPage = ({ job }) => {
       {loading ? (
         <LinearProgress />
       ) : (
-        <Grid container justify="center" alignContent="center">
-          {/* Company Card */}
-          <Grid item xs={12} sm={12} md={3} lg={2}>
-            <CompanyInfoCard
-              logo={job.logo}
+        <React.Fragment>
+          <Helmet>
+            <title>{`${job.title} ${job.about}`}</title>
+          </Helmet>
+          <Grid container justify="center" alignContent="center">
+            {/* Company Card */}
+            <Grid item xs={12} sm={12} md={4} lg={3} xl={2}>
+              <CompanyInfoCard
+                logo={job.logo}
+                companyName={job.companyName}
+                companyLocation={job.companyLocation}
+                companyWebsite={job.companyWebsite}
+                companyAbout={job.companyAbout}
+              />
+            </Grid>
+
+            {/* Basic Info */}
+            <Grid item xs={12} sm={12} md={8} lg={9} xl={10}>
+              <Paper className={classes.paper}>
+                {renderDateAndJobType(job.date, job.jobType)}
+                {renderJobTitle(job.title)}
+                {renderJobAbout(job.about)}
+                {renderListProperty(job.responsibilities, "Responsibilities")}
+                {renderListProperty(
+                  job.educationAndExperience,
+                  "Education and Experience"
+                )}
+                {renderListProperty(job.skills, "Skills")}
+                {renderListProperty(
+                  job.compensationAndBenefits,
+                  "Compensation And Benefits"
+                )}
+                {renderListProperty(
+                  job.hiringProcessSteps,
+                  "Hiring Process Steps"
+                )}
+                {renderAdditionalInformation(job.additionalInformation)}
+                {job.id !== "draftJobPosting" && (
+                  <React.Fragment>
+                    {renderApplyButton()}
+
+                    <ShareButtons
+                      title={`${job.title} at ${job.companyName}`}
+                      shareUrl={`https://butterfly-remote-jobs-dev.firebaseapp.com${history.location.pathname}`}
+                    />
+                  </React.Fragment>
+                )}
+              </Paper>
+            </Grid>
+
+            {/* Application Dialog */}
+            <ApplicationDialog
+              open={open}
+              handleClose={handleClose}
+              title={job.title}
+              id={job.id}
+              postedBy={job.postedBy}
               companyName={job.companyName}
-              companyLocation={job.companyLocation}
-              companyWebsite={job.companyWebsite}
-              companyAbout={job.companyAbout}
             />
           </Grid>
-
-          {/* Basic Info */}
-          <Grid item xs={12} sm={12} md={9} lg={10}>
-            <Paper className={classes.paper}>
-              {renderDate(job.date)}
-              {renderJobTitle(job.title)}
-              {renderJobAbout(job.about)}
-              {renderListProperty(job.responsibilities, "Responsibilities")}
-              {renderListProperty(
-                job.educationAndExperience,
-                "Education and Experience"
-              )}
-              {renderListProperty(job.skills, "Skills")}
-              {renderListProperty(
-                job.compensationAndBenefits,
-                "Compensation And Benefits"
-              )}
-              {renderListProperty(
-                job.hiringProcessSteps,
-                "Hiring Process Steps"
-              )}
-              {renderAdditionalInformation(job.additionalInformation)}
-
-              {renderApplyButton()}
-            </Paper>
-          </Grid>
-
-          {/* Application Dialog */}
-          <ApplicationDialog
-            open={open}
-            handleClose={handleClose}
-            title={job.title}
-            id={job.id}
-            postedBy={job.postedBy}
-            companyName={job.companyName}
-          />
-        </Grid>
+        </React.Fragment>
       )}
     </div>
   );
@@ -203,7 +243,11 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(4),
     margin: theme.spacing(1),
-    color: theme.palette.text.secondary
+    // color: theme.palette.text.secondary
+    "@media (max-width: 650px)": {
+      padding: theme.spacing(2),
+      margin: theme.spacing(0)
+    }
   },
   additionalInformationBox: {
     padding: theme.spacing(2),
@@ -224,6 +268,7 @@ const useStyles = makeStyles(theme => ({
   },
   icon: {
     marginTop: 5,
+    marginRight: 4,
     fontSize: "1.1rem",
     color: colors.darkGrey
   }

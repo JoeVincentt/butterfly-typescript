@@ -4,10 +4,8 @@ import Typography from "@material-ui/core/Typography";
 import { Grid, Paper, Button } from "@material-ui/core";
 import BusinessIcon from "@material-ui/icons/Business";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
-
-import GradientButton from "../Buttons/GradientButton";
-
-import colors from "../../constants/colors";
+import defaultLogo from "../../../images/defaultLogo.jpg";
+import colors from "../../../constants/colors";
 
 const CompanyInfoCard = ({
   logo,
@@ -18,15 +16,13 @@ const CompanyInfoCard = ({
 }) => {
   const classes = useStyles();
 
-  // const renderCardTitleText = () => (
-  //   <Grid container direction="column" justify="center" alignContent="center">
-  //     <Typography variant="h6">Company Details</Typography>
-  //   </Grid>
-  // );
-
   const renderCompanyProfilePicture = () => (
     <Grid container direction="column" justify="center" alignContent="center">
-      <img alt="company logo" src={logo} className={classes.bigAvatar} />
+      <img
+        alt="company logo"
+        src={logo.length <= 0 ? defaultLogo : logo}
+        className={classes.bigAvatar}
+      />
     </Grid>
   );
 
@@ -44,9 +40,7 @@ const CompanyInfoCard = ({
             <BusinessIcon className={classes.icon} />
           </Grid>
           <Grid item>
-            <Typography variant="body1" color="textSecondary">
-              {companyName}
-            </Typography>
+            <Typography variant="body1">{companyName}</Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -56,16 +50,12 @@ const CompanyInfoCard = ({
             <LocationOnIcon className={classes.icon} />
           </Grid>
           <Grid item>
-            <Typography variant="body1" color="textSecondary">
-              {companyLocation}
-            </Typography>
+            <Typography variant="body1">{companyLocation}</Typography>
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={11}>
-        <Typography variant="body1" color="textSecondary">
-          {companyAbout}
-        </Typography>
+        <Typography variant="body1">{companyAbout}</Typography>
       </Grid>
       {companyWebsite !== null && companyWebsite !== "" && (
         <Grid item>
@@ -113,7 +103,12 @@ const useStyles = makeStyles(theme => ({
     paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(3),
     boxShadow: "none",
-    border: "1px solid rgba(107, 19, 107, 0.2)"
+    border: "1px solid rgba(107, 19, 107, 0.2)",
+    "@media (max-width: 650px)": {
+      padding: theme.spacing(2),
+      margin: theme.spacing(0),
+      marginBottom: theme.spacing(2)
+    }
   },
   bigAvatar: {
     margin: theme.spacing(3),

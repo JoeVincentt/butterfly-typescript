@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import PropTypes from "prop-types";
@@ -27,7 +29,6 @@ import { convertTimestamp } from "../../utils/convertTimestamp";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 import colors from "../../../constants/colors";
-import { withRouter } from "react-router";
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -366,126 +367,136 @@ const EnhancedTable = props => {
     return <LinearProgress />;
   } else {
     return (
-      <div className={classes.root}>
-        <Button
-          color="primary"
-          className={classes.button}
-          size="large"
-          startIcon={<ArrowBackIcon />}
-          onClick={() => props.history.goBack()}
-        >
-          Dashboard Overview
-        </Button>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar
-            numSelected={selected.length}
-            handleDelete={handleDelete}
-          />
-          <div className={classes.tableWrapper}>
-            <Table
-              className={classes.table}
-              aria-labelledby="tableTitle"
-              size={dense ? "small" : "medium"}
-              aria-label="enhanced table"
-            >
-              <EnhancedTableHead
-                classes={classes}
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-                rowCount={rows.length}
-              />
-              <TableBody>
-                {stableSort(rows, getSorting(order, orderBy))
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    const isItemSelected = isSelected(row.id);
-                    const labelId = `enhanced-table-checkbox-${index}`;
-
-                    return (
-                      <TableRow
-                        className={classes.hoverRow}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            onClick={event => handleClick(event, row.id)}
-                            checked={isItemSelected}
-                            inputProps={{ "aria-labelledby": labelId }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                          align="left"
-                          style={{ padding: "1.2em" }}
-                        >
-                          {row.position}
-                        </TableCell>
-
-                        <TableCell align="left">{row.company}</TableCell>
-
-                        <TableCell align="left">
-                          {convertTimestamp(row.date)}
-                        </TableCell>
-
-                        <TableCell align="left">
-                          <a
-                            href={row.resume}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{ textDecoration: "none" }}
-                          >
-                            <Button
-                              color="primary"
-                              // className={classes.button}
-                              size="large"
-                              startIcon={<OpenInBrowserIcon />}
-                            >
-                              Open
-                            </Button>
-                          </a>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={rows.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
-          />
-        </Paper>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={dense}
-              onChange={handleChangeDense}
-              color="primary"
+      <React.Fragment>
+        <Helmet>
+          <title>Applications</title>
+        </Helmet>
+        <div className={classes.root}>
+          <Button
+            color="primary"
+            className={classes.button}
+            size="large"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => props.history.goBack()}
+          >
+            Dashboard Overview
+          </Button>
+          <Paper className={classes.paper}>
+            <EnhancedTableToolbar
+              numSelected={selected.length}
+              handleDelete={handleDelete}
             />
-          }
-          label="Minimize View"
-        />
-      </div>
+            <div className={classes.tableWrapper}>
+              <Table
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                size={dense ? "small" : "medium"}
+                aria-label="enhanced table"
+              >
+                <EnhancedTableHead
+                  classes={classes}
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                />
+                <TableBody>
+                  {stableSort(rows, getSorting(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+
+                      return (
+                        <TableRow
+                          className={classes.hoverRow}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              onClick={event => handleClick(event, row.id)}
+                              checked={isItemSelected}
+                              inputProps={{ "aria-labelledby": labelId }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                            align="left"
+                            style={{ padding: "1.2em" }}
+                          >
+                            <Link
+                              to={`/job-description/${row.jobID}`}
+                              style={{ textDecoration: "none" }}
+                            >
+                              {row.position}
+                            </Link>
+                          </TableCell>
+
+                          <TableCell align="left">{row.company}</TableCell>
+
+                          <TableCell align="left">
+                            {convertTimestamp(row.date)}
+                          </TableCell>
+
+                          <TableCell align="left">
+                            <a
+                              href={row.resume}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ textDecoration: "none" }}
+                            >
+                              <Button
+                                color="primary"
+                                // className={classes.button}
+                                size="large"
+                                startIcon={<OpenInBrowserIcon />}
+                              >
+                                Open
+                              </Button>
+                            </a>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              onChangeRowsPerPage={handleChangeRowsPerPage}
+            />
+          </Paper>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={dense}
+                onChange={handleChangeDense}
+                color="primary"
+              />
+            }
+            label="Minimize View"
+          />
+        </div>
+      </React.Fragment>
     );
   }
 };

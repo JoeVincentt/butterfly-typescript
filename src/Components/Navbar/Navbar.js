@@ -72,10 +72,10 @@ const Navbar = props => {
                   }
                 });
               }
-              props.history.push("/");
+              // props.history.push("/");
             })
             .catch(error => {
-              console.log(error);
+              // console.log(error);
             });
         }
       } else {
@@ -90,7 +90,7 @@ const Navbar = props => {
       .signOut()
       .then(() => {
         // Sign-out successful.
-        enqueueSnackbar("Successfully logged out", {
+        enqueueSnackbar("Logged Out.", {
           variant: "warning"
         });
         dispatch({ type: "logOut" });

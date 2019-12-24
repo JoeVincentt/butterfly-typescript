@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { useSnackbar } from "notistack";
-import firebase from "firebase/app";
 import uuid from "uuid/v4";
+import axios from "axios";
+import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import {
@@ -42,14 +43,13 @@ const ApplicationForm = ({
   const classes = useStyles();
   const db = firebase.firestore();
   //Notifications
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   //Context
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
   //Functional State
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   //DropZone Parameters
   const {
     acceptedFiles,
@@ -57,7 +57,8 @@ const ApplicationForm = ({
     getRootProps,
     getInputProps
   } = useDropzone({
-    accept: "application/pdf, .doc, .docx, application/msword",
+    accept:
+      "application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     multiple: false,
     maxSize: 200000
   });
@@ -111,6 +112,9 @@ const ApplicationForm = ({
               fieldName: "resume",
               payload: url
             });
+            enqueueSnackbar("Resume Updated.", {
+              variant: "success"
+            });
           })
           .catch(error => {
             enqueueSnackbar("Oops! Something went wrong! Please try again.", {
@@ -121,9 +125,61 @@ const ApplicationForm = ({
     );
   };
 
+  const employerEmailNotification = async (
+    postedBy,
+    jobTitle,
+    email,
+    firstName,
+    lastName
+  ) => {
+    // Example POST method implementation:
+    const data = {
+      postedBy: postedBy,
+      jobTitle: jobTitle,
+      email: email,
+      firstName: firstName,
+      lastName: lastName
+    };
+
+    try {
+      const response = await axios({
+        method: "POST",
+        url:
+          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication",
+        data: data
+      });
+      // console.log(response);
+      if (response.data.success === true) {
+        // console.log(response.data);
+        // enqueueSnackbar("Great! We Notified Employer.", {
+        //   variant: "success"
+        // });
+      }
+      if (response.data.success === false) {
+        // console.log(response.data);
+        // enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        //   variant: "error"
+        // });
+      }
+    } catch (error) {
+      // enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+      //   variant: "error"
+      // });
+    }
+  };
+
   const applyForPosition = () => {
     setLoading(true);
     const applicationID = uuid();
+
+    //NOTIFY EMPLOYER BY EMAIL
+    employerEmailNotification(
+      postedBy,
+      jobTitle,
+      state.email,
+      state.firstName,
+      state.lastName
+    );
     //ADD APPLICATION TO EMPLOYER DASHBOARD
     db.collection("applications-employer")
       .doc(postedBy)
@@ -147,7 +203,7 @@ const ApplicationForm = ({
         status: "unchecked"
       })
       .then(() => {
-        enqueueSnackbar("Application sent successfully", {
+        enqueueSnackbar("Application Sent", {
           variant: "success"
         });
         handleClose();
@@ -209,10 +265,10 @@ const ApplicationForm = ({
         )
       })
       .then(() => {
-        console.log("Document successfully updated!");
+        // console.log("Document successfully updated!");
       })
       .catch(error => {
-        console.log("Error updating document:", error);
+        // console.log("Error updating document:", error);
       });
 
     //UPDATE JOB STATS
@@ -526,7 +582,7 @@ const ApplicationForm = ({
                         </Grid>
                         <Grid item>
                           {" "}
-                          <Typography variant="subtitle2" color="textSecondary">
+                          <Typography variant="caption" color="textSecondary">
                             (Only *.pdf, *.doc, *.docx. 200KB MAX size)
                           </Typography>
                         </Grid>
@@ -602,6 +658,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(1)
   },
   dragAndDropPaper: {
+    padding: theme.spacing(2),
     border: "1px solid rgba(107, 19, 107, 0.2)"
   },
   uploadIcon: {

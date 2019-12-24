@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { Helmet } from "react-helmet";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Fab } from "@material-ui/core";
 import { ArrowForward, ArrowBack } from "@material-ui/icons";
@@ -36,7 +37,7 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(0);
   const { paymentSuccess } = useContext(PaymentStateContext);
   const jobState = useContext(PostJobStateContext);
 
@@ -116,21 +117,26 @@ const PostJobForm = () => {
   );
 
   return (
-    <Grid container direction="column">
-      <CustomStepper activeStep={activeStep} steps={steps} />
-      <div>
-        {activeStep === steps.length ? (
-          <Grid container direction="column">
-            <ThankYouCard handleReset={handleReset} />
-          </Grid>
-        ) : (
-          <Grid container direction="column" alignContent="center">
-            {getStepContent(activeStep)}
-            {renderButtons()}
-          </Grid>
-        )}
-      </div>
-    </Grid>
+    <React.Fragment>
+      <Helmet>
+        <title>Post A Job</title>
+      </Helmet>
+      <Grid container direction="column">
+        <CustomStepper activeStep={activeStep} steps={steps} />
+        <div>
+          {activeStep === steps.length ? (
+            <Grid container direction="column">
+              <ThankYouCard handleReset={handleReset} />
+            </Grid>
+          ) : (
+            <Grid container direction="column" alignContent="center">
+              {getStepContent(activeStep)}
+              {renderButtons()}
+            </Grid>
+          )}
+        </div>
+      </Grid>
+    </React.Fragment>
   );
 };
 

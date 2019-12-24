@@ -1,7 +1,20 @@
 service firebase.storage {
   match /b/{bucket}/o {
-    match /{allPaths=**} {
-      allow read, write: if request.auth!=null;
+    match /resumes/{userId}/{document=**} {
+      allow read: if request.auth!=null;
+      // Only allow uploads of any file that's less than 200KB
+      allow write: if request.resource.size < 200000 
+      						 && request.auth.uid == userId
+                   && (request.resource.contentType.matches('application/pdf') || 
+                       request.resource.contentType.matches('application/msword') ||
+                       request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.wordprocessingml.document'))            
+    }
+    match /images/{userId}/{document=**} {
+      allow read: if true;
+      // Only allow uploads of any image file that's less than 50KB
+      allow write: if request.resource.size < 50000 
+      						 && request.auth.uid == userId
+                   && request.resource.contentType.matches('image/.*')   
     }
   }
 }

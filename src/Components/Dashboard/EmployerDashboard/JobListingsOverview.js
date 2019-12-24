@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import {
@@ -16,6 +17,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { UserStateContext } from "../../../StateManagement/UserState";
+import defaultLogo from "../../../images/defaultLogo.jpg";
 
 const JobListingOverview = ({ history }) => {
   const classes = useStyles();
@@ -74,19 +76,20 @@ const JobListingOverview = ({ history }) => {
             alignItems="flex-start"
             spacing={2}
           >
-            <Grid item xs={3}>
+            <Grid item xs={2} sm={1} md={2} xl={1}>
               <img
-                src={logo}
+                src={logo.length <= 0 ? defaultLogo : logo}
                 alt="logo"
                 style={{ height: 60, width: 60, marginTop: 8 }}
               />
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={10} sm={11} md={10} xl={11}>
               <Grid
                 container
                 direction="row"
                 justify="space-between"
                 alignItems="flex-end"
+                style={{ marginTop: 20, marginLeft: 10 }}
               >
                 <Typography variant="h6">{title}</Typography>
               </Grid>
@@ -166,48 +169,63 @@ const JobListingOverview = ({ history }) => {
     return <LinearProgress />;
   } else {
     return (
-      <div className={classes.root}>
-        <Grid container justify="space-between">
-          <Button
-            color="primary"
-            className={classes.button}
-            size="large"
-            startIcon={<ArrowBackIcon />}
-            onClick={() => history.push("/dashboard-overview")}
-          >
-            Dashboard Overview
-          </Button>
-          <Button
-            color="primary"
-            className={classes.button}
-            size="large"
-            // endIcon={<ArrowForwardIcon />}
-            onClick={() => history.push("/dashboard-employer/applicants-list")}
-          >
-            go to Application
-          </Button>
-        </Grid>
-        {jobs.length <= 0 && (
-          <Box textAlign="center">
-            <Typography variant="body1" color="textSecondary">
-              You did not post any jobs yet.
-            </Typography>
-          </Box>
-        )}
-        <Grid container justify="flex-start" alignContent="center" spacing={3}>
-          {jobs.map((job, index) => (
-            <Grid key={job.id} item xs={12} md={3} className={classes.paperBox}>
-              {renderJobOverview(
-                job.id,
-                job.logo,
-                job.title,
-                job.views,
-                job.applied
-              )}
-            </Grid>
-          ))}
-        </Grid>
-      </div>
+      <React.Fragment>
+        <Helmet>
+          <title>Job Listings Overview</title>
+        </Helmet>
+        <div className={classes.root}>
+          <Grid container justify="space-between">
+            <Button
+              color="primary"
+              className={classes.button}
+              size="large"
+              startIcon={<ArrowBackIcon />}
+              onClick={() => history.push("/dashboard-overview")}
+            >
+              Dashboard Overview
+            </Button>
+            <Button
+              color="primary"
+              className={classes.button}
+              size="large"
+              // endIcon={<ArrowForwardIcon />}
+              onClick={() =>
+                history.push("/dashboard-employer/applicants-list")
+              }
+            >
+              go to Application
+            </Button>
+          </Grid>
+          {jobs.length <= 0 && (
+            <Box textAlign="center">
+              <Typography variant="body1" color="textSecondary">
+                You did not post any jobs yet.
+              </Typography>
+            </Box>
+          )}
+          <Grid container justify="space-around" alignContent="center">
+            {jobs.map((job, index) => (
+              <Grid
+                key={job.id}
+                item
+                xs={12}
+                md={4}
+                lg={3}
+                xl={3}
+                className={classes.paperBox}
+              >
+                {renderJobOverview(
+                  job.id,
+                  job.logo,
+                  job.title,
+                  job.views,
+                  job.applied
+                )}
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+      </React.Fragment>
     );
   }
 };
@@ -221,7 +239,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1)
   },
   paperBox: {
-    marginTop: theme.spacing(4)
+    marginTop: theme.spacing(4),
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1)
   },
   rootPaper: {
     padding: theme.spacing(2)

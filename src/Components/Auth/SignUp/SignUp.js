@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
@@ -11,22 +12,17 @@ import { FormControlLabel, Paper } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
-import {
-  UserStateContext,
-  UserDispatchContext
-} from "../../../StateManagement/UserState";
+import { UserDispatchContext } from "../../../StateManagement/UserState";
 
 import GradientButton from "../../Buttons/GradientButton";
 import { emailRegex, mediumStrengthPasswordRegex } from "../../utils/regex";
-import logo from "../../../images/logo.webp";
 
 const SignUp = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
 
   //State components
@@ -53,11 +49,9 @@ const SignUp = props => {
   const [passwordDoesNotMatch, setPasswordDoesNotMatch] = useState(false);
   //SignIN Error
   const [signInError, setSignInError] = useState(false);
-  const [signInErrorCode, setSignInErrorCode] = useState("");
   const [signInErrorMessage, setSignInErrorMessage] = useState("");
   //SignUP Error
   const [signUpError, setSignUpError] = useState(false);
-  const [signUpErrorCode, setSignUpErrorCode] = useState("");
   const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
 
   //ComponentDidMount
@@ -110,20 +104,14 @@ const SignUp = props => {
 
   const formValidation = () => {
     //Validate inputs
-    // let validateEmail = emailRegex.test(email.toLowerCase());
-    // let validatePasswordStrength = mediumStrengthPasswordRegex.test(
-    //   password.trim()
-    // );
+
     let passwordConfirmationMatch =
       password.trim() === passwordConfirmation.trim();
     let validFirstName = firstName.trim().length > 1;
     let validLastName = lastName.trim().length > 1;
 
-    // //Set Validation state
-    // setEmailInvalid(!validateEmail);
-    // setPasswordIsTooWeak(!validatePasswordStrength);
+    //Set Validation state
     setPasswordDoesNotMatch(!passwordConfirmationMatch);
-
     if (
       !emailInvalid &&
       !passwordIsTooWeak &&
@@ -132,24 +120,8 @@ const SignUp = props => {
       validLastName &&
       termsConditionsPrivacyPolicy
     ) {
-      // console.log("good to go");
       return true;
     } else {
-      // console.log(email, "email valid", validateEmail, "invalid", emailInvalid);
-      // console.log(
-      //   password,
-      //   "password strength valid",
-      //   validatePasswordStrength,
-      //   "too weak",
-      //   passwordIsTooWeak
-      // );
-      // console.log(
-      //   passwordConfirmation,
-      //   "matching",
-      //   passwordConfirmationMatch,
-      //   "does NOT match",
-      //   passwordDoesNotMatch
-      // );
       return false;
     }
   };
@@ -166,7 +138,6 @@ const SignUp = props => {
       .catch(error => {
         // Handle Errors here.
         setSignUpError(true);
-        setSignUpErrorCode(error.code);
         setSignUpErrorMessage(error.message);
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
@@ -198,7 +169,7 @@ const SignUp = props => {
           }
         });
         setLoading(false);
-        enqueueSnackbar("Successfully logged in ", {
+        enqueueSnackbar("Logged In.", {
           variant: "success"
         });
         props.history.push("/");
@@ -206,7 +177,6 @@ const SignUp = props => {
       .catch(error => {
         // Handle Errors here.
         setSignInError(true);
-        setSignInErrorCode(error.code);
         setSignInErrorMessage(error.message);
         setLoading(false);
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {
@@ -267,7 +237,7 @@ const SignUp = props => {
     if (valid) {
       createNewUserWithEmailAndPassword();
     } else {
-      enqueueSnackbar("Please fill all the required fields.", {
+      enqueueSnackbar("Please fill-up all the required fields.", {
         variant: "error"
       });
       return;
@@ -329,163 +299,176 @@ const SignUp = props => {
   };
 
   return (
-    <Grid container component="main" className={classes.image}>
-      <Grid container direction="column" justify="center" alignItems="center">
-        <Zoom in={zoomIn} style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}>
-          <Grid item xs={12}>
-            <Paper className={classes.shadowPaper}>
-              {/* <img src={logo} alt="logo" className={classes.logo} />
+    <React.Fragment>
+      <Helmet>
+        <title>Sign Up</title>
+      </Helmet>
+      <Grid container component="main" className={classes.image}>
+        <Grid container justify="center" alignItems="center">
+          <Zoom
+            in={zoomIn}
+            style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}
+          >
+            <Grid item xs={12} sm={8} md={6} lg={4} xl={4}>
+              <Paper className={classes.shadowPaper}>
+                {/* <img src={logo} alt="logo" className={classes.logo} />
               <Typography component="h1" variant="h6">
                 Sign Up
               </Typography> */}
-              <form className={classes.form} noValidate>
-                <Grid container spacing={4} direction="row">
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      className={classes.textField}
-                      variant="standard"
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="firstName"
-                      label="First Name"
-                      name="firstName"
-                      autoComplete="firstName"
-                      autoFocus
-                      disabled={loading}
-                      value={firstName}
-                      onChange={e => handleFirstNameChange(e)}
+                <form className={classes.form} noValidate>
+                  <Grid container spacing={4} direction="row">
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        className={classes.textField}
+                        variant="standard"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="firstName"
+                        label="First Name"
+                        name="firstName"
+                        autoComplete="firstName"
+                        autoFocus
+                        disabled={loading}
+                        value={firstName}
+                        onChange={e => handleFirstNameChange(e)}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        className={classes.textField}
+                        variant="standard"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="lastName"
+                        label="Last Name"
+                        name="lastName"
+                        autoComplete="lastName"
+                        autoFocus
+                        disabled={loading}
+                        value={lastName}
+                        onChange={e => handleLastNameChange(e)}
+                      />
+                    </Grid>
+                  </Grid>
+                  <TextField
+                    className={classes.textField}
+                    variant="standard"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    disabled={loading}
+                    value={email}
+                    onChange={e => handleEmailChange(e)}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    variant="standard"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    disabled={loading}
+                    value={password}
+                    onChange={e => handlePasswordChange(e)}
+                  />
+                  <TextField
+                    className={classes.textField}
+                    variant="standard"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="passwordConfirmation"
+                    label="Password Confirmation"
+                    type="password"
+                    id="passwordConfirmation"
+                    disabled={loading}
+                    value={passwordConfirmation}
+                    onChange={e => handlePasswordConfirmationChange(e)}
+                  />
+                  {renderLoadingBar()}
+                  <Grid>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={loading}
+                          checked={subscribeEmail}
+                          onChange={() => handleSubscribeToEmails()}
+                          value="subscribeEmail"
+                          color="primary"
+                        />
+                      }
+                      label="Subscribe for Newsletter"
+                      className={classes.checkBox}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      className={classes.textField}
-                      variant="standard"
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="lastName"
-                      label="Last Name"
-                      name="lastName"
-                      autoComplete="lastName"
-                      autoFocus
-                      disabled={loading}
-                      value={lastName}
-                      onChange={e => handleLastNameChange(e)}
+                  <Grid>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          style={{
+                            color: !termsConditionsPrivacyPolicy && "red"
+                          }}
+                          disabled={loading}
+                          checked={termsConditionsPrivacyPolicy}
+                          onChange={() => handleTermsConditionsPrivacyPolicy()}
+                          value="termsAndPrivacy"
+                          color="primary"
+                        />
+                      }
+                      label="I read and agree on Terms and Conditions & Privacy Policy"
+                      className={classes.checkBox}
                     />
                   </Grid>
-                </Grid>
-                <TextField
-                  className={classes.textField}
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  disabled={loading}
-                  value={email}
-                  onChange={e => handleEmailChange(e)}
-                />
-                <TextField
-                  className={classes.textField}
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  disabled={loading}
-                  value={password}
-                  onChange={e => handlePasswordChange(e)}
-                />
-                <TextField
-                  className={classes.textField}
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="passwordConfirmation"
-                  label="Password Confirmation"
-                  type="password"
-                  id="passwordConfirmation"
-                  disabled={loading}
-                  value={passwordConfirmation}
-                  onChange={e => handlePasswordConfirmationChange(e)}
-                />
-                {renderLoadingBar()}
-                <Grid>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        disabled={loading}
-                        checked={subscribeEmail}
-                        onChange={() => handleSubscribeToEmails()}
-                        value="subscribeEmail"
-                        color="primary"
-                      />
-                    }
-                    label="Subscribe for Newsletter"
-                    className={classes.checkBox}
-                  />
-                </Grid>
-                <Grid>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        style={{
-                          color: !termsConditionsPrivacyPolicy && "red"
-                        }}
-                        disabled={loading}
-                        checked={termsConditionsPrivacyPolicy}
-                        onChange={() => handleTermsConditionsPrivacyPolicy()}
-                        value="termsAndPrivacy"
-                        color="primary"
-                      />
-                    }
-                    label="I read and agree on Terms and Conditions & Privacy Policy"
-                    className={classes.checkBox}
-                  />
-                </Grid>
 
-                <Grid container direction="column">
-                  {renderSingUpError()}
-                  {renderSingInError()}
-                  {renderInvalidEmailError()}
-                  {renderPasswordIsTooWeakError()}
-                  {renderPasswordConfirmationNotMatchError()}
-                </Grid>
-
-                <Grid item className={classes.submit}>
-                  <GradientButton
-                    onClick={() => (loading ? () => {} : handleSubmit())}
-                    text="Register"
-                    labelName="registerButton"
-                    size="large"
-                  />
-                </Grid>
-
-                <Grid container>
-                  <Grid item>
-                    <Link to="/sign-in" style={{ textDecoration: "none" }}>
-                      <Typography variant="body2" color="textSecondary">
-                        Already have an account? Sign In
-                      </Typography>
-                    </Link>
+                  <Grid container direction="column">
+                    {renderSingUpError()}
+                    {renderSingInError()}
+                    {renderInvalidEmailError()}
+                    {renderPasswordIsTooWeakError()}
+                    {renderPasswordConfirmationNotMatchError()}
                   </Grid>
-                </Grid>
-              </form>
-            </Paper>
-          </Grid>
-        </Zoom>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Grid item className={classes.submit}>
+                      <GradientButton
+                        onClick={() => (loading ? () => {} : handleSubmit())}
+                        text="Register"
+                        labelName="registerButton"
+                        size="large"
+                      />
+                    </Grid>
+
+                    <Grid item>
+                      <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                        <Typography variant="body2" color="textSecondary">
+                          Already have an account? Sign In
+                        </Typography>
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </form>
+              </Paper>
+            </Grid>
+          </Zoom>
+        </Grid>
       </Grid>
-    </Grid>
+    </React.Fragment>
   );
 };
 
@@ -527,8 +510,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1)
   },
   submit: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
+    marginTop: theme.spacing(1)
   },
   errorMessage: {
     color: "red"

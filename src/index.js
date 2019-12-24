@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import "typeface-roboto";
 import config from "./firebaseConfig";
 // Firebase App (the core Firebase SDK) is always required and must be listed first
 import { initializeApp, analytics } from "firebase/app";

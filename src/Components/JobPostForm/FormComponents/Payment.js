@@ -27,6 +27,8 @@ import {
 } from "../../../StateManagement/PaymentState";
 import ThankYouCard from "./ThankYouCard";
 
+import { emailRegex } from "../../utils/regex";
+
 // You can customize your Elements to give it the look and feel of your site.
 const createOptions = () => {
   return {
@@ -51,7 +53,7 @@ const _CardForm = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const userState = useContext(UserStateContext);
   const postJobState = useContext(PostJobStateContext);
@@ -93,34 +95,61 @@ const _CardForm = props => {
     }
   };
 
+  const validateEmail = () => {
+    return emailRegex.test(email.toLowerCase());
+  };
+
+  const paymentFormCheck = () => {
+    if (
+      email.trim().length <= 0 ||
+      firstName.trim().length <= 0 ||
+      lastName.trim().length <= 0 ||
+      companyName.trim().length <= 0 ||
+      validateEmail() === false
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  };
+
   const createToken = e => {
     // e.preventDefault();
-    setLoading(true);
-    if (props.stripe) {
-      props.stripe
-        .createToken()
-        .then(payload => {
-          if (payload.error) {
+    if (paymentFormCheck() === false) {
+      enqueueSnackbar("Oops! Please fill-up all the fields.", {
+        variant: "error"
+      });
+    } else {
+      setLoading(true);
+      if (props.stripe) {
+        props.stripe
+          .createToken()
+          .then(payload => {
+            if (payload.error) {
+              enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+                variant: "error"
+              });
+              setLoading(false);
+              // console.log(payload.error);
+            } else if (payload.token) {
+              // console.log("[token]", payload.token);
+              handlePaymentRequest(payload.token.id);
+            }
+          })
+          .catch(error => {
             enqueueSnackbar("Oops! Something went wrong! Please try again.", {
               variant: "error"
             });
             setLoading(false);
-            // console.log(payload.error);
-          } else if (payload.token) {
-            // console.log("[token]", payload.token);
-            handlePaymentRequest(payload.token.id);
-          }
-        })
-        .catch(error => {
-          enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-            variant: "error"
+            // console.log(error);
           });
-          setLoading(false);
-          // console.log(error);
+      } else {
+        // console.log("Stripe.js hasn't loaded yet.");
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
         });
-    } else {
-      // console.log("Stripe.js hasn't loaded yet.");
-      setLoading(false);
+        setLoading(false);
+      }
     }
   };
 
@@ -134,42 +163,50 @@ const _CardForm = props => {
       amount: price,
       token: token
     };
-    // console.log(data);
-    const response = await axios({
-      method: "POST",
-      url:
-        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe",
-      data: data
-    });
-    console.log(response);
-    if (response.data.success === true) {
-      // console.log("success transaction");
 
-      dispatch({
-        type: "field",
-        fieldName: "paymentSuccess",
-        payload: true
+    try {
+      const response = await axios({
+        method: "POST",
+        url:
+          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe",
+        data: data
       });
-      //create database instance
-      createDataBaseInstanceOfPostedJob();
-      setLoading(false);
-    }
-    if (response.data.success === false) {
-      // console.log("failed transaction");
+      // console.log(response);
+      if (response.data.success === true) {
+        // console.log("success transaction");
+        dispatch({
+          type: "field",
+          fieldName: "paymentSuccess",
+          payload: true
+        });
+        //create database instance
+        createDataBaseInstanceOfPostedJob();
+        enqueueSnackbar("Payment Successful", {
+          variant: "success"
+        });
+        setLoading(false);
+      }
+      if (response.data.success === false) {
+        // console.log("failed transaction");
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
+        dispatch({
+          type: "field",
+          fieldName: "paymentSuccess",
+          payload: false
+        });
+        setLoading(false);
+      }
+    } catch (error) {
       enqueueSnackbar("Oops! Something went wrong! Please try again.", {
         variant: "error"
       });
-      dispatch({
-        type: "field",
-        fieldName: "paymentSuccess",
-        payload: false
-      });
-      setLoading(false);
     }
   };
 
   const createDataBaseInstanceOfPostedJob = () => {
-    console.log("create job data");
+    // console.log("create job data");
     const jobID = uuid();
     db.collection("jobs")
       .doc(jobID)
@@ -197,7 +234,7 @@ const _CardForm = props => {
         additionalInformation: postJobState.additionalInformation
       })
       .then(() => {
-        enqueueSnackbar("Congratulations! Job Posted Successfully.", {
+        enqueueSnackbar("Great News, Job Posted.", {
           variant: "success"
         });
 
@@ -219,10 +256,10 @@ const _CardForm = props => {
         "employerStats.jobsPosted": firebase.firestore.FieldValue.increment(1)
       })
       .then(() => {
-        console.log("Document successfully updated!");
+        // console.log("Document successfully updated!");
       })
       .catch(error => {
-        console.log("Error updating document:", error);
+        // console.log("Error updating document:", error);
       });
 
     //CREATE JOB STATS INSTANCE
@@ -246,7 +283,7 @@ const _CardForm = props => {
     return (
       <div>
         <Grid container justify="flex-end" alignContent="center">
-          <Grid item>
+          <Grid item style={{ paddingBottom: 20 }}>
             <Grid
               container
               direction="row"
@@ -264,8 +301,12 @@ const _CardForm = props => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
+
+        <Grid container spacing={1}>
+          <Grid item>
+            <Typography variant="h6">Personal Details</Typography>
+          </Grid>
+          <Grid item xs={12}>
             <TextField
               id="firstName"
               className={classes.textField}
@@ -285,7 +326,7 @@ const _CardForm = props => {
               }
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
               id="lastName"
               className={classes.textField}
@@ -305,8 +346,7 @@ const _CardForm = props => {
               }
             />
           </Grid>
-
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
               id="companyName"
               className={classes.textField}
@@ -326,7 +366,7 @@ const _CardForm = props => {
               }
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12}>
             <TextField
               id="Email"
               className={classes.textField}
@@ -350,11 +390,10 @@ const _CardForm = props => {
 
         <Grid>
           <Typography variant="h6" className={classes.spacing}>
-            Card Details
+            Credit or Debit Card
           </Typography>
           <CardElement onChange={handleChange} {...createOptions()} />
         </Grid>
-
         <Grid container justify="center" alignContent="center">
           <Grid item className={classes.button}>
             {loading ? (
@@ -373,6 +412,25 @@ const _CardForm = props => {
             )}
           </Grid>
         </Grid>
+        <Grid>
+          <Typography
+            variant="caption"
+            color="textSecondary"
+            className={classes.spacing}
+          >
+            By posting a job you acknowledge that you have read and agreed to
+            our{" "}
+            <a
+              href="https://app.termly.io/document/terms-of-use-for-saas/a5c3ec46-9aa9-4dd6-a400-ad98d3f06924"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              Terms and Conditions
+            </a>
+            . All sales are final.
+          </Typography>
+        </Grid>
       </div>
     );
   }
@@ -384,7 +442,7 @@ const Payment = props => {
   const classes = useStyles();
   return (
     <Grid container justify="center" alignContent="center">
-      <Grid item xs={12} sm={8}>
+      <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper className={classes.paper}>
           <StripeProvider apiKey={"pk_test_RppBJ2eaykT7fLU90EHShe43004Fx31yx1"}>
             <Elements>

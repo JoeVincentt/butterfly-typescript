@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
+import { Helmet } from "react-helmet";
 import axios from "axios";
 import {
   Grid,
@@ -83,81 +84,86 @@ const ContactUs = () => {
   };
 
   return (
-    <Grid container justify="center" alignContent="center" direction="column">
-      <Grid item xs={12} sm={8}>
-        <Paper className={classes.paper}>
-          <Box textAlign="center" className={classes.spacing}>
-            <Typography variant="h3">Contact Us</Typography>
-          </Box>
-          <Grid container direction="column" spacing={2}>
-            <Grid item xs={12}>
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="fullName"
-                    label="Full Name"
-                    variant="outlined"
-                    fullWidth
-                    disabled={loading}
-                    value={fullName}
-                    onChange={e => setFullName(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="email"
-                    label="Email"
-                    variant="outlined"
-                    fullWidth
-                    disabled={loading}
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                  />
+    <React.Fragment>
+      <Helmet>
+        <title>Contact Us</title>
+      </Helmet>
+      <Grid container justify="center" alignContent="center" direction="column">
+        <Grid item xs={12} sm={8}>
+          <Paper className={classes.paper}>
+            <Box textAlign="center" className={classes.spacing}>
+              <Typography variant="h3">Contact Us</Typography>
+            </Box>
+            <Grid container direction="column" spacing={2}>
+              <Grid item xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="fullName"
+                      label="Full Name"
+                      variant="outlined"
+                      fullWidth
+                      disabled={loading}
+                      value={fullName}
+                      onChange={e => setFullName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="email"
+                      label="Email"
+                      variant="outlined"
+                      fullWidth
+                      disabled={loading}
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="subject"
+                  label="Subject"
+                  variant="outlined"
+                  fullWidth
+                  disabled={loading}
+                  value={subject}
+                  onChange={e => setSubject(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  id="message"
+                  label="Message"
+                  variant="outlined"
+                  multiline
+                  fullWidth
+                  rows="4"
+                  disabled={loading}
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box textAlign="center">
+                  {loading ? (
+                    <CircularProgress />
+                  ) : (
+                    <GradientButton
+                      text="send message"
+                      labelName="sendMessage"
+                      size="large"
+                      onClick={() => sendMessage()}
+                    />
+                  )}
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="subject"
-                label="Subject"
-                variant="outlined"
-                fullWidth
-                disabled={loading}
-                value={subject}
-                onChange={e => setSubject(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id="message"
-                label="Message"
-                variant="outlined"
-                multiline
-                fullWidth
-                rows="4"
-                disabled={loading}
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Box textAlign="center">
-                {loading ? (
-                  <CircularProgress />
-                ) : (
-                  <GradientButton
-                    text="send message"
-                    labelName="sendMessage"
-                    size="large"
-                    onClick={() => sendMessage()}
-                  />
-                )}
-              </Box>
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </React.Fragment>
   );
 };
 

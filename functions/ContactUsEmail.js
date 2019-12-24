@@ -1,4 +1,4 @@
-exports.contactUsEmail = function(request, response, sgMail) {
+exports.contactUsEmail = async function(request, response, sgMail) {
   const msg = {
     to: "contactus.butterflyremotejobs@gmail.com",
     from: request.body.email,
@@ -15,10 +15,10 @@ exports.contactUsEmail = function(request, response, sgMail) {
     //     }
   };
 
-  return sgMail
-    .send(msg)
-    .then(() => response.status(200).send({ success: true }))
-    .catch(error =>
-      response.status(400).response.send({ data: error, success: false })
-    );
+  try {
+    await sgMail.send(msg);
+    return response.status(200).send({ success: true });
+  } catch (error) {
+    return response.status(400).response.send({ data: error, success: false });
+  }
 };

@@ -82,17 +82,6 @@ const MenuDrawer = ({
       <React.Fragment>
         <ListItem
           button
-          color="primary"
-          onClick={() => navigateTo("")}
-          onKeyDown={() => navigateTo("")}
-        >
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem
-          button
           onClick={() => navigateTo("dashboard-overview")}
           onKeyDown={() => navigateTo("dashboard-overview")}
         >
@@ -108,8 +97,18 @@ const MenuDrawer = ({
     <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
       <img className={classes.logoImg} alt="Butterfly remote" src={logo}></img>
       <List>
-        <Divider />
-
+        {/* <Divider /> */}
+        <ListItem
+          button
+          color="primary"
+          onClick={() => navigateTo("")}
+          onKeyDown={() => navigateTo("")}
+        >
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Home" />
+        </ListItem>
         {renderIfLoggedIn()}
 
         <ListItem button onClick={handleClick}>

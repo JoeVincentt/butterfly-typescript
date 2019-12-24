@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Link, withRouter } from "react-router-dom";
@@ -11,21 +12,16 @@ import Typography from "@material-ui/core/Typography";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { makeStyles } from "@material-ui/core/styles";
 
-import {
-  UserStateContext,
-  UserDispatchContext
-} from "../../../StateManagement/UserState";
+import { UserDispatchContext } from "../../../StateManagement/UserState";
 
 import GradientButton from "../../Buttons/GradientButton";
-import logo from "../../../images/logo.webp";
 
 const SignIn = props => {
   const classes = useStyles();
   const db = firebase.firestore();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   //Use context
-  const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
 
   //State components
@@ -38,8 +34,6 @@ const SignIn = props => {
 
   //SignIN Error
   const [signInError, setSignInError] = useState(false);
-  const [signInErrorCode, setSignInErrorCode] = useState("");
-  const [signInErrorMessage, setSignInErrorMessage] = useState("");
 
   useEffect(() => {
     setZoomIn(true);
@@ -86,7 +80,7 @@ const SignIn = props => {
                 }
               });
               props.history.push("/");
-              enqueueSnackbar("Successfully logged in ", {
+              enqueueSnackbar("Logged In", {
                 variant: "success"
               });
               return;
@@ -109,8 +103,6 @@ const SignIn = props => {
         });
         setLoading(false);
         setSignInError(true);
-        setSignInErrorCode(error.code);
-        setSignInErrorMessage(error.message);
       });
   };
 
@@ -142,7 +134,7 @@ const SignIn = props => {
               resume: data.resume
             }
           });
-          enqueueSnackbar("Successfully logged in ", {
+          enqueueSnackbar("Logged In.", {
             variant: "success"
           });
           props.history.push("/");
@@ -206,7 +198,7 @@ const SignIn = props => {
                       }
                     });
                     setLoading(false);
-                    enqueueSnackbar("Successfully logged in ", {
+                    enqueueSnackbar("Logged In.", {
                       variant: "success"
                     });
                     props.history.push("/");
@@ -276,82 +268,105 @@ const SignIn = props => {
   };
 
   return (
-    <Grid className={classes.image}>
-      <Grid container direction="column" justify="center" alignItems="center">
-        <Zoom in={zoomIn} style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}>
-          <Grid item xs={12}>
-            <Paper className={classes.shadowPaper}>
-              {/* <img src={logo} alt="logo" className={classes.logo} />
+    <React.Fragment>
+      <Helmet>
+        <title>Sign In</title>
+      </Helmet>
+      <Grid className={classes.image}>
+        <Grid container justify="center" alignItems="center">
+          <Zoom
+            in={zoomIn}
+            style={{ transitionDelay: zoomIn ? "100ms" : "0ms" }}
+          >
+            <Grid item xs={12} sm={6} md={4} lg={4} xl={2}>
+              <Paper className={classes.shadowPaper}>
+                {/* <img src={logo} alt="logo" className={classes.logo} />
               <Typography component="h1" variant="h6">
                 Sign In
               </Typography> */}
-              <form className={classes.form} noValidate>
-                <TextField
-                  className={classes.textField}
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  disabled={loading}
-                  value={email}
-                  onChange={e => handleEmailChange(e)}
-                />
-                <TextField
-                  className={classes.textField}
-                  variant="standard"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  disabled={loading}
-                  value={password}
-                  onChange={e => handlePasswordChange(e)}
-                />
-                <Grid container direction="column">
-                  {renderSingInError()}
-                </Grid>
-                <div style={{ height: "4px" }}>{renderLoadingBar()}</div>
-
-                <Grid item className={classes.submit}>
-                  <GradientButton
-                    onClick={() =>
-                      loading ? () => {} : signInWithEmailAndPassword()
-                    }
-                    text="Login"
-                    labelName="loginButton"
-                    size="large"
+                <form className={classes.form} noValidate>
+                  <TextField
+                    className={classes.textField}
+                    variant="standard"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    autoFocus
+                    disabled={loading}
+                    value={email}
+                    onChange={e => handleEmailChange(e)}
                   />
-                </Grid>
-
-                <StyledFirebaseAuth
-                  uiConfig={uiConfig}
-                  firebaseAuth={firebase.auth()}
-                />
-
-                <Grid container>
-                  <Grid item>
-                    <Link to="/sign-up" style={{ textDecoration: "none" }}>
-                      <Typography variant="body2" color="textSecondary">
-                        Don't have an account? Sign Up
-                      </Typography>
-                    </Link>
+                  <TextField
+                    className={classes.textField}
+                    variant="standard"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    disabled={loading}
+                    value={password}
+                    onChange={e => handlePasswordChange(e)}
+                  />
+                  <Grid container direction="column">
+                    {renderSingInError()}
                   </Grid>
-                </Grid>
-              </form>
-            </Paper>
-          </Grid>
-        </Zoom>
+                  <div style={{ height: "4px" }}>{renderLoadingBar()}</div>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    spacing={2}
+                  >
+                    <Grid item className={classes.submit}>
+                      <GradientButton
+                        onClick={() =>
+                          loading ? () => {} : signInWithEmailAndPassword()
+                        }
+                        text="Login"
+                        labelName="loginButton"
+                        size="large"
+                      />
+                    </Grid>
+
+                    <StyledFirebaseAuth
+                      uiConfig={uiConfig}
+                      firebaseAuth={firebase.auth()}
+                    />
+
+                    <Grid item>
+                      <Link to="/sign-up" style={{ textDecoration: "none" }}>
+                        <Typography variant="body2" color="textSecondary">
+                          Don't have an account? Sign Up
+                        </Typography>
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link
+                        to="/reset-password"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <Typography variant="body2" color="textSecondary">
+                          Forgot password?
+                        </Typography>
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </form>
+              </Paper>
+            </Grid>
+          </Zoom>
+        </Grid>
       </Grid>
-    </Grid>
+    </React.Fragment>
   );
 };
 
@@ -367,7 +382,6 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(2)
     },
     backgroundColor: "rgba(255, 255, 255, 0.7)"
-    // boxShadow: "12px 12px 12px -19px rgba(107,19,107,1)"
   },
   logo: {
     width: "100px",
@@ -382,8 +396,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: "100%"
   },
   submit: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
+    marginTop: theme.spacing(2)
   },
   errorMessage: {
     color: "red"

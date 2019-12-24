@@ -38,7 +38,7 @@ export const renderJobsFeed = (jobs, navigateToJobDetails) => {
     );
   } else {
     return (
-      <Grid container justify="center">
+      <Grid container justify="center" style={{ padding: 24 }}>
         <Typography variant="body1" color="textSecondary">
           No job postings in this category available. Please check again later.
         </Typography>

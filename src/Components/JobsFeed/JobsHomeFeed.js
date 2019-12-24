@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { Helmet } from "react-helmet";
 import { withRouter } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -183,52 +184,61 @@ const JobsFeed = ({ jobs, history }) => {
     return <LinearProgress />;
   } else {
     return (
-      <Grid container spacing={1} justify="center">
-        <Grid item xs={12} className={classes.categoryBox}>
-          <Grid
-            container
-            justify="center"
-            alignContent="center"
-            className={classes.titleBox}
-          >
-            <Typography variant="h5" className={classes.categoryText}>
-              Featured
-            </Typography>
+      <React.Fragment>
+        <Helmet>
+          <title>Butterfly Remote</title>
+        </Helmet>
+        <Grid container justify="space-around">
+          <Grid item xs={12} sm={10} md={5}>
+            <Grid item xs={12} className={classes.categoryBox}>
+              <Grid
+                container
+                justify="center"
+                alignContent="center"
+                className={classes.titleBox}
+              >
+                <Typography variant="h4" className={classes.categoryText}>
+                  Featured
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              {renderJobsFeed(featuredJobs, navigateToJobDetails)}
+              {featuredJobs.length > 0 && (
+                <SeeMoreButton
+                  handleLoad={() => loadMoreFeaturedJobs()}
+                  loading={loadingMoreFeaturedJobs}
+                  noMoreJobs={noMoreJobsInFeaturedCategory}
+                />
+              )}
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={10} md={5}>
+            <Grid item xs={12} className={classes.categoryBox}>
+              <Grid
+                container
+                justify="center"
+                alignContent="center"
+                className={classes.titleBox}
+              >
+                <Typography variant="h4" className={classes.categoryText}>
+                  Recently Posted
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              {renderJobsFeed(recentJobs, navigateToJobDetails)}
+              {recentJobs.length > 0 && (
+                <SeeMoreButton
+                  handleLoad={() => loadMoreRecentJobs()}
+                  loading={loadingMoreRecentJobs}
+                  noMoreJobs={noMoreJobsInRecentCategory}
+                />
+              )}
+            </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
-          {renderJobsFeed(featuredJobs, navigateToJobDetails)}
-          {featuredJobs.length > 0 && (
-            <SeeMoreButton
-              handleLoad={() => loadMoreFeaturedJobs()}
-              loading={loadingMoreFeaturedJobs}
-              noMoreJobs={noMoreJobsInFeaturedCategory}
-            />
-          )}
-        </Grid>
-        <Grid item xs={12} className={classes.categoryBox}>
-          <Grid
-            container
-            justify="center"
-            alignContent="center"
-            className={classes.titleBox}
-          >
-            <Typography variant="h5" className={classes.categoryText}>
-              Recently Posted
-            </Typography>
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          {renderJobsFeed(recentJobs, navigateToJobDetails)}
-          {recentJobs.length > 0 && (
-            <SeeMoreButton
-              handleLoad={() => loadMoreRecentJobs()}
-              loading={loadingMoreRecentJobs}
-              noMoreJobs={noMoreJobsInRecentCategory}
-            />
-          )}
-        </Grid>
-      </Grid>
+      </React.Fragment>
     );
   }
 };
@@ -238,17 +248,10 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     minWidth: 120
   },
-  categoryBox: {
-    margin: theme.spacing(1),
-    marginTop: theme.spacing(3)
-  },
-  categoryText: {
-    border: "1px solid rgba(107, 19, 107, 0.2)",
-    borderRadius: "2px",
-    padding: theme.spacing(2)
-  },
+  categoryBox: {},
+  categoryText: {},
   titleBox: {
-    marginTop: theme.spacing(10)
+    marginTop: theme.spacing(2)
   }
 }));
 

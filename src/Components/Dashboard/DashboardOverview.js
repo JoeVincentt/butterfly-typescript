@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import {
@@ -224,8 +225,11 @@ const DashboardOverview = props => {
     return <LinearProgress />;
   } else {
     return (
-      <>
-        <Grid container justify="center" alignContent="center" spacing={2}>
+      <React.Fragment>
+        <Helmet>
+          <title>Dashboard Overview</title>
+        </Helmet>
+        <Grid container justify="center" alignContent="center">
           <Grid item xs={12} md={6} className={classes.paperBox}>
             {renderEmployerDashboardOverview()}
           </Grid>
@@ -233,7 +237,7 @@ const DashboardOverview = props => {
             {renderEmployeeDashboardOverview()}
           </Grid>
         </Grid>
-      </>
+      </React.Fragment>
     );
   }
 };

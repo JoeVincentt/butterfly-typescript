@@ -13,6 +13,7 @@ import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
 import JobsHomeFeed from "./JobsFeed/JobsHomeFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
+import CookieBanner from "./Footer/FooterComponents/CookieBanner";
 
 import Subscribe from "./Pre-subscription/Subscribe";
 
@@ -23,6 +24,9 @@ const JobDescriptionPageRender = React.lazy(() =>
 );
 const SignIn = React.lazy(() => import("./Auth/SignIn/SignIn"));
 const SignUp = React.lazy(() => import("./Auth/SignUp/SignUp"));
+const ResetPassword = React.lazy(() =>
+  import("./Auth/ResetPassword/ResetPassword")
+);
 const PostJobForm = React.lazy(() => import("./JobPostForm/PostJobForm"));
 const DashboardOverview = React.lazy(() =>
   import("./Dashboard/DashboardOverview")
@@ -43,14 +47,13 @@ const About = React.lazy(() => import("./Footer/FooterComponents/About"));
 const ContactUs = React.lazy(() =>
   import("./Footer/FooterComponents/ContactUs")
 );
+const NoMatch = React.lazy(() => import("./404 Page/NoMatch"));
 // const PrivacyPolicy = React.lazy(() =>
 //   import("./Footer/FooterComponents/PrivacyPolicy")
 // );
 // const TermsAndConditions = React.lazy(() =>
 //   import("./Footer/FooterComponents/TermsAndConditions")
 // );
-
-const NoMatch = React.lazy(() => import("./404 Page/NoMatch"));
 
 const Content = props => {
   const classes = useStyles();
@@ -86,6 +89,7 @@ const Content = props => {
             /> */}
             <Route exact path="/sign-in" component={SignIn} />
             <Route exact path="/sign-up" component={SignUp} />
+            <Route exact path="/reset-password" component={ResetPassword} />
             <Route
               exact
               path="/job-description/:id"
@@ -120,7 +124,6 @@ const Content = props => {
             />
             <Route path="*" component={NoMatch} />
           </Switch>
-
           <ScrollToTheTop {...props}>
             <Fab
               color="secondary"
@@ -132,6 +135,7 @@ const Content = props => {
             </Fab>
           </ScrollToTheTop>
         </div>
+        <CookieBanner />
         <Footer />
       </Router>
     </Suspense>
