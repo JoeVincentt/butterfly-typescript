@@ -76,7 +76,8 @@ const SignIn = props => {
                   zipCode: data.zipCode,
                   timezone: data.timezone,
                   yearsOfExperience: data.yearsOfExperience,
-                  resume: data.resume
+                  resume: data.resume,
+                  jobsApplied: data.jobsApplied
                 }
               });
               props.history.push("/");
@@ -120,6 +121,7 @@ const SignIn = props => {
           //set state
           //get profile and update global state
           let data = doc.data();
+
           dispatch({
             type: "login",
             payload: {
@@ -131,7 +133,8 @@ const SignIn = props => {
               zipCode: data.zipCode,
               timezone: data.timezone,
               yearsOfExperience: data.yearsOfExperience,
-              resume: data.resume
+              resume: data.resume,
+              jobsApplied: data.jobsApplied
             }
           });
           enqueueSnackbar("Logged In.", {
@@ -172,7 +175,8 @@ const SignIn = props => {
               zipCode: "",
               timezone: "",
               yearsOfExperience: "",
-              resume: ""
+              resume: "",
+              jobsApplied: []
             })
             .then(() => {
               db.collection("users")
@@ -194,7 +198,8 @@ const SignIn = props => {
                         zipCode: data.zipCode,
                         timezone: data.timezone,
                         yearsOfExperience: data.yearsOfExperience,
-                        resume: data.resume
+                        resume: data.resume,
+                        jobsApplied: data.jobsApplied
                       }
                     });
                     setLoading(false);

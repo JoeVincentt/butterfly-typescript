@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
@@ -33,8 +33,20 @@ const JobCard = ({
   const classes = useStyles();
   const state = useContext(UserStateContext);
   const { isLoggedIn } = state;
-
   const [open, setOpen] = useState(false);
+
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
+
+  useEffect(() => {
+    // console.log(id);
+    // console.log(state.jobsApplied);
+    if (id !== null && id !== undefined) {
+      const alreadyApplied = state.jobsApplied.includes(id);
+      setAlreadyApplied(alreadyApplied);
+    }
+
+    return () => {};
+  }, [id, state.jobsApplied]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -161,8 +173,8 @@ const JobCard = ({
       </Grid>
       <Grid item>
         <GradientButton
-          onClick={() => handleClickOpen()}
-          text="apply"
+          onClick={() => !alreadyApplied && handleClickOpen()}
+          text={alreadyApplied ? "applied" : "1-click apply"}
           size="small"
           labelName="apply"
         />
@@ -251,7 +263,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1, 2),
     margin: theme.spacing(1),
     border: "1px solid rgba(107, 19, 107, 0.2)",
-    backgroundColor: "#faeef4",
+    backgroundColor: "#faeef46b",
 
     padding: theme.spacing(2),
     marginTop: theme.spacing(5),

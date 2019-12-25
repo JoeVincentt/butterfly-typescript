@@ -20,6 +20,7 @@ export const loginReducer = (draft, action) => {
       draft.timezone = action.payload.timezone;
       draft.yearsOfExperience = action.payload.yearsOfExperience;
       draft.resume = action.payload.resume;
+      draft.jobsApplied = action.payload.jobsApplied;
       return;
     }
     case "logOut": {
@@ -34,6 +35,7 @@ export const loginReducer = (draft, action) => {
       draft.timezone = "";
       draft.yearsOfExperience = "";
       draft.resume = "";
+      draft.jobsApplied = [];
       return;
     }
     default:
@@ -52,7 +54,8 @@ const initialState = {
   zipCode: "",
   timezone: "",
   yearsOfExperience: "",
-  resume: ""
+  resume: "",
+  jobsApplied: []
 };
 
 export const UserStateContext = React.createContext();

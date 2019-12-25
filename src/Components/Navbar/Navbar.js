@@ -68,7 +68,8 @@ const Navbar = props => {
                     zipCode: data.zipCode,
                     timezone: data.timezone,
                     yearsOfExperience: data.yearsOfExperience,
-                    resume: data.resume
+                    resume: data.resume,
+                    jobsApplied: data.jobsApplied
                   }
                 });
               }

@@ -168,7 +168,7 @@ const ApplicationForm = ({
     }
   };
 
-  const applyForPosition = () => {
+  const applyForPosition = async () => {
     setLoading(true);
     const applicationID = uuid();
 
@@ -181,128 +181,135 @@ const ApplicationForm = ({
       state.lastName
     );
     //ADD APPLICATION TO EMPLOYER DASHBOARD
-    db.collection("applications-employer")
-      .doc(postedBy)
-      .collection("applications")
-      .doc(applicationID)
-      .set({
-        id: applicationID,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        date: Date.now(),
-        jobID: jobID,
-        jobTitle: jobTitle,
-        companyName: companyName,
-        email: state.email,
-        firstName: state.firstName,
-        lastName: state.lastName,
-        country: state.country,
-        zipCode: state.zipCode,
-        yearsOfExperience: state.yearsOfExperience,
-        timezone: state.timezone,
-        resume: state.resume,
-        status: "unchecked"
-      })
-      .then(() => {
-        enqueueSnackbar("Application Sent", {
-          variant: "success"
-        });
-        handleClose();
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
-      });
-
-    //ADD APPLICATION TO EMPLOYEE DASHBOARD
-    db.collection("applications-employee")
-      .doc(state.uid)
-      .collection("applications")
-      .doc(applicationID)
-      .set({
-        id: applicationID,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        date: Date.now(),
-        jobID: jobID,
-        jobTitle: jobTitle,
-        companyName: companyName,
-        resume: state.resume
-      })
-      .then(() => setLoading(false))
-      .catch(error => {
-        setLoading(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
-      });
-
-    //UPDATE EMPLOYEE DASHBOARD STATS
-    db.collection("dashboardStats")
-      .doc(state.uid)
-      .update({
-        "employeeStats.totalApplications": firebase.firestore.FieldValue.increment(
-          1
-        )
-      })
-      .then(() => {
-        // console.log("Document successfully updated!");
-      })
-      .catch(error => {
-        // console.log("Error updating document:", error);
-      });
-
-    //UPDATE EMPLOYER DASHBOARD STATS
-    db.collection("dashboardStats")
-      .doc(postedBy)
-      .update({
-        "employerStats.totalApplicants": firebase.firestore.FieldValue.increment(
-          1
-        ),
-        "employerStats.newApplicants": firebase.firestore.FieldValue.increment(
-          1
-        )
-      })
-      .then(() => {
-        // console.log("Document successfully updated!");
-      })
-      .catch(error => {
-        // console.log("Error updating document:", error);
-      });
-
-    //UPDATE JOB STATS
-    db.collection("jobStats")
-      .doc(postedBy)
-      .collection("jobStats")
-      .doc(jobID)
-      .update({
-        applied: firebase.firestore.FieldValue.increment(1)
-      })
-      .then(() => {
-        // console.log("Document successfully updated!");
-      })
-      .catch(error => {
-        // console.log("Error updating document:", error);
-      });
-
-    //UPDATING PROFILE
-    if (state.modified) {
-      db.collection("users")
-        .doc(state.uid)
-        .update({
+    try {
+      await db
+        .collection("applications-employer")
+        .doc(postedBy)
+        .collection("applications")
+        .doc(applicationID)
+        .set({
+          id: applicationID,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          date: Date.now(),
+          jobID: jobID,
+          jobTitle: jobTitle,
+          companyName: companyName,
+          email: state.email,
           firstName: state.firstName,
           lastName: state.lastName,
           country: state.country,
           zipCode: state.zipCode,
-          timezone: state.timezone,
           yearsOfExperience: state.yearsOfExperience,
-          resume: state.resume
-        })
-        .catch(error => {
-          // console.log(error);
+          timezone: state.timezone,
+          resume: state.resume,
+          status: "unchecked"
         });
+      enqueueSnackbar("Application Sent", {
+        variant: "success"
+      });
+      handleClose();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
     }
+
+    //ADD APPLICATION TO EMPLOYEE DASHBOARD
+    try {
+      await db
+        .collection("applications-employee")
+        .doc(state.uid)
+        .collection("applications")
+        .doc(applicationID)
+        .set({
+          id: applicationID,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          date: Date.now(),
+          jobID: jobID,
+          jobTitle: jobTitle,
+          companyName: companyName,
+          resume: state.resume
+        });
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
+
+    //UPDATE EMPLOYEE DASHBOARD STATS
+    try {
+      await db
+        .collection("dashboardStats")
+        .doc(state.uid)
+        .update({
+          "employeeStats.totalApplications": firebase.firestore.FieldValue.increment(
+            1
+          )
+        });
+    } catch (error) {}
+
+    //UPDATE EMPLOYER DASHBOARD STATS
+    try {
+      await db
+        .collection("dashboardStats")
+        .doc(postedBy)
+        .update({
+          "employerStats.totalApplicants": firebase.firestore.FieldValue.increment(
+            1
+          ),
+          "employerStats.newApplicants": firebase.firestore.FieldValue.increment(
+            1
+          )
+        });
+    } catch (error) {}
+
+    //UPDATE JOB STATS
+    try {
+      await db
+        .collection("jobStats")
+        .doc(postedBy)
+        .collection("jobStats")
+        .doc(jobID)
+        .update({
+          applied: firebase.firestore.FieldValue.increment(1)
+        });
+    } catch (error) {}
+
+    //UPDATING PROFILE
+    try {
+      let jobsAppliedUpdated = [...state.jobsApplied, jobID];
+      dispatch({
+        type: "field",
+        fieldName: "jobsApplied",
+        payload: jobsAppliedUpdated
+      });
+      if (state.modified) {
+        await db
+          .collection("users")
+          .doc(state.uid)
+          .update({
+            firstName: state.firstName,
+            lastName: state.lastName,
+            country: state.country,
+            zipCode: state.zipCode,
+            timezone: state.timezone,
+            yearsOfExperience: state.yearsOfExperience,
+            resume: state.resume,
+            jobsApplied: jobsAppliedUpdated
+          });
+      } else {
+        await db
+          .collection("users")
+          .doc(state.uid)
+          .update({
+            jobsApplied: jobsAppliedUpdated
+          });
+      }
+    } catch (error) {}
   };
 
   const acceptedFilesItems = acceptedFiles.map((file, index) => {

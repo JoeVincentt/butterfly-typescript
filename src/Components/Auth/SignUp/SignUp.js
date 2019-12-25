@@ -165,7 +165,8 @@ const SignUp = props => {
             zipCode: "",
             timezone: "",
             yearsOfExperience: "",
-            resume: ""
+            resume: "",
+            jobsApplied: []
           }
         });
         setLoading(false);
@@ -217,7 +218,8 @@ const SignUp = props => {
         zipCode: "",
         timezone: "",
         yearsOfExperience: "",
-        resume: ""
+        resume: "",
+        jobsApplied: []
       })
       .catch(error => {
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {

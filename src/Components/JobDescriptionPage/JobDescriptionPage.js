@@ -19,10 +19,22 @@ import { UserStateContext } from "../../StateManagement/UserState";
 const JobDescriptionPage = ({ job, history }) => {
   const classes = useStyles();
 
-  const { isLoggedIn } = useContext(UserStateContext);
+  const state = useContext(UserStateContext);
 
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+
+  const [alreadyApplied, setAlreadyApplied] = useState(false);
+
+  useEffect(() => {
+    // console.log(id);
+    // console.log(state.jobsApplied);
+    if (job.id !== null && job.id !== undefined) {
+      const alreadyApplied = state.jobsApplied.includes(job.id);
+      setAlreadyApplied(alreadyApplied);
+    }
+    return () => {};
+  }, [job.id, state.jobsApplied]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -152,11 +164,11 @@ const JobDescriptionPage = ({ job, history }) => {
     >
       <GradientButton
         onClick={() =>
-          job.id !== "draftJobPosting" ? handleClickOpen() : () => {}
+          job.id !== "draftJobPosting" && !alreadyApplied && handleClickOpen()
         }
         size="large"
         labelName="apply"
-        text="apply for position"
+        text={alreadyApplied ? "you already applied" : "apply for position"}
       />
     </Grid>
   );

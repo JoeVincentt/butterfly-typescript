@@ -14,6 +14,16 @@ import "./App.css";
 
 let theme = createMuiTheme({
   overrides: {
+    MuiListItemIcon: {
+      root: {
+        minWidth: 40
+      }
+    },
+    MuiDrawer: {
+      paper: {
+        minWidth: 210
+      }
+    },
     MuiPaper: {
       elevation1: {
         boxShadow:
