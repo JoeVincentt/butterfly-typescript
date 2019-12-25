@@ -37,7 +37,7 @@ const getStepContent = stepIndex => {
 
 const PostJobForm = () => {
   const classes = useStyles();
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(0);
   const { paymentSuccess } = useContext(PaymentStateContext);
   const jobState = useContext(PostJobStateContext);
 

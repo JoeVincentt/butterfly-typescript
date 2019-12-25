@@ -37,9 +37,6 @@ const createOptions = () => {
   return {
     style: {
       base: {
-        border: "1px solid #c4c4c4",
-        borderRadius: "4px",
-        padding: "20px 5px",
         fontSize: "16px",
         color: "#424770",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
@@ -87,12 +84,18 @@ const _CardForm = props => {
         companyName: postJobState.companyName
       }
     });
-    return () =>
+    return () => {
       dispatch({
         type: "field",
         fieldName: "paymentSuccess",
         payload: false
       });
+      dispatch({
+        type: "field",
+        fieldName: "promoCode",
+        payload: ""
+      });
+    };
   }, []);
 
   const applyPromoCode = async () => {
@@ -133,7 +136,7 @@ const _CardForm = props => {
               variant: "success"
             });
           }
-          console.log(document.data());
+          // console.log(document.data());
         } else {
           enqueueSnackbar("Please Enter Valid Promo Code.", {
             variant: "error"

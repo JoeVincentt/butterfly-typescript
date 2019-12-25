@@ -28,6 +28,11 @@ const AdvertisementPlan = () => {
 
   useEffect(() => {
     setActive(jobState.advertisementPlan);
+    plans.forEach(plan => {
+      if (plan.name === jobState.advertisementPlan) {
+        dispatch({ type: "field", fieldName: "price", payload: plan.price });
+      }
+    });
   }, []);
 
   const selectPlan = (name, standardPrice) => {
