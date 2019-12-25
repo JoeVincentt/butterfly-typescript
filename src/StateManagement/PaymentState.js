@@ -26,6 +26,7 @@ const initialState = {
   email: "",
   companyName: "",
   price: 119,
+  promoCode: "",
   basePrice: 0,
   paymentSuccess: false
 };

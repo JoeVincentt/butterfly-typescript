@@ -1,0 +1,10 @@
+.StripeElement--empty {
+  border: 1px solid #c4c4c4 !important;
+  border-radius: 4px !important;
+  padding: 20px 5px !important;
+}
+.StripeElement--focus {
+  border: 2px solid #8a24aa !important;
+  border-radius: 4px !important;
+  padding: 20px 5px !important;
+}

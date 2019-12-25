@@ -15,9 +15,11 @@ import {
   Paper,
   Typography,
   TextField,
-  CircularProgress
+  CircularProgress,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import "./StripeOverride.css";
 
 import GradientButton from "../../Buttons/GradientButton";
 import { UserStateContext } from "../../../StateManagement/UserState";
@@ -35,6 +37,9 @@ const createOptions = () => {
   return {
     style: {
       base: {
+        border: "1px solid #c4c4c4",
+        borderRadius: "4px",
+        padding: "20px 5px",
         fontSize: "16px",
         color: "#424770",
         fontFamily: "Roboto, Helvetica, Arial, sans-serif",
@@ -64,11 +69,13 @@ const _CardForm = props => {
     lastName,
     companyName,
     price,
-    paymentSuccess
+    paymentSuccess,
+    promoCode
   } = useContext(PaymentStateContext);
   const dispatch = useContext(PaymentDispatchContext);
 
   const [loading, setLoading] = useState(false);
+  const [promoCodeToCheck, setPromoCodeToCheck] = useState("");
 
   useEffect(() => {
     dispatch({
@@ -88,7 +95,60 @@ const _CardForm = props => {
       });
   }, []);
 
-  const handleChange = ({ error }) => {
+  const applyPromoCode = async () => {
+    if (promoCodeToCheck.trim().length < 8) {
+      enqueueSnackbar("Please Enter Valid Promo Code.", {
+        variant: "error"
+      });
+    } else if (promoCode !== "") {
+      enqueueSnackbar("Only One Promo Code Can be Applied.", {
+        variant: "error"
+      });
+    } else {
+      try {
+        const document = await db
+          .collection("coupons")
+          .doc(promoCodeToCheck)
+          .get();
+        if (document.exists) {
+          const coupon = document.data();
+          if (coupon.expiration < Date.now()) {
+            enqueueSnackbar("Promo Code is Expired.", {
+              variant: "error"
+            });
+            setPromoCodeToCheck("");
+          } else {
+            const discountedPrice = price - (price * coupon.discount) / 100;
+            dispatch({
+              type: "field",
+              fieldName: "price",
+              payload: discountedPrice
+            });
+            dispatch({
+              type: "field",
+              fieldName: "promoCode",
+              payload: promoCodeToCheck
+            });
+            enqueueSnackbar("Promo Code Applied.", {
+              variant: "success"
+            });
+          }
+          console.log(document.data());
+        } else {
+          enqueueSnackbar("Please Enter Valid Promo Code.", {
+            variant: "error"
+          });
+          setPromoCodeToCheck("");
+        }
+      } catch (error) {
+        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+          variant: "error"
+        });
+      }
+    }
+  };
+
+  const handleCardNumberChangeInput = ({ error }) => {
     if (error) {
       enqueueSnackbar(`${error.message}`, {
         variant: "error"
@@ -99,7 +159,6 @@ const _CardForm = props => {
   const validateEmail = () => {
     return emailRegex.test(email.toLowerCase());
   };
-
   const paymentFormCheck = () => {
     if (
       email.trim().length <= 0 ||
@@ -130,6 +189,7 @@ const _CardForm = props => {
               enqueueSnackbar("Oops! Something went wrong! Please try again.", {
                 variant: "error"
               });
+
               setLoading(false);
               // console.log(payload.error);
             } else if (payload.token) {
@@ -162,6 +222,8 @@ const _CardForm = props => {
       lastName: lastName,
       companyName: companyName,
       amount: price,
+      promoCode: promoCode,
+      advertisementPlan: postJobState.advertisementPlan,
       token: token
     };
 
@@ -388,12 +450,44 @@ const _CardForm = props => {
             />
           </Grid>
         </Grid>
-
         <Grid>
-          <Typography variant="h6" className={classes.spacing}>
+          <Typography variant="h6" className={classes.promoCodeTitleText}>
+            Promo Code
+          </Typography>
+          <Grid container direction="row" alignItems="center" spacing={1}>
+            <Grid item xs={10}>
+              <TextField
+                id="PromoCode"
+                className={classes.textField}
+                label="Optional"
+                margin="normal"
+                variant="outlined"
+                fullWidth
+                disabled={loading || promoCode !== ""}
+                value={promoCodeToCheck}
+                onChange={e => setPromoCodeToCheck(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <Button
+                color="primary"
+                size="large"
+                disabled={loading || promoCode !== ""}
+                onClick={() => applyPromoCode()}
+              >
+                Apply
+              </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid>
+          <Typography variant="h6" className={classes.cardTitleText}>
             Credit or Debit Card
           </Typography>
-          <CardElement onChange={handleChange} {...createOptions()} />
+          <CardElement
+            onChange={handleCardNumberChangeInput}
+            {...createOptions()}
+          />
         </Grid>
         <Grid container justify="center" alignContent="center">
           <Grid item className={classes.button}>
@@ -470,6 +564,14 @@ const useStyles = makeStyles(theme => ({
   },
   spacing: {
     margin: theme.spacing(4, 0)
+  },
+  promoCodeTitleText: {
+    marginTop: 32,
+    marginBottom: -10
+  },
+  cardTitleText: {
+    marginTop: 20,
+    marginBottom: 10
   },
 
   textField: {}

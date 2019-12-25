@@ -195,7 +195,6 @@ const JobCard = ({
     <Grid container justify="center">
       <Grid item xs={12}>
         <Paper
-          id="job-card"
           className={
             advertisementPlan === "Marathon"
               ? classes.paperHighAd
