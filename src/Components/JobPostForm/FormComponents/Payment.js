@@ -115,7 +115,7 @@ const _CardForm = props => {
           .get();
         if (document.exists) {
           const coupon = document.data();
-          if (coupon.expiration < Date.now()) {
+          if (coupon.expiration < Date.now() + 3600000) {
             enqueueSnackbar("Promo Code is Expired.", {
               variant: "error"
             });
@@ -176,7 +176,7 @@ const _CardForm = props => {
     }
   };
 
-  const createToken = e => {
+  const createToken = async e => {
     // e.preventDefault();
     if (paymentFormCheck() === false) {
       enqueueSnackbar("Oops! Please fill-up all the fields.", {
@@ -185,28 +185,24 @@ const _CardForm = props => {
     } else {
       setLoading(true);
       if (props.stripe) {
-        props.stripe
-          .createToken()
-          .then(payload => {
-            if (payload.error) {
-              enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-                variant: "error"
-              });
-
-              setLoading(false);
-              // console.log(payload.error);
-            } else if (payload.token) {
-              // console.log("[token]", payload.token);
-              handlePaymentRequest(payload.token.id);
-            }
-          })
-          .catch(error => {
+        try {
+          const payload = await props.stripe.createToken();
+          if (payload.error) {
             enqueueSnackbar("Oops! Something went wrong! Please try again.", {
               variant: "error"
             });
             setLoading(false);
-            // console.log(error);
+            // console.log(payload.error);
+          } else if (payload.token) {
+            // console.log("[token]", payload.token);
+            handlePaymentRequest(payload.token.id);
+          }
+        } catch (error) {
+          enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+            variant: "error"
           });
+          setLoading(false);
+        }
       } else {
         // console.log("Stripe.js hasn't loaded yet.");
         enqueueSnackbar("Oops! Something went wrong! Please try again.", {

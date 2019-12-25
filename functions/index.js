@@ -16,7 +16,7 @@ exports.completePaymentWithStripe = functions.https.onRequest(
   (request, response) => {
     var corsFn = cors();
     corsFn(request, response, () => {
-      stripePayment(request, response, stripe);
+      stripePayment(request, response, stripe, admin);
     });
   }
 );

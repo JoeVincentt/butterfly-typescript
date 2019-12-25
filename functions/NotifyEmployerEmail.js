@@ -7,15 +7,17 @@ exports.notifyEmployerEmail = async function(request, response, sgMail, admin) {
       .collection("users")
       .doc(data.postedBy)
       .get();
-    const { email } = document.data();
-    const msg = {
-      to: email,
-      from: "no-reply@butterflyremote.com",
-      subject: `New Applicant: ${data.firstName} ${data.lastName} applied for ${data.jobTitle}`,
-      text: `New Applicant ${data.firstName}  ${data.lastName}. Position: ${data.jobTitle}. Applicant email: ${data.email}`
-    };
-    await sgMail.send(msg);
-    return response.status(200).send({ success: true });
+    if (document.exists) {
+      const { email } = document.data();
+      const msg = {
+        to: email,
+        from: "no-reply@butterflyremote.com",
+        subject: `New Applicant: ${data.firstName} ${data.lastName} applied for ${data.jobTitle}`,
+        text: `New Applicant ${data.firstName}  ${data.lastName}. Position: ${data.jobTitle}. Applicant email: ${data.email}`
+      };
+      await sgMail.send(msg);
+      return response.status(200).send({ success: true });
+    }
   } catch (error) {
     console.log(error);
     return response.status(400).response.send({ data: error, success: false });

@@ -17,6 +17,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Brightness1Icon from "@material-ui/icons/Brightness1";
 
 import { UserStateContext } from "../../../StateManagement/UserState";
 import defaultLogo from "../../../images/defaultLogo.jpg";
@@ -67,9 +68,29 @@ const JobListingOverview = ({ history }) => {
     });
   };
 
-  const renderJobOverview = (id, logo, title, views, applied) => (
+  const renderJobOverview = (id, logo, title, views, applied, status) => (
     <Paper className={classes.rootPaper}>
-      <Grid container direction="column" spacing={4}>
+      <Grid container direction="column" spacing={2}>
+        <Grid item style={{ marginBottom: -30 }}>
+          <Grid
+            container
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+          >
+            <Brightness1Icon
+              className={
+                status === "active"
+                  ? classes.activityIconActive
+                  : classes.activityIconExpired
+              }
+            />
+            <Typography variant="caption" className={classes.activityText}>
+              {status}
+            </Typography>
+          </Grid>
+        </Grid>
+
         <Grid item>
           <Grid
             container
@@ -101,7 +122,7 @@ const JobListingOverview = ({ history }) => {
         <Divider className={classes.divider} />
         <Grid item>
           <Grid container direction="row" spacing={1} alignItems="center">
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -125,7 +146,7 @@ const JobListingOverview = ({ history }) => {
                 </Grid>
               </Paper>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={6} sm={6}>
               <Paper elevation={0} className={classes.itemPaper}>
                 <Grid container direction="row" spacing={1}>
                   <Grid item>
@@ -173,6 +194,7 @@ const JobListingOverview = ({ history }) => {
             <Grid container justify="flex-end">
               <Button
                 color="primary"
+                className={classes.button}
                 size="large"
                 onClick={() => navigateToJobDetails(id)}
               >
@@ -228,7 +250,8 @@ const JobListingOverview = ({ history }) => {
                   job.logo,
                   job.title,
                   job.views,
-                  job.applied
+                  job.applied,
+                  job.status
                 )}
               </Grid>
             ))}
@@ -255,13 +278,24 @@ const useStyles = makeStyles(theme => ({
   rootPaper: {
     padding: theme.spacing(2)
   },
-  divider: {
-    marginLeft: 5,
-    marginRight: 5
-  },
   itemPaper: {
     padding: theme.spacing(2),
     border: "1px solid rgba(107, 19, 107, 0.2)"
+  },
+  activityIconActive: {
+    marginBottom: 2,
+    marginRight: 2,
+    color: "green",
+    fontSize: 9
+  },
+  activityIconExpired: {
+    marginBottom: 2,
+    marginRight: 2,
+    color: "red",
+    fontSize: 9
+  },
+  activityText: {
+    textTransform: "capitalize"
   },
   appliedIconBox: {
     backgroundColor: "rgba(48, 74, 241, 0.3)",
@@ -280,6 +314,9 @@ const useStyles = makeStyles(theme => ({
   },
   viewsIcon: {
     color: "rgb(44, 217, 17)"
+  },
+  button: {
+    margin: theme.spacing(1)
   }
 }));
 

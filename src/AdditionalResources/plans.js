@@ -7,7 +7,7 @@ export const plans = [
       "Email notifications",
       "1X Promotion on social media"
     ],
-    price: 49
+    price: 99
   },
   {
     name: "Marathon",
@@ -18,7 +18,7 @@ export const plans = [
       "3X Promotion on social media",
       "Highlight listing"
     ],
-    price: 119
+    price: 239
   },
   {
     name: "Mid-range",
@@ -28,6 +28,6 @@ export const plans = [
       "Email notifications",
       "2X Promotion on social media"
     ],
-    price: 89
+    price: 179
   }
 ];

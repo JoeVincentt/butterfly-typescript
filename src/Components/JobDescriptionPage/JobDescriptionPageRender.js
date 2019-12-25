@@ -27,7 +27,7 @@ const JobDescriptionPageRender = props => {
     // console.log(id);
     db.collection("jobs")
       .where("id", "==", id)
-      .where("status", "==", "active")
+      // .where("status", "==", "active")
       .get()
       .then(querySnapshot => {
         if (querySnapshot.size > 0) {

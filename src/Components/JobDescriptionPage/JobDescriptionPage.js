@@ -166,14 +166,23 @@ const JobDescriptionPage = ({ job, history }) => {
       alignItems="center"
       className={classes.applyButton}
     >
-      <GradientButton
-        onClick={() =>
-          job.id !== "draftJobPosting" && !alreadyApplied && handleClickOpen()
-        }
-        size="large"
-        labelName="apply"
-        text={alreadyApplied ? "you already applied" : "apply for position"}
-      />
+      {job.status === "active" ? (
+        <GradientButton
+          onClick={() =>
+            job.id !== "draftJobPosting" &&
+            !alreadyApplied &&
+            job.postedBy !== state.uid &&
+            handleClickOpen()
+          }
+          size="large"
+          labelName="apply"
+          text={alreadyApplied ? "you already applied" : "apply for position"}
+        />
+      ) : (
+        <Typography variant="caption" color="textSecondary">
+          Job Posting is Expired
+        </Typography>
+      )}
     </Grid>
   );
 
