@@ -3,14 +3,16 @@ import { useSnackbar } from "notistack";
 import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import { Link, withRouter } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Zoom from "@material-ui/core/Zoom";
-import Typography from "@material-ui/core/Typography";
+import {
+  TextField,
+  Grid,
+  Zoom,
+  Typography,
+  Checkbox,
+  LinearProgress
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControlLabel, Paper } from "@material-ui/core";
-import Checkbox from "@material-ui/core/Checkbox";
-import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { UserDispatchContext } from "../../../StateManagement/UserState";
 

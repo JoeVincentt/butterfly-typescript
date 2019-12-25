@@ -4,12 +4,14 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import { Helmet } from "react-helmet";
 import { Link, withRouter } from "react-router-dom";
-import Zoom from "@material-ui/core/Zoom";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import LinearProgress from "@material-ui/core/LinearProgress";
+import {
+  Zoom,
+  TextField,
+  Grid,
+  Paper,
+  Typography,
+  LinearProgress
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import GradientButton from "../../Buttons/GradientButton";

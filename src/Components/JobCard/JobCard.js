@@ -1,16 +1,20 @@
 import React, { useContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Fab from "@material-ui/core/Fab";
-import Paper from "@material-ui/core/Paper";
+import {
+  Typography,
+  Grid,
+  Fab,
+  Paper,
+  Hidden,
+  withWidth
+} from "@material-ui/core";
+
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import BusinessIcon from "@material-ui/icons/Business";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
 import DateRangeIcon from "@material-ui/icons/DateRange";
-import Hidden from "@material-ui/core/Hidden";
-import withWidth from "@material-ui/core/withWidth";
+
 import defaultLogo from "../../images/defaultLogo.jpg";
 import { UserStateContext } from "../../StateManagement/UserState";
 
@@ -40,7 +44,12 @@ const JobCard = ({
   useEffect(() => {
     // console.log(id);
     // console.log(state.jobsApplied);
-    if (id !== null && id !== undefined) {
+    if (
+      id !== null &&
+      id !== undefined &&
+      state.jobsApplied !== null &&
+      state.jobsApplied !== undefined
+    ) {
       const alreadyApplied = state.jobsApplied.includes(id);
       setAlreadyApplied(alreadyApplied);
     }

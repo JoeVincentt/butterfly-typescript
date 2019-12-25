@@ -1,9 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { Grid, Paper, Button } from "@material-ui/core";
+import { Grid, Paper, Button, Typography } from "@material-ui/core";
+
 import BusinessIcon from "@material-ui/icons/Business";
 import LocationOnIcon from "@material-ui/icons/LocationOn";
+
 import defaultLogo from "../../../images/defaultLogo.jpg";
 import colors from "../../../constants/colors";
 

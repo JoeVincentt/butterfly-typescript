@@ -2,17 +2,22 @@ import React from "react";
 import firebase from "firebase/app";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {
+  Divider,
+  Collapse,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon
+} from "@material-ui/core";
+
+import { ExpandLess, ExpandMore } from "@material-ui/icons";
 import CategoryIcon from "@material-ui/icons/Category";
 import HomeIcon from "@material-ui/icons/Home";
 import SpeedIcon from "@material-ui/icons/Speed";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { Divider, Collapse } from "@material-ui/core";
-import { ExpandLess, ExpandMore } from "@material-ui/icons";
+
 import logo from "../../images/logoFull.png";
 import { categoryList } from "../../AdditionalResources/categoryList";
 

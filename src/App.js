@@ -43,7 +43,7 @@ theme = responsiveFontSizes(theme);
 const App = props => {
   return (
     <ThemeProvider theme={theme}>
-      <SnackbarProvider maxSnack={4}>
+      <SnackbarProvider maxSnack={4} hideIconVariant={false}>
         <UserStateProvider>
           <PostJobStateProvider>
             <PaymentStateProvider>

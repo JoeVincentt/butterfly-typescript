@@ -4,10 +4,9 @@ import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
+import { LinearProgress, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { LinearProgress } from "@material-ui/core";
+
 import { renderJobsFeed } from "../utils/renderJobsFeed";
 import SeeMoreButton from "../../Buttons/SeeMoreButton";
 

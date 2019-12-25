@@ -1,20 +1,19 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Helmet } from "react-helmet";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import { Typography, LinearProgress } from "@material-ui/core";
+import { Typography, LinearProgress, Paper, Grid } from "@material-ui/core";
+
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import { convertTimestamp } from "../utils/convertTimestamp";
-import { Helmet } from "react-helmet";
-import colors from "../../constants/colors";
 
 import ShareButtons from "./Components/ShareButtons";
 import ApplicationDialog from "../Application/ApplicationDialog";
 import GradientButton from "../Buttons/GradientButton";
 import CompanyInfoCard from "./Components/CompanyInfoCard";
 import { UserStateContext } from "../../StateManagement/UserState";
+import { convertTimestamp } from "../utils/convertTimestamp";
+import colors from "../../constants/colors";
 
 const JobDescriptionPage = ({ job, history }) => {
   const classes = useStyles();
@@ -29,7 +28,12 @@ const JobDescriptionPage = ({ job, history }) => {
   useEffect(() => {
     // console.log(id);
     // console.log(state.jobsApplied);
-    if (job.id !== null && job.id !== undefined) {
+    if (
+      job.id !== null &&
+      job.id !== undefined &&
+      state.jobsApplied !== null &&
+      state.jobsApplied !== undefined
+    ) {
       const alreadyApplied = state.jobsApplied.includes(job.id);
       setAlreadyApplied(alreadyApplied);
     }

@@ -2,8 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
-import ApplicantsList from "./ApplicantsList";
 import { LinearProgress } from "@material-ui/core";
+
+import ApplicantsList from "./ApplicantsList";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 const ApplicationListRender = props => {

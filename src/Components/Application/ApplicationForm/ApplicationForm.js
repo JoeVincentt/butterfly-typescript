@@ -12,13 +12,14 @@ import {
   TextField,
   Button,
   LinearProgress,
-  CircularProgress
+  CircularProgress,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
+
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { useDropzone } from "react-dropzone";

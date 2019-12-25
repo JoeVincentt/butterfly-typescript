@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Fab from "@material-ui/core/Fab";
+import { Fab } from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 
 const SubscriptionButton = () => {

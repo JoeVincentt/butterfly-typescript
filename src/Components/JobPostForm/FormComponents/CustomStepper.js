@@ -1,11 +1,10 @@
 import React from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Check from "@material-ui/icons/Check";
-import StepConnector from "@material-ui/core/StepConnector";
 import clsx from "clsx";
+
+import { Stepper, Step, StepLabel, StepConnector } from "@material-ui/core";
+
+import Check from "@material-ui/icons/Check";
 
 const CustomStepper = ({ activeStep, steps }) => {
   const classes = useStyles();

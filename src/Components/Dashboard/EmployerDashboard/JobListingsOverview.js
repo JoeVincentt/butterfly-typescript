@@ -12,10 +12,12 @@ import {
   LinearProgress,
   Box
 } from "@material-ui/core";
+
 import { makeStyles } from "@material-ui/core/styles";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
 import { UserStateContext } from "../../../StateManagement/UserState";
 import defaultLogo from "../../../images/defaultLogo.jpg";
 

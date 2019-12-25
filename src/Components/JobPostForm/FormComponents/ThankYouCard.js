@@ -2,6 +2,7 @@ import React from "react";
 import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid, Typography, Paper } from "@material-ui/core";
+
 import colors from "../../../constants/colors";
 import GradientButton from "../../Buttons/GradientButton";
 

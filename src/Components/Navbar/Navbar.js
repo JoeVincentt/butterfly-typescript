@@ -1,29 +1,33 @@
 import React, { useState, useContext, useEffect } from "react";
+import PropTypes from "prop-types";
+import { Link, withRouter } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { Link, withRouter } from "react-router-dom";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import Hidden from "@material-ui/core/Hidden";
-import withWidth from "@material-ui/core/withWidth";
-import Fab from "@material-ui/core/Fab";
-import GradientButton from "../Buttons/GradientButton";
+
+import {
+  Button,
+  Grid,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Hidden,
+  withWidth,
+  Fab
+} from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import SpeedIcon from "@material-ui/icons/Speed";
-import { Button, Grid } from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+
+import GradientButton from "../Buttons/GradientButton";
 import CategoryMenuButton from "./CategoryMenu";
+import MenuDrawer from "./MenuDrawer";
 import {
   UserStateContext,
   UserDispatchContext
 } from "../../StateManagement/UserState";
-
 import colors from "../../constants/colors";
-import MenuDrawer from "./MenuDrawer";
 
 const Navbar = props => {
   const classes = useStyles();
@@ -35,7 +39,7 @@ const Navbar = props => {
   const { isLoggedIn } = state;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const navigateToPostJobScreen = () => props.history.push("/post-a-job");
+  // const navigateToPostJobScreen = () => props.history.push("/post-a-job");
 
   const navigateToLoginScreen = () => props.history.push("/sign-in");
 
@@ -158,12 +162,12 @@ const Navbar = props => {
             </Hidden>
           </div>
 
-          <GradientButton
+          {/* <GradientButton
             onClick={navigateToPostJobScreen}
             size="medium"
             labelName="postAJob"
             text="Post A Job"
-          />
+          /> */}
           <Hidden xsDown>
             <Fab
               onClick={() => (isLoggedIn ? signOut() : navigateToLoginScreen())}

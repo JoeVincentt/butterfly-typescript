@@ -18,6 +18,7 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
 import GradientButton from "../../Buttons/GradientButton";
 import { UserStateContext } from "../../../StateManagement/UserState";
 import { PostJobStateContext } from "../../../StateManagement/PostJobState";

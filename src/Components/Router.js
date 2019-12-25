@@ -2,19 +2,17 @@ import React, { Suspense } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { ProtectedRoute } from "./utils/ProtectedRoute";
-import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
-import { LinearProgress } from "@material-ui/core";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Fab from "@material-ui/core/Fab";
+import { LinearProgress, CssBaseline, Fab, Toolbar } from "@material-ui/core";
+
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
+
 import ScrollToTheTop from "./ScrollToTheTop";
 import Navbar from "./Navbar/Navbar";
 import Footer from "./Footer/Footer";
 import JobsHomeFeed from "./JobsFeed/JobsHomeFeed";
 import CompanyBar from "./CompanyBar/CompanyBar";
 import CookieBanner from "./Footer/FooterComponents/CookieBanner";
-
 import Subscribe from "./Pre-subscription/Subscribe";
 
 import colors from "../constants/colors";
@@ -59,14 +57,7 @@ const Content = props => {
   const classes = useStyles();
 
   return (
-    <Suspense
-      fallback={
-        <div className={classes.loadingBar}>
-          <CompanyBar />
-          <LinearProgress />
-        </div>
-      }
-    >
+    <Suspense fallback={<LinearProgress />}>
       <Router>
         <div className={classes.root}>
           <CssBaseline />
@@ -143,12 +134,6 @@ const Content = props => {
 };
 
 const useStyles = makeStyles(theme => ({
-  loadingBar: {
-    paddingTop: 54,
-    "@media (min-width: 600px)": {
-      paddingTop: 64
-    }
-  },
   root: {
     display: "flex",
     flexDirection: "column",

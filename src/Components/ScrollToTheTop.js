@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
-import Zoom from "@material-ui/core/Zoom";
+import { useScrollTrigger, Zoom } from "@material-ui/core";
 
 const ScrollToTheTop = props => {
   const { children, window } = props;

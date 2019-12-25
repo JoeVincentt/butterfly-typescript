@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
+import { LinearProgress } from "@material-ui/core";
+
 import {
   // PostJobDispatchContext,
   PostJobStateContext
 } from "../../../StateManagement/PostJobState";
-
 import JobDescriptionPage from "../../JobDescriptionPage/JobDescriptionPage";
-import { LinearProgress } from "@material-ui/core";
 
 const PreviewJobPosting = job => {
   const [loading, setLoading] = useState(true);

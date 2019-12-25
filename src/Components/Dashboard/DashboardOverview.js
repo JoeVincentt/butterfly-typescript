@@ -12,10 +12,12 @@ import {
   LinearProgress
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+
 import WorkOutlineIcon from "@material-ui/icons/WorkOutline";
 import NotificationsNoneIcon from "@material-ui/icons/NotificationsNone";
 import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import CheckIcon from "@material-ui/icons/Check";
+
 import { UserStateContext } from "../../StateManagement/UserState";
 
 const DashboardOverview = props => {

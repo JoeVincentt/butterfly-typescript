@@ -4,24 +4,25 @@ import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/storage";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import {
   Grid,
   Paper,
   Typography,
   IconButton,
   LinearProgress,
-  Button
+  Button,
+  InputLabel,
+  MenuItem,
+  FormControlLabel,
+  FormControl,
+  Select,
+  RadioGroup
 } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import { Add, Remove } from "@material-ui/icons";
 import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import RadioGroup from "@material-ui/core/RadioGroup";
+
 import StyledRadio from "../../Buttons/StyledRadio";
 import { useDropzone } from "react-dropzone";
 import {

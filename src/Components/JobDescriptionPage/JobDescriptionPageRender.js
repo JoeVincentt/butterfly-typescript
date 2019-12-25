@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { withRouter } from "react-router-dom";
-import JobDescriptionPage from "./JobDescriptionPage";
 import { LinearProgress } from "@material-ui/core";
+
+import JobDescriptionPage from "./JobDescriptionPage";
 import NoMatch from "../404 Page/NoMatch";
 
 const JobDescriptionPageRender = props => {

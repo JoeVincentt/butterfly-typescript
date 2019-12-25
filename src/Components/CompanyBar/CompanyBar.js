@@ -1,16 +1,19 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import { Grid } from "@material-ui/core";
 
 import backgroundImage from "../../images/companybar.jpg";
 import logo from "../../images/logoFull.png";
-import { Grid } from "@material-ui/core";
+import GradientButton from "../Buttons/GradientButton";
 
-const CompanyBar = () => {
+const CompanyBar = props => {
   const classes = useStyles();
 
   return (
     <Grid
       container
+      direction="column"
       justify="center"
       alignItems="center"
       alignContent="center"
@@ -19,6 +22,12 @@ const CompanyBar = () => {
       <Grid className={classes.logoBox}>
         <img src={logo} alt="logo" className={classes.logo} />
       </Grid>
+      <GradientButton
+        onClick={() => props.history.push("/post-a-job")}
+        size="medium"
+        labelName="postAJob"
+        text="Post A Job"
+      />
     </Grid>
   );
 };
@@ -26,6 +35,7 @@ const CompanyBar = () => {
 const useStyles = makeStyles(theme => ({
   root: {
     height: "400px",
+    marginBottom: theme.spacing(4),
     backgroundImage: `url(${backgroundImage})`,
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
@@ -51,4 +61,4 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default CompanyBar;
+export default withRouter(CompanyBar);
