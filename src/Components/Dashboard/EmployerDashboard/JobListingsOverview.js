@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { withRouter } from "react-router-dom";
+import { useSnackbar } from "notistack";
 import { Helmet } from "react-helmet";
 import firebase from "firebase/app";
 import "firebase/firestore";
@@ -19,43 +20,87 @@ import PeopleOutlineIcon from "@material-ui/icons/PeopleOutline";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Brightness1Icon from "@material-ui/icons/Brightness1";
 
+import SeeMoreButton from "../../Buttons/SeeMoreButton";
 import { UserStateContext } from "../../../StateManagement/UserState";
 import defaultLogo from "../../../images/defaultLogo.jpg";
 
 const JobListingOverview = ({ history }) => {
   const classes = useStyles();
   const db = firebase.firestore();
-
+  const { enqueueSnackbar } = useSnackbar();
   const state = useContext(UserStateContext);
 
-  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let jobsDraft = [];
-    db.collection("jobStats")
-      .doc(state.uid)
-      .collection("jobStats")
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          console.log(doc.id, " => ", doc.data());
-          jobsDraft.push(doc.data());
-        });
-      })
-      .then(() => {
-        // console.log(jobs);
-        setJobs(jobsDraft);
-        setLoading(false);
-      })
-      .catch(error => {
-        setLoading(false);
-        console.log("Error getting documents: ", error);
-      });
+  //Jobs State
+  const [loadingMoreJobs, setLoadingMoreJobs] = useState(false);
+  const [lastVisibleJob, setLastVisibleJob] = useState(null);
+  const [noMoreJobs, setNoMoreJobs] = useState(false);
+  const [jobs, setJobs] = useState([]);
 
-    //     setLoading(false);
+  useEffect(() => {
+    getJobs();
   }, []);
+
+  const getJobs = async () => {
+    let jobsDraft = [];
+    try {
+      const querySnapshot = await db
+        .collection("jobStats")
+        .doc(state.uid)
+        .collection("jobStats")
+        .orderBy("status", "asc")
+        .orderBy("title", "asc")
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleJob(lastVisible);
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        jobsDraft.push(doc.data());
+      });
+      setJobs(jobsDraft);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      // console.log("Error getting documents: ", error);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
+  };
+
+  const loadMoreJobs = async () => {
+    setLoadingMoreJobs(true);
+    let jobsDraft = [...jobs];
+    try {
+      const querySnapshot = await db
+        .collection("jobStats")
+        .doc(state.uid)
+        .collection("jobStats")
+        .orderBy("status", "asc")
+        .orderBy("title", "asc")
+        .startAfter(lastVisibleJob)
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleJob(lastVisible);
+      if (lastVisible === undefined) {
+        setNoMoreJobs(true);
+      }
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        jobsDraft.push(doc.data());
+      });
+      setJobs(jobsDraft);
+      setLoadingMoreJobs(false);
+    } catch (error) {
+      setLoadingMoreJobs(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
+  };
 
   const navigateToJobDetails = id => {
     // console.log(history);
@@ -181,7 +226,7 @@ const JobListingOverview = ({ history }) => {
                 size="large"
                 // endIcon={<ArrowForwardIcon />}
                 onClick={() => {
-                  console.log(id);
+                  // console.log(id);
                   history.push(`/dashboard-employer/applicants-list/${id}`);
                 }}
               >
@@ -234,7 +279,7 @@ const JobListingOverview = ({ history }) => {
               </Typography>
             </Box>
           )}
-          <Grid container justify="space-around" alignContent="center">
+          <Grid container justify="center" alignContent="center">
             {jobs.map((job, index) => (
               <Grid
                 key={job.id}
@@ -256,6 +301,14 @@ const JobListingOverview = ({ history }) => {
               </Grid>
             ))}
           </Grid>
+          {jobs.length > 0 && (
+            <SeeMoreButton
+              handleLoad={() => loadMoreJobs()}
+              loading={loadingMoreJobs}
+              noMoreJobs={noMoreJobs}
+              text={"No More Job Postings"}
+            />
+          )}
         </div>
       </React.Fragment>
     );

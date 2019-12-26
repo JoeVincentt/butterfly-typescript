@@ -14,7 +14,7 @@ const JobsFeed = ({ jobs, history }) => {
   const classes = useStyles();
   const db = firebase.firestore();
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [loading, setLoading] = useState(true);
 
@@ -40,134 +40,126 @@ const JobsFeed = ({ jobs, history }) => {
     getFeaturedJobs();
   }, []);
 
-  const getFeaturedJobs = () => {
+  const getFeaturedJobs = async () => {
     let jobs = [];
-    db.collection("jobs")
-      .where("advertisementPlan", "==", "Marathon")
-      .where("status", "==", "active")
-      .orderBy("date", "desc")
-      .limit(5)
-      .get()
-      .then(querySnapshot => {
-        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleFeaturedJob(lastVisible);
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          jobs.push(doc.data());
-        });
-      })
-      .then(() => {
-        setFeaturedJobs(jobs);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.log(error);
-        setLoading(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
+    try {
+      const querySnapshot = await db
+        .collection("jobs")
+        .where("advertisementPlan", "==", "Marathon")
+        .where("status", "==", "active")
+        .orderBy("date", "desc")
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleFeaturedJob(lastVisible);
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        jobs.push(doc.data());
       });
+      setFeaturedJobs(jobs);
+      setLoading(false);
+    } catch (error) {
+      // console.log(error);
+      setLoading(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
   };
 
-  const loadMoreFeaturedJobs = () => {
+  const loadMoreFeaturedJobs = async () => {
     setLoadingMoreFeaturedJobs(true);
     let jobs = [...featuredJobs];
-    db.collection("jobs")
-      .where("advertisementPlan", "==", "Marathon")
-      .where("status", "==", "active")
-      .orderBy("date", "desc")
-      .startAfter(lastVisibleFeaturedJob)
-      .limit(5)
-      .get()
-      .then(querySnapshot => {
-        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleFeaturedJob(lastVisible);
-        if (lastVisible === undefined) {
-          setNoMoreJobsInFeaturedCategory(true);
-        }
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          jobs.push(doc.data());
-        });
-      })
-      .then(() => {
-        setFeaturedJobs(jobs);
-        setLoadingMoreFeaturedJobs(false);
-      })
-      .catch(error => {
-        setLoadingMoreFeaturedJobs(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
+
+    try {
+      const querySnapshot = await db
+        .collection("jobs")
+        .where("advertisementPlan", "==", "Marathon")
+        .where("status", "==", "active")
+        .orderBy("date", "desc")
+        .startAfter(lastVisibleFeaturedJob)
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleFeaturedJob(lastVisible);
+      if (lastVisible === undefined) {
+        setNoMoreJobsInFeaturedCategory(true);
+      }
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        jobs.push(doc.data());
       });
+      setFeaturedJobs(jobs);
+      setLoadingMoreFeaturedJobs(false);
+    } catch (error) {
+      setLoadingMoreFeaturedJobs(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
   };
 
-  const getRecentJobs = () => {
+  const getRecentJobs = async () => {
     let sevenDaysFromNow = Date.now() - 604800000;
     let jobs = [];
-    db.collection("jobs")
-      .where("date", ">=", sevenDaysFromNow)
-      .where("status", "==", "active")
-      .orderBy("date", "desc")
-      .limit(5)
-      .get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(function(doc) {
-          var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-          setLastVisibleRecentJob(lastVisible);
-          // doc.data() is never undefined for query doc snapshots
-          jobs.push(doc.data());
-        });
-      })
-      .then(() => {
-        setRecentJobs(jobs);
-        // console.log(jobs);
-        setLoadingMoreRecentJobs(false);
-      })
-      .catch(error => {
-        // console.log(error);
-        setLoadingMoreRecentJobs(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
+    try {
+      const querySnapshot = await db
+        .collection("jobs")
+        .where("date", ">=", sevenDaysFromNow)
+        .where("status", "==", "active")
+        .orderBy("date", "desc")
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleRecentJob(lastVisible);
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        jobs.push(doc.data());
       });
+      setRecentJobs(jobs);
+      setLoadingMoreRecentJobs(false);
+    } catch (error) {
+      setLoadingMoreRecentJobs(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
   };
 
-  const loadMoreRecentJobs = () => {
+  const loadMoreRecentJobs = async () => {
     setLoadingMoreRecentJobs(true);
     let sevenDaysFromNow = Date.now() - 604800000;
     let jobs = [...recentJobs];
-    db.collection("jobs")
-      .where("date", ">=", sevenDaysFromNow)
-      .where("status", "==", "active")
-      .orderBy("date", "desc")
-      .startAfter(lastVisibleRecentJob)
-      .limit(5)
-      .get()
-      .then(querySnapshot => {
-        var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
-        setLastVisibleRecentJob(lastVisible);
-        if (lastVisible === undefined) {
-          setNoMoreJobsInRecentCategory(true);
-        }
-        querySnapshot.forEach(function(doc) {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          jobs.push(doc.data());
-        });
-      })
-      .then(() => {
-        setRecentJobs(jobs);
-        setLoadingMoreRecentJobs(false);
-      })
-      .catch(error => {
-        setLoadingMoreRecentJobs(false);
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
-        });
+
+    try {
+      const querySnapshot = await db
+        .collection("jobs")
+        .where("date", ">=", sevenDaysFromNow)
+        .where("status", "==", "active")
+        .orderBy("date", "desc")
+        .startAfter(lastVisibleRecentJob)
+        .limit(5)
+        .get();
+      var lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setLastVisibleRecentJob(lastVisible);
+      if (lastVisible === undefined) {
+        setNoMoreJobsInRecentCategory(true);
+      }
+      await querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        jobs.push(doc.data());
       });
+      setRecentJobs(jobs);
+      setLoadingMoreRecentJobs(false);
+    } catch (error) {
+      setLoadingMoreRecentJobs(false);
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
+      });
+    }
   };
 
   const navigateToJobDetails = id => {
@@ -208,6 +200,7 @@ const JobsFeed = ({ jobs, history }) => {
                   handleLoad={() => loadMoreFeaturedJobs()}
                   loading={loadingMoreFeaturedJobs}
                   noMoreJobs={noMoreJobsInFeaturedCategory}
+                  text="no more featured jobs"
                 />
               )}
             </Grid>
@@ -232,6 +225,7 @@ const JobsFeed = ({ jobs, history }) => {
                   handleLoad={() => loadMoreRecentJobs()}
                   loading={loadingMoreRecentJobs}
                   noMoreJobs={noMoreJobsInRecentCategory}
+                  text="no more recent jobs"
                 />
               )}
             </Grid>

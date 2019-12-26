@@ -256,7 +256,7 @@ const EnhancedTable = props => {
       })
       .catch(function(error) {
         setLoading(false);
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
       });
   }, []);
 
@@ -326,8 +326,8 @@ const EnhancedTable = props => {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const handleDelete = () => {
-    console.log("delete");
-    console.log(selected);
+    // console.log("delete");
+    // console.log(selected);
     let newRows = [...rows];
     newRows = newRows.filter(row => {
       if (!selected.includes(row.id)) {
@@ -340,10 +340,10 @@ const EnhancedTable = props => {
           .doc(row.id)
           .delete()
           .then(function() {
-            console.log("Document successfully deleted!");
+            // console.log("Document successfully deleted!");
           })
           .catch(function(error) {
-            console.error("Error removing document: ", error);
+            // console.error("Error removing document: ", error);
           });
 
         //UPDATE EMPLOYEE DASHBOARD STATS
@@ -355,10 +355,10 @@ const EnhancedTable = props => {
             )
           })
           .then(() => {
-            console.log("Document successfully updated!");
+            // console.log("Document successfully updated!");
           })
           .catch(error => {
-            console.log("Error updating document:", error);
+            // console.log("Error updating document:", error);
           });
 
         return null;

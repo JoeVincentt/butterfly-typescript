@@ -8,6 +8,7 @@ sgMail.setApiKey(functions.config().sendgrid.key);
 const { stripePayment } = require("./StripePayment");
 const { contactUsEmail } = require("./ContactUsEmail");
 const { notifyEmployerEmail } = require("./NotifyEmployerEmail");
+const { jobPostingExpireCleanUp } = require("./JobPostingExpireCleanUp");
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -35,6 +36,19 @@ exports.notifyEmployerByEmailWhenNewApplication = functions.https.onRequest(
     var corsFn = cors();
     corsFn(request, response, () => {
       notifyEmployerEmail(request, response, sgMail, admin);
+    });
+  }
+);
+// exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
+//   console.log('This will be run every 5 minutes!');
+//   return null;
+// });
+
+exports.setJobPostingExpireCleanUp = functions.https.onRequest(
+  (request, response) => {
+    var corsFn = cors();
+    corsFn(request, response, () => {
+      jobPostingExpireCleanUp(request, response, admin);
     });
   }
 );

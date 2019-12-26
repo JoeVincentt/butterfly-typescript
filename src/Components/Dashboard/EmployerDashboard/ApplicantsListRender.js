@@ -17,7 +17,7 @@ const ApplicationListRender = props => {
   useEffect(() => {
     if (props.match.params.jobID !== null) {
       fetchApplicants();
-      console.log(props.match.params);
+      // console.log(props.match.params);
     }
   }, []);
 
@@ -59,7 +59,7 @@ const ApplicationListRender = props => {
       })
       .catch(function(error) {
         setLoading(false);
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
       });
   };
 

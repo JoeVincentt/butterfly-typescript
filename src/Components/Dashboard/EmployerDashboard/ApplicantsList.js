@@ -260,23 +260,21 @@ const EnhancedTable = props => {
   useEffect(() => {
     setRow(props.rows);
     setLoading(false);
+    //reset New Applicants field
+    resetNewApplicantsStats();
     return () => {};
   }, []);
 
-  //reset New Applicants field
-  useEffect(() => {
-    db.collection("dashboardStats")
-      .doc(state.uid)
-      .update({
-        "employerStats.newApplicants": 0
-      })
-      .then(() => {
-        console.log("Document successfully updated!");
-      })
-      .catch(error => {
-        console.log("Error updating document:", error);
-      });
-  }, []);
+  const resetNewApplicantsStats = async () => {
+    try {
+      await db
+        .collection("dashboardStats")
+        .doc(state.uid)
+        .update({
+          "employerStats.newApplicants": 0
+        });
+    } catch (error) {}
+  };
 
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === "desc";
@@ -333,8 +331,8 @@ const EnhancedTable = props => {
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const handleDelete = () => {
-    console.log("delete");
-    console.log(selected);
+    // console.log("delete");
+    // console.log(selected);
     let newRows = [...rows];
     newRows = newRows.filter(row => {
       if (!selected.includes(row.id)) {
@@ -346,10 +344,10 @@ const EnhancedTable = props => {
           .doc(row.id)
           .delete()
           .then(function() {
-            console.log("Document successfully deleted!");
+            // console.log("Document successfully deleted!");
           })
           .catch(function(error) {
-            console.error("Error removing document: ", error);
+            // console.error("Error removing document: ", error);
           });
 
         //UPDATE EMPLOYER DASHBOARD STATS
@@ -361,10 +359,10 @@ const EnhancedTable = props => {
             )
           })
           .then(() => {
-            console.log("Document successfully updated!");
+            // console.log("Document successfully updated!");
           })
           .catch(error => {
-            console.log("Error updating document:", error);
+            // console.log("Error updating document:", error);
           });
 
         return null;
@@ -391,10 +389,10 @@ const EnhancedTable = props => {
             }
           });
           setRow(newRows);
-          console.log("Document successfully updated!");
+          // console.log("Document successfully updated!");
         })
         .catch(function(error) {
-          console.error("Error updating document: ", error);
+          // console.error("Error updating document: ", error);
         });
     } else {
       return;

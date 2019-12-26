@@ -44,10 +44,10 @@ const JobDescriptionPageRender = props => {
               views: firebase.firestore.FieldValue.increment(1)
             })
             .then(() => {
-              console.log("Document successfully updated!");
+              // console.log("Document successfully updated!");
             })
             .catch(error => {
-              console.log("Error updating document:", error);
+              // console.log("Error updating document:", error);
             });
           setLoading(false);
         } else {
@@ -57,7 +57,7 @@ const JobDescriptionPageRender = props => {
         }
       })
       .catch(error => {
-        console.log("Error getting document:", error);
+        // console.log("Error getting document:", error);
       });
   };
 

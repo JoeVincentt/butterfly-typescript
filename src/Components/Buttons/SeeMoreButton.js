@@ -3,7 +3,7 @@ import ExpandMoreOutlinedIcon from "@material-ui/icons/ExpandMoreOutlined";
 import { Button, Box, CircularProgress } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const SeeMoreButton = ({ handleLoad, loading, noMoreJobs }) => {
+const SeeMoreButton = ({ handleLoad, loading, noMoreJobs, text }) => {
   const classes = useStyles();
 
   if (loading) {
@@ -23,7 +23,7 @@ const SeeMoreButton = ({ handleLoad, loading, noMoreJobs }) => {
           endIcon={<ExpandMoreOutlinedIcon />}
           onClick={() => handleLoad()}
         >
-          {noMoreJobs ? "no more jobs in this category" : "see more"}
+          {noMoreJobs ? text : "see more"}
         </Button>
       </Box>
     );

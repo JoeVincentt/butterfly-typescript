@@ -87,7 +87,7 @@ const JobCard = ({
 
   const renderTimePostedSmallScreen = () => (
     <Hidden smUp>
-      <Grid item xs={6}>
+      <Grid item xs={6} style={{ alignSelf: "flex-start" }}>
         <Grid container direction="row" justify="flex-end" alignItems="center">
           <AccessTimeIcon className={classes.icon} />
           <Typography variant="subtitle2" style={{ color: "#616161" }}>
@@ -100,7 +100,7 @@ const JobCard = ({
 
   const renderTimePostedMediumAndUpScreen = () => (
     <Hidden xsDown>
-      <Grid item xs={2}>
+      <Grid item xs={2} style={{ alignSelf: "flex-start" }}>
         <Grid container direction="row" justify="flex-end" alignItems="center">
           <AccessTimeIcon className={classes.icon} />
           <Typography variant="subtitle2" style={{ color: "#616161" }}>

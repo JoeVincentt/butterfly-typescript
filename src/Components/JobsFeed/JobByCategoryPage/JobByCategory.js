@@ -134,6 +134,7 @@ const JobsFeed = ({ history, location }) => {
                 handleLoad={() => loadMoreInCategoryJobs()}
                 loading={loadingMoreInCategoryJobs}
                 noMoreJobs={noMoreJobsInCategoryCategory}
+                text={`no more ${location.state.category} jobs`}
               />
             )}
           </Grid>
