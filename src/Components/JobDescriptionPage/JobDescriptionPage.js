@@ -52,7 +52,7 @@ const JobDescriptionPage = ({ job, history }) => {
   }, []);
 
   const renderDateAndJobType = (date, jobType) => (
-    <Grid container justify="space-between">
+    <Grid container justify="space-between" style={{ marginBottom: 16 }}>
       <Grid item>
         <Grid
           container

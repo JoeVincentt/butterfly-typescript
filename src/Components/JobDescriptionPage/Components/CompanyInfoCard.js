@@ -55,8 +55,15 @@ const CompanyInfoCard = ({
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={11}>
-        <Typography variant="body1">{companyAbout}</Typography>
+      <Grid item xs={12}>
+        <Grid
+          container
+          justify="flex-start"
+          alignContent="center"
+          style={{ padding: 20 }}
+        >
+          <Typography variant="body1">{companyAbout}</Typography>
+        </Grid>
       </Grid>
       {companyWebsite !== null && companyWebsite !== "" && (
         <Grid item>

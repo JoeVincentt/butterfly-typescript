@@ -32,6 +32,7 @@ exports.jobPostingExpireCleanUp = async function(request, response, admin) {
         .update({
           status: "expired"
         });
+      return true;
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +62,7 @@ exports.jobPostingExpireCleanUp = async function(request, response, admin) {
         return updateDocuments(docData.id, docData.postedBy);
       } else {
         //   console.log("job is not expired");
-        return;
+        return false;
       }
     });
 
