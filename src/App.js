@@ -10,6 +10,8 @@ import Content from "./Components/Router";
 import { UserStateProvider } from "./StateManagement/UserState";
 import { PostJobStateProvider } from "./StateManagement/PostJobState";
 import { PaymentStateProvider } from "./StateManagement/PaymentState";
+// Include only the reset
+import "instantsearch.css/themes/reset.css";
 import "./App.css";
 
 let theme = createMuiTheme({

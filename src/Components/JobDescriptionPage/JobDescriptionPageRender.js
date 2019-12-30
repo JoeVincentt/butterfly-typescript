@@ -20,7 +20,7 @@ const JobDescriptionPageRender = props => {
       getJobDescription();
     }
     //need to fetch job description from the database
-  }, []);
+  }, [props.match.params.id]);
 
   const getJobDescription = () => {
     const id = props.match.params.id.toString();

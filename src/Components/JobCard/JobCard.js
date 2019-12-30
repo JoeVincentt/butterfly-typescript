@@ -7,7 +7,9 @@ import {
   Fab,
   Paper,
   Hidden,
-  withWidth
+  Grow,
+  withWidth,
+  Zoom
 } from "@material-ui/core";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
@@ -38,12 +40,14 @@ const JobCard = ({
   const state = useContext(UserStateContext);
   const { isLoggedIn } = state;
   const [open, setOpen] = useState(false);
+  const [growCard, setGrowCard] = useState(false);
 
   const [alreadyApplied, setAlreadyApplied] = useState(false);
 
   useEffect(() => {
     // console.log(id);
     // console.log(state.jobsApplied);
+    setGrowCard(true);
     if (
       id !== null &&
       id !== undefined &&
@@ -193,53 +197,55 @@ const JobCard = ({
 
   return (
     <Grid container justify="center">
-      <Grid item xs={12}>
-        <Paper
-          className={
-            advertisementPlan === "Marathon"
-              ? classes.paperHighAd
-              : classes.paper
-          }
-          elevation={0}
-        >
-          <Grid container spacing={1}>
-            <Grid container>
-              <Grid
-                container
-                direction="row"
-                justify="space-between"
-                alignItems="center"
-              >
-                {renderLogoImage()}
-                {renderTimePostedSmallScreen()}
+      <Zoom in={growCard} timeout={300}>
+        <Grid item xs={12}>
+          <Paper
+            className={
+              advertisementPlan === "Marathon"
+                ? classes.paperHighAd
+                : classes.paper
+            }
+            elevation={0}
+          >
+            <Grid container spacing={1}>
+              <Grid container>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-between"
+                  alignItems="center"
+                >
+                  {renderLogoImage()}
+                  {renderTimePostedSmallScreen()}
 
-                <Grid item xs>
-                  <Grid container>
-                    <Grid item xs>
-                      <Grid item>
-                        <Grid
-                          container
-                          justify="space-between"
-                          alignItems="center"
-                        >
-                          {renderJobTitle()}
-                          {renderTimePostedMediumAndUpScreen()}
+                  <Grid item xs>
+                    <Grid container>
+                      <Grid item xs>
+                        <Grid item>
+                          <Grid
+                            container
+                            justify="space-between"
+                            alignItems="center"
+                          >
+                            {renderJobTitle()}
+                            {renderTimePostedMediumAndUpScreen()}
+                          </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid item xs={12} sm={10} md={10}>
-                        {renderCompanyDetails()}
-                      </Grid>
-                      <Grid item xs={12}>
-                        {renderCardButtons()}
+                        <Grid item xs={12} sm={10} md={10}>
+                          {renderCompanyDetails()}
+                        </Grid>
+                        <Grid item xs={12}>
+                          {renderCardButtons()}
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-      </Grid>
+          </Paper>
+        </Grid>
+      </Zoom>
       {/* Application Dialog */}
       <ApplicationDialog
         open={open}

@@ -4,7 +4,7 @@ import { Grid, Typography } from "@material-ui/core";
 import JobCard from "../../JobCard/JobCard";
 import { convertTimestamp } from "../../utils/convertTimestamp";
 
-export const renderJobsFeed = (jobs, navigateToJobDetails) => {
+export const renderJobsFeed = (jobs, navigateToJobDetails, noResultText) => {
   if (jobs.length !== 0) {
     return jobs.map(
       (
@@ -40,7 +40,7 @@ export const renderJobsFeed = (jobs, navigateToJobDetails) => {
     return (
       <Grid container justify="center" style={{ padding: 24 }}>
         <Typography variant="body1" color="textSecondary">
-          No job postings in this category available. Please check again later.
+          {noResultText}
         </Typography>
       </Grid>
     );

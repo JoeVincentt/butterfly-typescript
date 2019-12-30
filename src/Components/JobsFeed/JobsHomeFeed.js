@@ -194,7 +194,11 @@ const JobsFeed = ({ jobs, history }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {renderJobsFeed(featuredJobs, navigateToJobDetails)}
+              {renderJobsFeed(
+                featuredJobs,
+                navigateToJobDetails,
+                "No job postings in this category available. Please check again later."
+              )}
               {featuredJobs.length > 0 && (
                 <SeeMoreButton
                   handleLoad={() => loadMoreFeaturedJobs()}
@@ -219,7 +223,11 @@ const JobsFeed = ({ jobs, history }) => {
               </Grid>
             </Grid>
             <Grid item xs={12}>
-              {renderJobsFeed(recentJobs, navigateToJobDetails)}
+              {renderJobsFeed(
+                recentJobs,
+                navigateToJobDetails,
+                "No job postings in this category available. Please check again later."
+              )}
               {recentJobs.length > 0 && (
                 <SeeMoreButton
                   handleLoad={() => loadMoreRecentJobs()}

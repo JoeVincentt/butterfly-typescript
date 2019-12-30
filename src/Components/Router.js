@@ -25,6 +25,7 @@ const SignUp = React.lazy(() => import("./Auth/SignUp/SignUp"));
 const ResetPassword = React.lazy(() =>
   import("./Auth/ResetPassword/ResetPassword")
 );
+const FindAJob = React.lazy(() => import("./FindAJob/FindAJob"));
 const PostJobForm = React.lazy(() => import("./JobPostForm/PostJobForm"));
 const DashboardOverview = React.lazy(() =>
   import("./Dashboard/DashboardOverview")
@@ -91,6 +92,7 @@ const Content = props => {
               path="/job-by-category/:categoryID"
               component={JobByCategory}
             />
+            <Route exact path="/find-a-job" component={FindAJob} />
 
             <ProtectedRoute exact path="/post-a-job" component={PostJobForm} />
             <ProtectedRoute

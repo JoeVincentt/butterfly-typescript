@@ -128,7 +128,11 @@ const JobsFeed = ({ history, location }) => {
             </Grid>
           </Grid>
           <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-            {renderJobsFeed(inCategoryJobs, navigateToJobDetails)}
+            {renderJobsFeed(
+              inCategoryJobs,
+              navigateToJobDetails,
+              "No job postings in this category available. Please check again later."
+            )}
             {inCategoryJobs.length > 0 && (
               <SeeMoreButton
                 handleLoad={() => loadMoreInCategoryJobs()}

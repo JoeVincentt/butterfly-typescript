@@ -28,7 +28,7 @@ const ThankYouCard = props => {
             </Grid>
             <Grid item>
               <Typography variant="body1" color="textSecondary">
-                Please check your email for receipt.
+                Please check your email for a receipt.
               </Typography>
             </Grid>
             <Grid item className={classes.button}>

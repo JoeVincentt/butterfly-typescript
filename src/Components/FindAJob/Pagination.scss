@@ -1,0 +1,17 @@
+.ais-Pagination {
+  color: #8a24ae;
+  &-list {
+    font-size: 1.3rem;
+  }
+  &-link {
+    text-decoration: none;
+    color: #8a24ae;
+    &--selected {
+      text-decoration: underline;
+    }
+  }
+  &-item {
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+}

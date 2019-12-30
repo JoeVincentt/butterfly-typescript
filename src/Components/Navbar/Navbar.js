@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link, withRouter } from "react-router-dom";
+
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, fade } from "@material-ui/core/styles";
 
 import {
   Button,
@@ -14,7 +15,9 @@ import {
   IconButton,
   Hidden,
   withWidth,
-  Fab
+  Fab,
+  InputBase,
+  Typography
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import SpeedIcon from "@material-ui/icons/Speed";
@@ -38,8 +41,6 @@ const Navbar = props => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { isLoggedIn } = state;
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // const navigateToPostJobScreen = () => props.history.push("/post-a-job");
 
   const navigateToLoginScreen = () => props.history.push("/sign-in");
 
@@ -161,13 +162,13 @@ const Navbar = props => {
               </Grid>
             </Hidden>
           </div>
-
-          {/* <GradientButton
-            onClick={navigateToPostJobScreen}
+          <GradientButton
+            onClick={() => props.history.push("/find-a-job")}
             size="medium"
-            labelName="postAJob"
-            text="Post A Job"
-          /> */}
+            labelName="quick search"
+            text="Find a job"
+          />
+
           <Hidden xsDown>
             <Fab
               onClick={() => (isLoggedIn ? signOut() : navigateToLoginScreen())}

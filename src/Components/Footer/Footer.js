@@ -49,14 +49,14 @@ const Footer = () => {
         </a>
       </Grid>
       <Grid container direction="row" justify="center" alignContent="center">
-        <Grid item>
+        {/* <Grid item>
           <LinkNoStyle to="/about">
             <div className={classes.text}>About</div>
           </LinkNoStyle>
         </Grid>
         <Grid item>
           <div className={classes.text}>|</div>
-        </Grid>
+        </Grid> */}
 
         <Grid item>
           <LinkNoStyle to="/contact-us">
