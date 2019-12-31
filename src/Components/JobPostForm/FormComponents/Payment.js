@@ -214,7 +214,15 @@ const _CardForm = props => {
   };
 
   const handlePaymentRequest = async token => {
-    // Example POST method implementation:
+    //Cloud Function To Execute
+    let url;
+    if (process.env.NODE_ENV === "production") {
+      url =
+        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe";
+    } else {
+      url =
+        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe";
+    }
     const data = {
       email: email,
       firstName: firstName,
@@ -229,8 +237,7 @@ const _CardForm = props => {
     try {
       const response = await axios({
         method: "POST",
-        url:
-          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe",
+        url: url,
         data: data
       });
       // console.log(response);

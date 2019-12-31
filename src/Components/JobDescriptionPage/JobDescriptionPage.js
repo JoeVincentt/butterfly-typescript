@@ -158,33 +158,50 @@ const JobDescriptionPage = ({ job, history }) => {
     }
   };
 
-  const renderApplyButton = () => (
-    <Grid
-      container
-      justify="center"
-      alignContent="center"
-      alignItems="center"
-      className={classes.applyButton}
-    >
-      {job.status === "active" ? (
-        <GradientButton
-          onClick={() =>
-            job.id !== "draftJobPosting" &&
-            !alreadyApplied &&
-            job.postedBy !== state.uid &&
-            handleClickOpen()
-          }
-          size="large"
-          labelName="apply"
-          text={alreadyApplied ? "you already applied" : "apply for position"}
-        />
-      ) : (
-        <Typography variant="caption" color="textSecondary">
+  const renderApplyButton = () => {
+    let content;
+
+    if (job.status === "active") {
+      if (alreadyApplied) {
+        content = (
+          <Typography variant="button" color="textSecondary">
+            Already Applied
+          </Typography>
+        );
+      } else {
+        content = (
+          <GradientButton
+            onClick={() =>
+              job.id !== "draftJobPosting" &&
+              job.postedBy !== state.uid &&
+              handleClickOpen()
+            }
+            size="large"
+            labelName="apply"
+            text="apply for position"
+          />
+        );
+      }
+    } else {
+      content = (
+        <Typography variant="button" color="textSecondary">
           Job Posting is Expired
         </Typography>
-      )}
-    </Grid>
-  );
+      );
+    }
+
+    return (
+      <Grid
+        container
+        justify="center"
+        alignContent="center"
+        alignItems="center"
+        className={classes.applyButton}
+      >
+        {content}
+      </Grid>
+    );
+  };
 
   return (
     <div className={classes.root}>
@@ -234,7 +251,7 @@ const JobDescriptionPage = ({ job, history }) => {
 
                     <ShareButtons
                       title={`${job.title} at ${job.companyName}`}
-                      shareUrl={`https://butterfly-remote-jobs-dev.firebaseapp.com${history.location.pathname}`}
+                      shareUrl={`https://butterflyremote.com${history.location.pathname}`}
                     />
                   </React.Fragment>
                 )}

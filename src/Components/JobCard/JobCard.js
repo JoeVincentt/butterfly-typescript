@@ -185,12 +185,18 @@ const JobCard = ({
         </Fab>
       </Grid>
       <Grid item>
-        <GradientButton
-          onClick={() => !alreadyApplied && handleClickOpen()}
-          text={alreadyApplied ? "applied" : "1-click apply"}
-          size="small"
-          labelName="apply"
-        />
+        {!alreadyApplied ? (
+          <GradientButton
+            onClick={() => !alreadyApplied && handleClickOpen()}
+            text={alreadyApplied ? "applied" : "1-click apply"}
+            size="small"
+            labelName="apply"
+          />
+        ) : (
+          <Typography variant="button" color="textSecondary">
+            APPLIED
+          </Typography>
+        )}
       </Grid>
     </Grid>
   );

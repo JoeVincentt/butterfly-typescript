@@ -127,26 +127,35 @@ const ApplicationForm = ({
   };
 
   const employerEmailNotification = async (
+    jobID,
     postedBy,
     jobTitle,
     email,
     firstName,
     lastName
   ) => {
-    // Example POST method implementation:
+    //Cloud Function To Execute
+    let url;
+    if (process.env.NODE_ENV === "production") {
+      url =
+        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication";
+    } else {
+      url =
+        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication";
+    }
+
     const data = {
+      jobID: jobID,
       postedBy: postedBy,
       jobTitle: jobTitle,
       email: email,
       firstName: firstName,
       lastName: lastName
     };
-
     try {
       const response = await axios({
         method: "POST",
-        url:
-          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication",
+        url: url,
         data: data
       });
       // console.log(response);
@@ -175,6 +184,7 @@ const ApplicationForm = ({
 
     //NOTIFY EMPLOYER BY EMAIL
     employerEmailNotification(
+      jobID,
       postedBy,
       jobTitle,
       state.email,
@@ -311,6 +321,34 @@ const ApplicationForm = ({
           });
       }
     } catch (error) {}
+  };
+
+  const checkIfFormIsValid = () => {
+    if (
+      state.firstName.trim().length !== 0 &&
+      state.lastName.trim().length !== 0 &&
+      state.country.trim().length !== 0 &&
+      state.zipCode.trim().length !== 0 &&
+      state.timezone.trim().length !== 0 &&
+      state.yearsOfExperience !== "" &&
+      state.resume.trim().length !== 0
+    ) {
+      return true;
+    } else {
+      enqueueSnackbar("Oops! Please fill-up all the fields.", {
+        variant: "error"
+      });
+      return false;
+    }
+  };
+
+  const handleApply = () => {
+    const valid = checkIfFormIsValid();
+    if (valid) {
+      return applyForPosition();
+    } else {
+      return;
+    }
   };
 
   const acceptedFilesItems = acceptedFiles.map((file, index) => {
@@ -624,7 +662,7 @@ const ApplicationForm = ({
                         text="Apply for position"
                         labelName="applyProfile"
                         size="large"
-                        onClick={() => !loading && applyForPosition()}
+                        onClick={() => !loading && handleApply()}
                       />
                     )}
                   </Grid>

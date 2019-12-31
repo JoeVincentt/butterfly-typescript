@@ -35,15 +35,20 @@ const ContactUs = () => {
       message.trim().length <= 0 ||
       validateEmail() === false
     ) {
-      enqueueSnackbar(
-        "Oops! Something went wrong! Please make sure to fill-up the form.",
-        {
-          variant: "error"
-        }
-      );
+      enqueueSnackbar("Oops! Please make sure to fill-up the form.", {
+        variant: "error"
+      });
       return;
     } else {
       setLoading(true);
+      let url;
+      if (process.env.NODE_ENV === "production") {
+        url =
+          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/contactUsEmailSendToCustomerSupport";
+      } else {
+        url =
+          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/contactUsEmailSendToCustomerSupport";
+      }
       const data = {
         fullName: fullName,
         email: email,
@@ -52,8 +57,7 @@ const ContactUs = () => {
       };
       const response = await axios({
         method: "POST",
-        url:
-          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/contactUsEmailSendToCustomerSupport",
+        url: url,
         data: data
       });
       //     console.log(response);
