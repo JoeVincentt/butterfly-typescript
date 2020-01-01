@@ -9,7 +9,7 @@ const SeeMoreButton = ({ handleLoad, loading, noMoreJobs, text }) => {
   if (loading) {
     return (
       <Box textAlign="center">
-        <CircularProgress />
+        <CircularProgress className={classes.button} />
       </Box>
     );
   } else {

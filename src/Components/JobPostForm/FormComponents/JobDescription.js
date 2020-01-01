@@ -555,6 +555,31 @@ const JobDescription = () => {
       }
     />
   );
+  const renderJobLink = () => (
+    <React.Fragment>
+      <TextField
+        id="externalJobPostingLink"
+        className={classes.textField}
+        label="Link for Job Application"
+        margin="normal"
+        variant="outlined"
+        fullWidth
+        value={jobState.externalJobPostingLink}
+        onChange={e =>
+          dispatch({
+            type: "field",
+            fieldName: "externalJobPostingLink",
+            payload: e.target.value
+          })
+        }
+      />
+      <Typography variant="caption" color="textSecondary">
+        **Please note if you're giving external link, the applicant does not
+        apply through ButterflyRemote.com, You WON'T be able to track your
+        applicants in your Dashboard.
+      </Typography>
+    </React.Fragment>
+  );
 
   return (
     <Paper className={classes.paper}>
@@ -643,6 +668,9 @@ const JobDescription = () => {
 
               {/* Additional Information */}
               {renderAdditionalInformation()}
+
+              {/* External Job Posting Link */}
+              {renderJobLink()}
             </Grid>
           </Paper>
         </Grid>

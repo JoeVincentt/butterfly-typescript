@@ -59,7 +59,8 @@ const PostJobForm = () => {
       educationAndExperience: jobState.educationAndExperience,
       skills: jobState.skills,
       compensationAndBenefits: jobState.compensationAndBenefits,
-      additionalInformation: jobState.additionalInformation
+      additionalInformation: jobState.additionalInformation,
+      externalJobPostingLink: jobState.externalJobPostingLink
     };
     localStorage.setItem("jobDraft", JSON.stringify(jobDraft));
   };

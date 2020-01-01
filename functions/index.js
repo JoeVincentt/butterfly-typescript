@@ -20,6 +20,8 @@ const { stripePayment } = require("./StripePayment");
 const { contactUsEmail } = require("./ContactUsEmail");
 const { notifyEmployerEmail } = require("./NotifyEmployerEmail");
 const { jobPostingExpireCleanUp } = require("./JobPostingExpireCleanUp");
+const { createIndex, removeIndex } = require("./JobIndex");
+const { cleanUpDependencies } = require("./CleanUpJobDependencies");
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
@@ -67,36 +69,17 @@ exports.setJobPostingExpireCleanUp = functions.https.onRequest(
 exports.indexJob = functions.firestore
   .document("jobs/{jobID}")
   .onCreate((snapshot, context) => {
-    const jobSearchIndex = client.initIndex("job_search");
-    const data = snapshot.data();
-    const dataToIndex = {
-      id: data.id,
-      postedBy: data.postedBy,
-      title: data.title,
-      about: data.about,
-      category: data.category,
-      companyLocation: data.companyLocation,
-      companyName: data.companyName,
-      logo: data.logo,
-      date: data.date,
-      advertisementPlan: data.advertisementPlan,
-      jobType: data.jobType
-    };
-    const objectID = snapshot.id; //or data.id
-
-    //Add the data to the algolia index
-    return jobSearchIndex.addObject({
-      objectID,
-      ...dataToIndex
-    });
+    return createIndex(snapshot, client);
   });
 
 exports.unindexJob = functions.firestore
   .document("jobs/{jobID}")
   .onDelete((snapshot, context) => {
-    const jobSearchIndex = client.initIndex("job_search");
-    const objectID = snapshot.id;
+    return removeIndex(snapshot, client);
+  });
 
-    //Delete an ID from the index
-    return jobSearchIndex.deleteObject(objectID);
+exports.cleanUpJobDependencies = functions.firestore
+  .document("jobs/{jobID}")
+  .onDelete((snapshot, context) => {
+    return cleanUpDependencies(snapshot, admin);
   });

@@ -81,7 +81,7 @@ const CategoryMenu = ({ history }) => {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        Category
+        Categories
       </Button>
       <Popper
         open={open}

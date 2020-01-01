@@ -74,7 +74,7 @@ const WrapperSearchBox = ({ currentRefinement, isSearchStalled, refine }) => {
             <SearchIcon />
           </div>
           <InputBase
-            placeholder="Search…"
+            placeholder="Start typing here..."
             value={currentRefinement}
             onChange={event => refine(event.currentTarget.value)}
             // onBlur={() =>

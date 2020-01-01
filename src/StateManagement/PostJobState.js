@@ -24,6 +24,7 @@ export const postJobReducer = (draft, action) => {
       draft.skills = action.payload.skills;
       draft.compensationAndBenefits = action.payload.compensationAndBenefits;
       draft.additionalInformation = action.payload.additionalInformation;
+      draft.externalJobPostingLink = action.payload.externalJobPostingLink;
       return;
     }
     case "resetJobDescription": {
@@ -41,6 +42,7 @@ export const postJobReducer = (draft, action) => {
       draft.skills = [""];
       draft.compensationAndBenefits = [""];
       draft.additionalInformation = "";
+      draft.externalJobPostingLink = "";
       return;
     }
     default:
@@ -66,7 +68,8 @@ const initialState = {
   educationAndExperience: [""],
   skills: [""],
   compensationAndBenefits: [""],
-  additionalInformation: ""
+  additionalInformation: "",
+  externalJobPostingLink: ""
 };
 
 export const PostJobStateContext = React.createContext();

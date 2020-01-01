@@ -159,17 +159,34 @@ const JobDescriptionPage = ({ job, history }) => {
   };
 
   const renderApplyButton = () => {
-    let content;
-
     if (job.status === "active") {
+      if (job.externalJobPostingLink !== undefined) {
+        if (job.externalJobPostingLink.trim().length !== 0) {
+          return (
+            <a
+              href={job.externalJobPostingLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <GradientButton
+                onClick={() => {}}
+                text={"apply for position"}
+                size="large"
+                labelName="apply"
+              />
+            </a>
+          );
+        }
+      }
       if (alreadyApplied) {
-        content = (
+        return (
           <Typography variant="button" color="textSecondary">
             Already Applied
           </Typography>
         );
       } else {
-        content = (
+        return (
           <GradientButton
             onClick={() =>
               job.id !== "draftJobPosting" &&
@@ -183,24 +200,12 @@ const JobDescriptionPage = ({ job, history }) => {
         );
       }
     } else {
-      content = (
+      return (
         <Typography variant="button" color="textSecondary">
           Job Posting is Expired
         </Typography>
       );
     }
-
-    return (
-      <Grid
-        container
-        justify="center"
-        alignContent="center"
-        alignItems="center"
-        className={classes.applyButton}
-      >
-        {content}
-      </Grid>
-    );
   };
 
   return (
@@ -247,7 +252,15 @@ const JobDescriptionPage = ({ job, history }) => {
                 {renderAdditionalInformation(job.additionalInformation)}
                 {job.id !== "draftJobPosting" && (
                   <React.Fragment>
-                    {renderApplyButton()}
+                    <Grid
+                      container
+                      justify="center"
+                      alignContent="center"
+                      alignItems="center"
+                      className={classes.applyButton}
+                    >
+                      {renderApplyButton()}
+                    </Grid>
 
                     <ShareButtons
                       title={`${job.title} at ${job.companyName}`}

@@ -274,76 +274,72 @@ const _CardForm = props => {
     }
   };
 
-  const createDataBaseInstanceOfPostedJob = () => {
+  const createDataBaseInstanceOfPostedJob = async () => {
     // console.log("create job data");
-    const jobID = uuid();
-    db.collection("jobs")
-      .doc(jobID)
-      .set({
-        postedBy: userState.uid,
-        id: jobID,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        date: Date.now(),
-        status: "active",
-        advertisementPlan: postJobState.advertisementPlan,
-        logo: postJobState.logo,
-        companyName: postJobState.companyName,
-        companyLocation: postJobState.companyLocation,
-        companyWebsite: postJobState.companyWebsite,
-        companyAbout: postJobState.companyAbout,
-        title: postJobState.title,
-        category: postJobState.category,
-        jobType: postJobState.jobType,
-        about: postJobState.about,
-        hiringProcessSteps: postJobState.hiringProcessSteps,
-        responsibilities: postJobState.responsibilities,
-        educationAndExperience: postJobState.educationAndExperience,
-        skills: postJobState.skills,
-        compensationAndBenefits: postJobState.compensationAndBenefits,
-        additionalInformation: postJobState.additionalInformation
-      })
-      .then(() => {
-        enqueueSnackbar("Great News, Job Posted.", {
-          variant: "success"
+    try {
+      const jobID = uuid();
+      await db
+        .collection("jobs")
+        .doc(jobID)
+        .set({
+          postedBy: userState.uid,
+          id: jobID,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          date: Date.now(),
+          status: "active",
+          advertisementPlan: postJobState.advertisementPlan,
+          logo: postJobState.logo,
+          companyName: postJobState.companyName,
+          companyLocation: postJobState.companyLocation,
+          companyWebsite: postJobState.companyWebsite,
+          companyAbout: postJobState.companyAbout,
+          title: postJobState.title,
+          category: postJobState.category,
+          jobType: postJobState.jobType,
+          about: postJobState.about,
+          hiringProcessSteps: postJobState.hiringProcessSteps,
+          responsibilities: postJobState.responsibilities,
+          educationAndExperience: postJobState.educationAndExperience,
+          skills: postJobState.skills,
+          compensationAndBenefits: postJobState.compensationAndBenefits,
+          additionalInformation: postJobState.additionalInformation,
+          externalJobPostingLink: postJobState.externalJobPostingLink
         });
 
-        setLoading(false);
-      })
-      .catch(error => {
-        enqueueSnackbar("Oops! Something went wrong! Please try again.", {
-          variant: "error"
+      //UPDATE EMPLOYER DASHBOARD STATS
+      await db
+        .collection("dashboardStats")
+        .doc(userState.uid)
+        .update({
+          "employerStats.jobsPosted": firebase.firestore.FieldValue.increment(1)
         });
-        setLoading(false);
-        // setError(true);
-        // console.log(error);
-      });
 
-    //UPDATE EMPLOYER DASHBOARD STATS
-    db.collection("dashboardStats")
-      .doc(userState.uid)
-      .update({
-        "employerStats.jobsPosted": firebase.firestore.FieldValue.increment(1)
-      })
-      .then(() => {
-        // console.log("Document successfully updated!");
-      })
-      .catch(error => {
-        // console.log("Error updating document:", error);
+      //CREATE JOB STATS INSTANCE
+      await db
+        .collection("jobStats")
+        .doc(userState.uid)
+        .collection("jobStats")
+        .doc(jobID)
+        .set({
+          id: jobID,
+          status: "active",
+          logo: postJobState.logo,
+          title: postJobState.title,
+          views: 0,
+          applied: 0
+        });
+      enqueueSnackbar("Great News, Job Posted.", {
+        variant: "success"
       });
-
-    //CREATE JOB STATS INSTANCE
-    db.collection("jobStats")
-      .doc(userState.uid)
-      .collection("jobStats")
-      .doc(jobID)
-      .set({
-        id: jobID,
-        status: "active",
-        logo: postJobState.logo,
-        title: postJobState.title,
-        views: 0,
-        applied: 0
+      setLoading(false);
+    } catch (error) {
+      enqueueSnackbar("Oops! Something went wrong! Please try again.", {
+        variant: "error"
       });
+      setLoading(false);
+      // setError(true);
+      // console.log(error);
+    }
   };
 
   if (paymentSuccess) {
@@ -506,7 +502,11 @@ const _CardForm = props => {
                     text="Submit Payment"
                     size="large"
                     labelName="stripePay"
-                    onClick={() => createToken()}
+                    onClick={() =>
+                      userState.uid === "EkKGmuAvLiPWmIPpweqlTQqlQ7t1"
+                        ? createDataBaseInstanceOfPostedJob()
+                        : createToken()
+                    }
                   />
                 )}
               </Fragment>

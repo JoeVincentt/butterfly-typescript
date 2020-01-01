@@ -17,6 +17,7 @@ export const renderJobsFeed = (jobs, navigateToJobDetails, noResultText) => {
           logo,
           date,
           advertisementPlan,
+          externalJobPostingLink,
           jobType
         },
         index
@@ -30,6 +31,7 @@ export const renderJobsFeed = (jobs, navigateToJobDetails, noResultText) => {
           companyName={companyName}
           logo={logo}
           advertisementPlan={advertisementPlan}
+          externalJobPostingLink={externalJobPostingLink}
           jobType={jobType}
           date={convertTimestamp(date)}
           navigateToJobDetails={() => navigateToJobDetails(id)}

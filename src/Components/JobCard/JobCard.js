@@ -33,6 +33,7 @@ const JobCard = ({
   logo,
   date,
   advertisementPlan,
+  externalJobPostingLink,
   navigateToJobDetails,
   jobType
 }) => {
@@ -163,6 +164,46 @@ const JobCard = ({
     </Grid>
   );
 
+  const renderApplyButton = () => {
+    if (externalJobPostingLink !== undefined) {
+      if (externalJobPostingLink.trim().length !== 0) {
+        return (
+          <a
+            href={externalJobPostingLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ textDecoration: "none" }}
+          >
+            <GradientButton
+              onClick={() => {}}
+              text={"apply"}
+              size="small"
+              labelName="apply"
+            />
+          </a>
+        );
+      }
+    }
+    if (alreadyApplied) {
+      return (
+        <Typography variant="button" color="textSecondary">
+          APPLIED
+        </Typography>
+      );
+    } else {
+      return (
+        <GradientButton
+          onClick={() =>
+            !alreadyApplied && postedBy !== state.uid && handleClickOpen()
+          }
+          text="1-click apply"
+          size="small"
+          labelName="apply"
+        />
+      );
+    }
+  };
+
   const renderCardButtons = () => (
     <Grid
       container
@@ -184,20 +225,7 @@ const JobCard = ({
           Details
         </Fab>
       </Grid>
-      <Grid item>
-        {!alreadyApplied ? (
-          <GradientButton
-            onClick={() => !alreadyApplied && handleClickOpen()}
-            text={alreadyApplied ? "applied" : "1-click apply"}
-            size="small"
-            labelName="apply"
-          />
-        ) : (
-          <Typography variant="button" color="textSecondary">
-            APPLIED
-          </Typography>
-        )}
-      </Grid>
+      <Grid item>{renderApplyButton()}</Grid>
     </Grid>
   );
 
