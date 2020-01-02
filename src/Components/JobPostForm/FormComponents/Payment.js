@@ -218,7 +218,7 @@ const _CardForm = props => {
     let url;
     if (process.env.NODE_ENV === "production") {
       url =
-        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe";
+        "https://us-central1-butterfly-remote-jobs-prod.cloudfunctions.net/completePaymentWithStripe";
     } else {
       url =
         "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/completePaymentWithStripe";
@@ -503,7 +503,7 @@ const _CardForm = props => {
                     size="large"
                     labelName="stripePay"
                     onClick={() =>
-                      userState.uid === "EkKGmuAvLiPWmIPpweqlTQqlQ7t1"
+                      userState.role === "administrator"
                         ? createDataBaseInstanceOfPostedJob()
                         : createToken()
                     }
@@ -525,7 +525,6 @@ const _CardForm = props => {
               href="https://app.termly.io/document/terms-of-use-for-saas/a5c3ec46-9aa9-4dd6-a400-ad98d3f06924"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
             >
               Terms and Conditions
             </a>
@@ -541,11 +540,18 @@ const CardForm = injectStripe(_CardForm);
 
 const Payment = props => {
   const classes = useStyles();
+
+  let publicKey;
+  if (process.env.NODE_ENV === "production") {
+    publicKey = "pk_live_us1NSqxG4k5emLkhJJ19umfR00KkasNTue";
+  } else {
+    publicKey = "pk_test_RppBJ2eaykT7fLU90EHShe43004Fx31yx1";
+  }
   return (
     <Grid container justify="center" alignContent="center">
       <Grid item xs={12} sm={8} md={6} lg={4}>
         <Paper className={classes.paper}>
-          <StripeProvider apiKey={"pk_test_RppBJ2eaykT7fLU90EHShe43004Fx31yx1"}>
+          <StripeProvider apiKey={publicKey}>
             <Elements>
               <CardForm
               //  handleResult={props.handleResult}

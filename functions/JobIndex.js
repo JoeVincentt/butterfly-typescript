@@ -24,10 +24,26 @@ exports.createIndex = async function(snapshot, client) {
   });
 };
 
-exports.removeIndex = async function(snapshot, client) {
+exports.removeIndexOnDelete = async function(snapshot, client) {
   const jobSearchIndex = client.initIndex("job_search");
   const objectID = snapshot.id;
 
   //Delete an ID from the index
   return jobSearchIndex.deleteObject(objectID);
+};
+
+exports.removeIndexOnExpire = async function(change, client) {
+  const jobSearchIndex = client.initIndex("job_search");
+  const newValue = change.after.data();
+  const previousValue = change.before.data();
+
+  // access a particular field as you would any JS property
+  const status = newValue.status;
+  const objectID = previousValue.id;
+
+  if (status === "expired") {
+    //Delete an ID from the index
+    return jobSearchIndex.deleteObject(objectID);
+  }
+  return false;
 };

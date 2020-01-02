@@ -68,12 +68,7 @@ const CompanyInfoCard = ({
       {companyWebsite !== null && companyWebsite !== "" && (
         <Grid item>
           <Grid container justify="center">
-            <a
-              href={companyWebsite}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
-            >
+            <a href={companyWebsite} target="_blank" rel="noopener noreferrer">
               <Button color="primary">Visit Website</Button>
             </a>
           </Grid>

@@ -20,7 +20,11 @@ const { stripePayment } = require("./StripePayment");
 const { contactUsEmail } = require("./ContactUsEmail");
 const { notifyEmployerEmail } = require("./NotifyEmployerEmail");
 const { jobPostingExpireCleanUp } = require("./JobPostingExpireCleanUp");
-const { createIndex, removeIndex } = require("./JobIndex");
+const {
+  createIndex,
+  removeIndexOnDelete,
+  removeIndexOnExpire
+} = require("./JobIndex");
 const { cleanUpDependencies } = require("./CleanUpJobDependencies");
 
 // // Create and Deploy Your First Cloud Functions
@@ -66,16 +70,22 @@ exports.setJobPostingExpireCleanUp = functions.https.onRequest(
   }
 );
 
-exports.indexJob = functions.firestore
+exports.indexJobOnCreate = functions.firestore
   .document("jobs/{jobID}")
   .onCreate((snapshot, context) => {
     return createIndex(snapshot, client);
   });
 
-exports.unindexJob = functions.firestore
+exports.unindexJobOnDelete = functions.firestore
   .document("jobs/{jobID}")
   .onDelete((snapshot, context) => {
-    return removeIndex(snapshot, client);
+    return removeIndexOnDelete(snapshot, client);
+  });
+
+exports.unindexJobOnExpiredUpdate = functions.firestore
+  .document("jobs/{jobID}")
+  .onUpdate((change, context) => {
+    return removeIndexOnExpire(change, client);
   });
 
 exports.cleanUpJobDependencies = functions.firestore

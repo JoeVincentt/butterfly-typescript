@@ -172,7 +172,6 @@ const JobCard = ({
             href={externalJobPostingLink}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
           >
             <GradientButton
               onClick={() => {}}

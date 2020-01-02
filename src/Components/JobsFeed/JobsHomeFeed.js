@@ -60,7 +60,6 @@ const JobsFeed = ({ jobs, history }) => {
       setFeaturedJobs(jobs);
       setLoading(false);
     } catch (error) {
-      // console.log(error);
       setLoading(false);
       enqueueSnackbar("Oops! Something went wrong! Please try again.", {
         variant: "error"

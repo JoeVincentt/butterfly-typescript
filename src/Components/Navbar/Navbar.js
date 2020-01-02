@@ -74,6 +74,7 @@ const Navbar = props => {
                     timezone: data.timezone,
                     yearsOfExperience: data.yearsOfExperience,
                     resume: data.resume,
+                    role: data.role,
                     jobsApplied: data.jobsApplied
                   }
                 });
@@ -133,7 +134,7 @@ const Navbar = props => {
           <div className={classes.buttonBar}>
             <Hidden smDown>
               <Grid container direction="row" alignItems="center">
-                <Link to="/" style={{ textDecoration: "none" }}>
+                <Link to="/">
                   <Button
                     color="primary"
                     className={classes.button}
@@ -144,10 +145,7 @@ const Navbar = props => {
                   </Button>
                 </Link>
                 {isLoggedIn && (
-                  <Link
-                    to="/dashboard-overview"
-                    style={{ textDecoration: "none" }}
-                  >
+                  <Link to="/dashboard-overview">
                     <Button
                       color="primary"
                       className={classes.button}

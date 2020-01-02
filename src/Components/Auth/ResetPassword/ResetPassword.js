@@ -121,7 +121,7 @@ const SignIn = props => {
                     </Grid>
 
                     <Grid item>
-                      <Link to="/sign-in" style={{ textDecoration: "none" }}>
+                      <Link to="/sign-in">
                         <Typography variant="body2" color="textSecondary">
                           Have an account? Sign In
                         </Typography>

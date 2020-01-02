@@ -138,7 +138,7 @@ const ApplicationForm = ({
     let url;
     if (process.env.NODE_ENV === "production") {
       url =
-        "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication";
+        "https://us-central1-butterfly-remote-jobs-prod.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication";
     } else {
       url =
         "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/notifyEmployerByEmailWhenNewApplication";
@@ -571,7 +571,6 @@ const ApplicationForm = ({
                       href={state.resume}
                       target="_blank"
                       rel="noopener noreferrer"
-                      style={{ textDecoration: "none" }}
                     >
                       <Button color="primary" size="large" disabled={loading}>
                         <DescriptionIcon style={{ marginRight: 3 }} />

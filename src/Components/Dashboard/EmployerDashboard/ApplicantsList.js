@@ -477,10 +477,7 @@ const EnhancedTable = props => {
                           </TableCell>
 
                           <TableCell align="left">
-                            <Link
-                              to={`/job-description/${row.jobID}`}
-                              style={{ textDecoration: "none" }}
-                            >
+                            <Link to={`/job-description/${row.jobID}`}>
                               {row.appliedFor}
                             </Link>
                           </TableCell>
@@ -515,7 +512,6 @@ const EnhancedTable = props => {
                               href={row.resume}
                               target="_blank"
                               rel="noopener noreferrer"
-                              style={{ textDecoration: "none" }}
                             >
                               <Button
                                 color="primary"

@@ -15,6 +15,7 @@ import CompanyBar from "./CompanyBar/CompanyBar";
 import CookieBanner from "./Footer/FooterComponents/CookieBanner";
 import Subscribe from "./Pre-subscription/Subscribe";
 
+import { UserStateContext } from "../StateManagement/UserState";
 import colors from "../constants/colors";
 
 const JobDescriptionPageRender = React.lazy(() =>
@@ -57,82 +58,100 @@ const NoMatch = React.lazy(() => import("./404 Page/NoMatch"));
 const Content = props => {
   const classes = useStyles();
 
-  return (
-    <Suspense fallback={<LinearProgress />}>
-      <Router>
-        <div className={classes.root}>
-          <CssBaseline />
-          <Toolbar id="back-to-top-anchor" />
-          <Navbar />
-          <CompanyBar />
-          <Switch>
-            {/* <Route path="/">
-            <Subscribe />
-          </Route> */}
+  const admin = JSON.parse(localStorage.getItem("admin"));
+  if (admin !== null && admin === "blahblah2020!!") {
+    return (
+      <Suspense fallback={<LinearProgress />}>
+        <Router>
+          <div className={classes.root}>
+            <CssBaseline />
+            <Toolbar id="back-to-top-anchor" />
+            <Navbar />
+            <CompanyBar />
+            <Switch>
+              <Route exact path="/" component={JobsHomeFeed} />
+              <Route exact path="/about" component={About} />
+              <Route exact path="/contact-us" component={ContactUs} />
+              {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />
+              <Route
+                exact
+                path="/terms-and-conditions"
+                component={TermsAndConditions}
+              /> */}
+              <Route exact path="/sign-in" component={SignIn} />
+              <Route exact path="/sign-up" component={SignUp} />
+              <Route exact path="/reset-password" component={ResetPassword} />
+              <Route
+                exact
+                path="/job-description/:id"
+                component={JobDescriptionPageRender}
+              />
+              <Route
+                exact
+                path="/job-by-category/:categoryID"
+                component={JobByCategory}
+              />
+              <Route exact path="/find-a-job" component={FindAJob} />
 
-            <Route exact path="/" component={JobsHomeFeed} />
-            <Route exact path="/about" component={About} />
-            <Route exact path="/contact-us" component={ContactUs} />
-            {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />
-            <Route
-              exact
-              path="/terms-and-conditions"
-              component={TermsAndConditions}
-            /> */}
-            <Route exact path="/sign-in" component={SignIn} />
-            <Route exact path="/sign-up" component={SignUp} />
-            <Route exact path="/reset-password" component={ResetPassword} />
-            <Route
-              exact
-              path="/job-description/:id"
-              component={JobDescriptionPageRender}
-            />
-            <Route
-              exact
-              path="/job-by-category/:categoryID"
-              component={JobByCategory}
-            />
-            <Route exact path="/find-a-job" component={FindAJob} />
-
-            <ProtectedRoute exact path="/post-a-job" component={PostJobForm} />
-            <ProtectedRoute
-              exact
-              path="/dashboard-overview"
-              component={DashboardOverview}
-            />
-            <ProtectedRoute
-              exact
-              path="/dashboard-employee"
-              component={EmployeeDashboard}
-            />
-            <ProtectedRoute
-              exact
-              path="/dashboard-employer/applicants-list/:jobID"
-              component={ApplicantsListRender}
-            />
-            <ProtectedRoute
-              exact
-              path="/dashboard-employer/job-listings"
-              component={JobListingsOverview}
-            />
-            <Route path="*" component={NoMatch} />
-          </Switch>
-          <ScrollToTheTop {...props}>
-            <Fab
-              color="secondary"
-              size="small"
-              aria-label="scroll back to top"
-              className={classes.scrollToTheTop}
-            >
-              <KeyboardArrowUpIcon />
-            </Fab>
-          </ScrollToTheTop>
-        </div>
-        <CookieBanner />
-        <Footer />
-      </Router>
-    </Suspense>
-  );
+              <ProtectedRoute
+                exact
+                path="/post-a-job"
+                component={PostJobForm}
+              />
+              <ProtectedRoute
+                exact
+                path="/dashboard-overview"
+                component={DashboardOverview}
+              />
+              <ProtectedRoute
+                exact
+                path="/dashboard-employee"
+                component={EmployeeDashboard}
+              />
+              <ProtectedRoute
+                exact
+                path="/dashboard-employer/applicants-list/:jobID"
+                component={ApplicantsListRender}
+              />
+              <ProtectedRoute
+                exact
+                path="/dashboard-employer/job-listings"
+                component={JobListingsOverview}
+              />
+              <Route path="*" component={NoMatch} />
+            </Switch>
+            <ScrollToTheTop {...props}>
+              <Fab
+                color="secondary"
+                size="small"
+                aria-label="scroll back to top"
+                className={classes.scrollToTheTop}
+              >
+                <KeyboardArrowUpIcon />
+              </Fab>
+            </ScrollToTheTop>
+          </div>
+          <CookieBanner />
+          <Footer />
+        </Router>
+      </Suspense>
+    );
+  } else {
+    return (
+      <Suspense fallback={<LinearProgress />}>
+        <Router>
+          <div className={classes.root}>
+            <Switch>
+              <Route path="/">
+                <Subscribe />
+              </Route>
+              <Route path="*" component={NoMatch} />
+            </Switch>
+          </div>
+        </Router>
+      </Suspense>
+    );
+  }
 };
 
 const useStyles = makeStyles(theme => ({

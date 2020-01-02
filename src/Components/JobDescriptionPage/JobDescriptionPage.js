@@ -167,7 +167,6 @@ const JobDescriptionPage = ({ job, history }) => {
               href={job.externalJobPostingLink}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
             >
               <GradientButton
                 onClick={() => {}}

@@ -22,10 +22,17 @@ import {
 
 import colors from "../../constants/colors";
 
-const algoliaClient = algoliasearch(
-  "FQOPOU9VTD",
-  "bac581e50537247c3eff1ba5fb3a3a07"
-);
+let appId;
+let publicKey;
+if (process.env.NODE_ENV === "production") {
+  appId = "0SXUZKAT41";
+  publicKey = "a6068ca8ed2ee910c292805c1ee8bd18";
+} else {
+  appId = "FQOPOU9VTD";
+  publicKey = "bac581e50537247c3eff1ba5fb3a3a07";
+}
+
+const algoliaClient = algoliasearch(appId, publicKey);
 
 const searchClient = {
   search(requests) {

@@ -7,7 +7,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 
 const LinkNoStyle = props => (
-  <Link style={{ textDecoration: "none" }} {...props} to={props.to}>
+  <Link {...props} to={props.to}>
     {props.children}
   </Link>
 );
@@ -73,7 +73,6 @@ const Footer = () => {
             href="https://app.termly.io/document/terms-of-use-for-saas/a5c3ec46-9aa9-4dd6-a400-ad98d3f06924"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
           >
             <div className={classes.text}>Terms and Conditions</div>
           </a>
@@ -89,7 +88,6 @@ const Footer = () => {
             href="https://app.termly.io/document/privacy-policy/77c0a45f-6dab-4065-be59-126dc1af09d1"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ textDecoration: "none" }}
           >
             <div className={classes.text}>Privacy Policy</div>
           </a>

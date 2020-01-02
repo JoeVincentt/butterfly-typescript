@@ -44,7 +44,7 @@ const ContactUs = () => {
       let url;
       if (process.env.NODE_ENV === "production") {
         url =
-          "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/contactUsEmailSendToCustomerSupport";
+          "https://us-central1-butterfly-remote-jobs-prod.cloudfunctions.net/contactUsEmailSendToCustomerSupport";
       } else {
         url =
           "https://us-central1-butterfly-remote-jobs-dev.cloudfunctions.net/contactUsEmailSendToCustomerSupport";
