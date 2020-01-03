@@ -1,20 +1,20 @@
-[debug] [2020-01-03T06:57:48.721Z] ----------------------------------------------------------------------
-[debug] [2020-01-03T06:57:48.723Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
-[debug] [2020-01-03T06:57:48.723Z] CLI Version:   7.11.0
-[debug] [2020-01-03T06:57:48.723Z] Platform:      darwin
-[debug] [2020-01-03T06:57:48.723Z] Node Version:  v13.3.0
-[debug] [2020-01-03T06:57:48.724Z] Time:          Fri Jan 03 2020 01:57:48 GMT-0500 (Eastern Standard Time)
-[debug] [2020-01-03T06:57:48.724Z] ----------------------------------------------------------------------
-[debug] [2020-01-03T06:57:48.724Z] 
-[debug] [2020-01-03T06:57:48.730Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2020-01-03T06:57:48.731Z] > authorizing via signed-in user
-[debug] [2020-01-03T06:57:48.731Z] [iam] checking project butterfly-remote-jobs-prod for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
-[debug] [2020-01-03T06:57:48.732Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/butterfly-remote-jobs-prod:testIamPermissions  
+[debug] [2020-01-03T08:20:06.608Z] ----------------------------------------------------------------------
+[debug] [2020-01-03T08:20:06.610Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy
+[debug] [2020-01-03T08:20:06.610Z] CLI Version:   7.11.0
+[debug] [2020-01-03T08:20:06.610Z] Platform:      darwin
+[debug] [2020-01-03T08:20:06.610Z] Node Version:  v13.3.0
+[debug] [2020-01-03T08:20:06.611Z] Time:          Fri Jan 03 2020 03:20:06 GMT-0500 (Eastern Standard Time)
+[debug] [2020-01-03T08:20:06.611Z] ----------------------------------------------------------------------
+[debug] [2020-01-03T08:20:06.611Z] 
+[debug] [2020-01-03T08:20:06.618Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-01-03T08:20:06.618Z] > authorizing via signed-in user
+[debug] [2020-01-03T08:20:06.618Z] [iam] checking project butterfly-remote-jobs-prod for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2020-01-03T08:20:06.620Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/butterfly-remote-jobs-prod:testIamPermissions  
 
-[debug] [2020-01-03T06:57:49.081Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:57:49.083Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod  
+[debug] [2020-01-03T08:20:06.903Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:06.905Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod  
  
-[debug] [2020-01-03T06:57:49.333Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:07.111Z] <<< HTTP RESPONSE 200
 [info] 
 [info] === Deploying to 'butterfly-remote-jobs-prod'...
 [info] 
@@ -23,21 +23,21 @@
 [info] ✔  functions: Finished running predeploy script.
 [info] Running command: npm --prefix "$RESOURCE_DIR/.." run build
 [info] ✔  hosting: Finished running predeploy script.
-[debug] [2020-01-03T06:58:23.529Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/butterfly-remote-jobs-prod  
+[debug] [2020-01-03T08:20:40.343Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/butterfly-remote-jobs-prod  
  
-[debug] [2020-01-03T06:58:24.058Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:40.902Z] <<< HTTP RESPONSE 200
 [info] i  firebase.storage: checking storage.rules for compilation errors...
-[debug] [2020-01-03T06:58:24.061Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod:test  
+[debug] [2020-01-03T08:20:40.905Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod:test  
 
-[debug] [2020-01-03T06:58:24.363Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:41.230Z] <<< HTTP RESPONSE 200
 [info] ✔  firebase.storage: rules file storage.rules compiled successfully
 [info] i  firestore: reading indexes from firestore.indexes.json...
 [info] i  cloud.firestore: checking firestore.rules for compilation errors...
-[debug] [2020-01-03T06:58:24.366Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod:test  
+[debug] [2020-01-03T08:20:41.233Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod:test  
 
-[debug] [2020-01-03T06:58:24.632Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:41.498Z] <<< HTTP RESPONSE 200
 [info] ✔  cloud.firestore: rules file firestore.rules compiled successfully
-[debug] [2020-01-03T06:58:24.634Z] > [functions] package.json contents: {
+[debug] [2020-01-03T08:20:41.499Z] > [functions] package.json contents: {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
@@ -67,267 +67,21 @@
   "private": true
 }
 [info] i  functions: ensuring necessary APIs are enabled...
-[debug] [2020-01-03T06:58:24.635Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/butterfly-remote-jobs-prod/services/cloudfunctions.googleapis.com  
+[debug] [2020-01-03T08:20:41.500Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/butterfly-remote-jobs-prod/services/cloudfunctions.googleapis.com  
  
-[debug] [2020-01-03T06:58:24.635Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/butterfly-remote-jobs-prod/services/runtimeconfig.googleapis.com  
+[debug] [2020-01-03T08:20:41.501Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/butterfly-remote-jobs-prod/services/runtimeconfig.googleapis.com  
  
-[debug] [2020-01-03T06:58:25.050Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:25.132Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:42.026Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:42.098Z] <<< HTTP RESPONSE 200
 [info] ✔  functions: all necessary APIs are enabled
-[debug] [2020-01-03T06:58:25.133Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/adminSdkConfig  
+[debug] [2020-01-03T08:20:42.099Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/adminSdkConfig  
  
-[debug] [2020-01-03T06:58:25.377Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:25.378Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/butterfly-remote-jobs-prod/versions  
+[debug] [2020-01-03T08:20:42.344Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:42.345Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/butterfly-remote-jobs-prod/versions  
 
-[debug] [2020-01-03T06:58:27.027Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:27.028Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/releases?pageSize=10&pageToken=  
+[debug] [2020-01-03T08:20:43.669Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:43.671Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/releases?pageSize=10&pageToken=  
  
-[debug] [2020-01-03T06:58:27.298Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:27.299Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/rulesets/ea4d1c53-3b42-4902-bd76-8f48a315b296  
+[debug] [2020-01-03T08:20:43.961Z] <<< HTTP RESPONSE 200
+[debug] [2020-01-03T08:20:43.962Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/rulesets/ea4d1c53-3b42-4902-bd76-8f48a315b296  
  
-[debug] [2020-01-03T06:58:27.584Z] <<< HTTP RESPONSE 200
-[info] i  storage: latest version of storage.rules already up to date, skipping upload...
-[debug] [2020-01-03T06:58:27.586Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/releases?pageSize=10&pageToken=  
- 
-[debug] [2020-01-03T06:58:27.586Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/butterfly-remote-jobs-prod/databases/(default)/collectionGroups/-/indexes  
- 
-[debug] [2020-01-03T06:58:27.889Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:27.890Z] >>> HTTP REQUEST GET https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/rulesets/ab9e1c83-013f-4abc-a261-4e1d8dc28e86  
- 
-[debug] [2020-01-03T06:58:27.943Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:27.944Z] >>> HTTP REQUEST GET https://firestore.googleapis.com/v1beta2/projects/butterfly-remote-jobs-prod/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false  
- 
-[debug] [2020-01-03T06:58:28.182Z] <<< HTTP RESPONSE 200
-[info] i  firestore: latest version of firestore.rules already up to date, skipping upload...
-[debug] [2020-01-03T06:58:28.276Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.277Z] Skipping existing index: {"collectionGroup":"jobs","queryScope":"COLLECTION","fields":[{"fieldPath":"advertisementPlan","order":"ASCENDING"},{"fieldPath":"date","order":"DESCENDING"}]}
-[debug] [2020-01-03T06:58:28.277Z] Skipping existing index: {"collectionGroup":"jobs","queryScope":"COLLECTION","fields":[{"fieldPath":"date","order":"ASCENDING"},{"fieldPath":"jobType","order":"ASCENDING"}]}
-[debug] [2020-01-03T06:58:28.277Z] Skipping existing index: {"collectionGroup":"jobs","queryScope":"COLLECTION","fields":[{"fieldPath":"status","order":"ASCENDING"},{"fieldPath":"date","order":"DESCENDING"}]}
-[debug] [2020-01-03T06:58:28.277Z] Skipping existing index: {"collectionGroup":"jobStats","queryScope":"COLLECTION","fields":[{"fieldPath":"status","order":"ASCENDING"},{"fieldPath":"title","order":"ASCENDING"}]}
-[info] ✔  firestore: deployed indexes in firestore.indexes.json successfully
-[info] i  functions: preparing functions directory for uploading...
-[debug] [2020-01-03T06:58:28.279Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs  
- 
-[debug] [2020-01-03T06:58:28.545Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.546Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/algolia/variables  
- 
-[debug] [2020-01-03T06:58:28.546Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/sendgrid/variables  
- 
-[debug] [2020-01-03T06:58:28.546Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/stripe/variables  
- 
-[debug] [2020-01-03T06:58:28.741Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.742Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/algolia/variables/apikey  
- 
-[debug] [2020-01-03T06:58:28.742Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/algolia/variables/appid  
- 
-[debug] [2020-01-03T06:58:28.768Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.768Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/sendgrid/variables/key  
- 
-[debug] [2020-01-03T06:58:28.774Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.775Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/butterfly-remote-jobs-prod/configs/stripe/variables/secretkey  
- 
-[debug] [2020-01-03T06:58:28.935Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.942Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.948Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:28.951Z] <<< HTTP RESPONSE 200
-[info] i  functions: packaged functions (49.22 KB) for uploading
-[debug] [2020-01-03T06:58:29.398Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions:generateUploadUrl  
- 
-[debug] [2020-01-03T06:58:30.554Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:30.555Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-e70c65b0-93cd-4fd5-a0f1-ca80f9b3f0a2/be13fe1f-93c8-424f-84ca-aaf26b1d3c30.zip?GoogleAccessId=service-889926117816@gcf-admin-robot.iam.gserviceaccount.com&Expires=1578036510&Signature=jC5b%2BytRXMrNkUjqvCo21l1x8CweYmCVqR4VeDPvvgjJ%2FeKQjr2kufHlT%2B7Z5VaBrw%2FynqOlv%2Fb%2F%2Fsu1%2BuNnKvS53y8hK6RKN9KOv5gKGicR%2B1tfsXqPU0G8UMEajyJkTxjgUGhGdrPXqrupZ9168%2BNArnYHXZZVzJkNSrFIKtvxU62i08sN8I2sTVpC9vml37p%2BLBtLq%2B0V5AQ6mr51ro%2BtXsNebHvSAtUiNufCa8LSA9EPuTo5KIEM7a55%2Fscl88yI%2BjQS00B88CJTJ0uIn%2Fiv6q58XopePAgh9nHkwRgXgt3hbCVNbcqDh8%2BdQPM4wGbzJRJT7mLZkduDNOFmFg%3D%3D  
- <request body omitted>
-[debug] [2020-01-03T06:58:31.020Z] <<< HTTP RESPONSE 200
-[info] ✔  functions: functions folder uploaded successfully
-[info] i  hosting[butterfly-remote-jobs-prod]: beginning deploy...
-[info] i  hosting[butterfly-remote-jobs-prod]: found 40 files in build
-[debug] [2020-01-03T06:58:31.141Z] [hosting] hash cache [YnVpbGQ] stored for 40 files
-[debug] [2020-01-03T06:58:31.141Z] [hosting][hash queue][FINAL]
-[debug] [2020-01-03T06:58:31.141Z] >>> HTTP REQUEST POST https://firebasehosting.googleapis.com/v1beta1/sites/butterfly-remote-jobs-prod/versions/65423974bb22448d:populateFiles  
- <request body omitted>
-[debug] [2020-01-03T06:58:32.994Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:32.999Z] [hosting][populate queue][FINAL]
-[debug] [2020-01-03T06:58:32.999Z] [hosting] uploads queued: 8
-[debug] [2020-01-03T06:58:35.321Z] [hosting][upload queue][FINAL]
-[info] ✔  hosting[butterfly-remote-jobs-prod]: file upload complete
-[debug] [2020-01-03T06:58:35.321Z] [hosting] deploy completed after 4300ms
-[debug] [2020-01-03T06:58:35.458Z] [rules] releasing firebase.storage/butterfly-remote-jobs-prod.appspot.com with ruleset projects/butterfly-remote-jobs-prod/rulesets/ea4d1c53-3b42-4902-bd76-8f48a315b296
-[debug] [2020-01-03T06:58:35.458Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/releases/firebase.storage/butterfly-remote-jobs-prod.appspot.com  
-
-[debug] [2020-01-03T06:58:36.154Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:36.154Z] [rules] updated release projects/butterfly-remote-jobs-prod/releases/firebase.storage/butterfly-remote-jobs-prod.appspot.com
-[info] ✔  storage: released rules storage.rules to firebase.storage
-[debug] [2020-01-03T06:58:36.155Z] [rules] releasing cloud.firestore with ruleset projects/butterfly-remote-jobs-prod/rulesets/ab9e1c83-013f-4abc-a261-4e1d8dc28e86
-[debug] [2020-01-03T06:58:36.155Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/butterfly-remote-jobs-prod/releases/cloud.firestore  
-
-[debug] [2020-01-03T06:58:36.598Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:36.598Z] [rules] updated release projects/butterfly-remote-jobs-prod/releases/cloud.firestore
-[info] ✔  firestore: released rules firestore.rules to cloud.firestore
-[debug] [2020-01-03T06:58:36.601Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/-/functions  
- 
-[debug] [2020-01-03T06:58:37.206Z] <<< HTTP RESPONSE 200
-[info] i  functions: updating Node.js 8 function completePaymentWithStripe(us-central1)...
-[debug] [2020-01-03T06:58:37.208Z] Trigger is:  {"httpsTrigger":{}}
-[info] i  functions: updating Node.js 8 function contactUsEmailSendToCustomerSupport(us-central1)...
-[debug] [2020-01-03T06:58:37.209Z] Trigger is:  {"httpsTrigger":{}}
-[info] i  functions: updating Node.js 8 function notifyEmployerByEmailWhenNewApplication(us-central1)...
-[debug] [2020-01-03T06:58:37.209Z] Trigger is:  {"httpsTrigger":{}}
-[info] i  functions: updating Node.js 8 function setJobPostingExpireCleanUp(us-central1)...
-[debug] [2020-01-03T06:58:37.209Z] Trigger is:  {"httpsTrigger":{}}
-[info] i  functions: updating Node.js 8 function indexJobOnCreate(us-central1)...
-[debug] [2020-01-03T06:58:37.209Z] Trigger is:  {"eventTrigger":{"resource":"projects/butterfly-remote-jobs-prod/databases/(default)/documents/jobs/{jobID}","eventType":"providers/cloud.firestore/eventTypes/document.create","service":"firestore.googleapis.com"}}
-[info] i  functions: updating Node.js 8 function unindexJobOnDelete(us-central1)...
-[debug] [2020-01-03T06:58:37.210Z] Trigger is:  {"eventTrigger":{"resource":"projects/butterfly-remote-jobs-prod/databases/(default)/documents/jobs/{jobID}","eventType":"providers/cloud.firestore/eventTypes/document.delete","service":"firestore.googleapis.com"}}
-[info] i  functions: updating Node.js 8 function unindexJobOnExpiredUpdate(us-central1)...
-[debug] [2020-01-03T06:58:37.210Z] Trigger is:  {"eventTrigger":{"resource":"projects/butterfly-remote-jobs-prod/databases/(default)/documents/jobs/{jobID}","eventType":"providers/cloud.firestore/eventTypes/document.update","service":"firestore.googleapis.com"}}
-[info] i  functions: updating Node.js 8 function cleanUpJobDependencies(us-central1)...
-[debug] [2020-01-03T06:58:37.210Z] Trigger is:  {"eventTrigger":{"resource":"projects/butterfly-remote-jobs-prod/databases/(default)/documents/jobs/{jobID}","eventType":"providers/cloud.firestore/eventTypes/document.delete","service":"firestore.googleapis.com"}}
-[debug] [2020-01-03T06:58:37.211Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/butterfly-remote-jobs-prod/services/cloudscheduler.googleapis.com  
- 
-[debug] [2020-01-03T06:58:37.679Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:37.681Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/completePaymentWithStripe {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
-
-[debug] [2020-01-03T06:58:37.683Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/contactUsEmailSendToCustomerSupport {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
-
-[debug] [2020-01-03T06:58:37.684Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/notifyEmployerByEmailWhenNewApplication {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
-
-[debug] [2020-01-03T06:58:37.684Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/setJobPostingExpireCleanUp {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"} 
-
-[debug] [2020-01-03T06:58:37.684Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/indexJobOnCreate {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
-
-[debug] [2020-01-03T06:58:37.685Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/unindexJobOnDelete {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
-
-[debug] [2020-01-03T06:58:37.687Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/unindexJobOnExpiredUpdate {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
-
-[debug] [2020-01-03T06:58:37.688Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/us-central1/functions/cleanUpJobDependencies {"updateMask":"sourceUploadUrl,name,labels,runtime,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
-
-[debug] [2020-01-03T06:58:38.395Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.396Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.397Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.397Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.398Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.399Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.400Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.400Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:38.401Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/butterfly-remote-jobs-prod/locations/-/functions  
- 
-[debug] [2020-01-03T06:58:39.109Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.110Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29tcGxldGVQYXltZW50V2l0aFN0cmlwZS9vXzNJUENHUUhTdw  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29udGFjdFVzRW1haWxTZW5kVG9DdXN0b21lclN1cHBvcnQvRTFCT21UN1RzbTA  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvbm90aWZ5RW1wbG95ZXJCeUVtYWlsV2hlbk5ld0FwcGxpY2F0aW9uL0MwWjZjZFpKRWpZ  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvc2V0Sm9iUG9zdGluZ0V4cGlyZUNsZWFuVXAvanp5aHRrSVYzbW8  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvaW5kZXhKb2JPbkNyZWF0ZS9tNXRoOElNclJkNA  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRGVsZXRlLzhUYzQ3RVR5WF9R  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRXhwaXJlZFVwZGF0ZS8yaWhUMVpwY1Bvdw  
- 
-[debug] [2020-01-03T06:58:39.111Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY2xlYW5VcEpvYkRlcGVuZGVuY2llcy94RHhnbTUtUy1NSQ  
- 
-[debug] [2020-01-03T06:58:39.357Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.453Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.468Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.469Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.470Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.470Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.474Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:39.509Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.360Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRXhwaXJlZFVwZGF0ZS8yaWhUMVpwY1Bvdw  
- 
-[debug] [2020-01-03T06:58:41.457Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29tcGxldGVQYXltZW50V2l0aFN0cmlwZS9vXzNJUENHUUhTdw  
- 
-[debug] [2020-01-03T06:58:41.471Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY2xlYW5VcEpvYkRlcGVuZGVuY2llcy94RHhnbTUtUy1NSQ  
- 
-[debug] [2020-01-03T06:58:41.471Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvaW5kZXhKb2JPbkNyZWF0ZS9tNXRoOElNclJkNA  
- 
-[debug] [2020-01-03T06:58:41.471Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRGVsZXRlLzhUYzQ3RVR5WF9R  
- 
-[debug] [2020-01-03T06:58:41.474Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvbm90aWZ5RW1wbG95ZXJCeUVtYWlsV2hlbk5ld0FwcGxpY2F0aW9uL0MwWjZjZFpKRWpZ  
- 
-[debug] [2020-01-03T06:58:41.475Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvc2V0Sm9iUG9zdGluZ0V4cGlyZUNsZWFuVXAvanp5aHRrSVYzbW8  
- 
-[debug] [2020-01-03T06:58:41.514Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29udGFjdFVzRW1haWxTZW5kVG9DdXN0b21lclN1cHBvcnQvRTFCT21UN1RzbTA  
- 
-[debug] [2020-01-03T06:58:41.678Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.788Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.809Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.813Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.829Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.830Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.835Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:41.857Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:43.683Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRXhwaXJlZFVwZGF0ZS8yaWhUMVpwY1Bvdw  
- 
-[debug] [2020-01-03T06:58:43.793Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29tcGxldGVQYXltZW50V2l0aFN0cmlwZS9vXzNJUENHUUhTdw  
- 
-[debug] [2020-01-03T06:58:43.812Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRGVsZXRlLzhUYzQ3RVR5WF9R  
- 
-[debug] [2020-01-03T06:58:43.813Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvbm90aWZ5RW1wbG95ZXJCeUVtYWlsV2hlbk5ld0FwcGxpY2F0aW9uL0MwWjZjZFpKRWpZ  
- 
-[debug] [2020-01-03T06:58:43.832Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvaW5kZXhKb2JPbkNyZWF0ZS9tNXRoOElNclJkNA  
- 
-[debug] [2020-01-03T06:58:43.832Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY2xlYW5VcEpvYkRlcGVuZGVuY2llcy94RHhnbTUtUy1NSQ  
- 
-[debug] [2020-01-03T06:58:43.836Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvc2V0Sm9iUG9zdGluZ0V4cGlyZUNsZWFuVXAvanp5aHRrSVYzbW8  
- 
-[debug] [2020-01-03T06:58:43.858Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29udGFjdFVzRW1haWxTZW5kVG9DdXN0b21lclN1cHBvcnQvRTFCT21UN1RzbTA  
- 
-[debug] [2020-01-03T06:58:44.025Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.147Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.161Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.161Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.197Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.204Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.211Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:44.240Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.026Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRXhwaXJlZFVwZGF0ZS8yaWhUMVpwY1Bvdw  
- 
-[debug] [2020-01-03T06:58:46.153Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29tcGxldGVQYXltZW50V2l0aFN0cmlwZS9vXzNJUENHUUhTdw  
- 
-[debug] [2020-01-03T06:58:46.162Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvbm90aWZ5RW1wbG95ZXJCeUVtYWlsV2hlbk5ld0FwcGxpY2F0aW9uL0MwWjZjZFpKRWpZ  
- 
-[debug] [2020-01-03T06:58:46.162Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRGVsZXRlLzhUYzQ3RVR5WF9R  
- 
-[debug] [2020-01-03T06:58:46.198Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29udGFjdFVzRW1haWxTZW5kVG9DdXN0b21lclN1cHBvcnQvRTFCT21UN1RzbTA  
- 
-[debug] [2020-01-03T06:58:46.205Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvc2V0Sm9iUG9zdGluZ0V4cGlyZUNsZWFuVXAvanp5aHRrSVYzbW8  
- 
-[debug] [2020-01-03T06:58:46.212Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvaW5kZXhKb2JPbkNyZWF0ZS9tNXRoOElNclJkNA  
- 
-[debug] [2020-01-03T06:58:46.241Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY2xlYW5VcEpvYkRlcGVuZGVuY2llcy94RHhnbTUtUy1NSQ  
- 
-[debug] [2020-01-03T06:58:46.475Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.475Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.480Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.502Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.513Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.519Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.569Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:46.592Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.481Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29udGFjdFVzRW1haWxTZW5kVG9DdXN0b21lclN1cHBvcnQvRTFCT21UN1RzbTA  
- 
-[debug] [2020-01-03T06:58:48.481Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvbm90aWZ5RW1wbG95ZXJCeUVtYWlsV2hlbk5ld0FwcGxpY2F0aW9uL0MwWjZjZFpKRWpZ  
- 
-[debug] [2020-01-03T06:58:48.481Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRGVsZXRlLzhUYzQ3RVR5WF9R  
- 
-[debug] [2020-01-03T06:58:48.504Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY29tcGxldGVQYXltZW50V2l0aFN0cmlwZS9vXzNJUENHUUhTdw  
- 
-[debug] [2020-01-03T06:58:48.517Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvdW5pbmRleEpvYk9uRXhwaXJlZFVwZGF0ZS8yaWhUMVpwY1Bvdw  
- 
-[debug] [2020-01-03T06:58:48.521Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvaW5kZXhKb2JPbkNyZWF0ZS9tNXRoOElNclJkNA  
- 
-[debug] [2020-01-03T06:58:48.569Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvc2V0Sm9iUG9zdGluZ0V4cGlyZUNsZWFuVXAvanp5aHRrSVYzbW8  
- 
-[debug] [2020-01-03T06:58:48.593Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/YnV0dGVyZmx5LXJlbW90ZS1qb2JzLXByb2QvdXMtY2VudHJhbDEvY2xlYW5VcEpvYkRlcGVuZGVuY2llcy94RHhnbTUtUy1NSQ  
- 
-[debug] [2020-01-03T06:58:48.813Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.814Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.821Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.839Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.843Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.851Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.909Z] <<< HTTP RESPONSE 200
-[debug] [2020-01-03T06:58:48.927Z] <<< HTTP RESPONSE 200

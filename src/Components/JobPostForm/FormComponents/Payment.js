@@ -121,7 +121,10 @@ const _CardForm = props => {
             });
             setPromoCodeToCheck("");
           } else {
-            const discountedPrice = price - (price * coupon.discount) / 100;
+            const discountedPrice = (
+              price -
+              (price * coupon.discount) / 100
+            ).toFixed(2);
             dispatch({
               type: "field",
               fieldName: "price",

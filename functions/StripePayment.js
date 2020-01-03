@@ -28,7 +28,7 @@ exports.stripePayment = async function(request, response, stripe, admin) {
           } else {
             //valid
             setPriceByPlan();
-            price = price - (price * coupon.discount) / 100;
+            price = (price - (price * coupon.discount) / 100).toFixed(2);
             if (price === data.amount) {
               //the right price was passed by client
               return proceedCharge();
