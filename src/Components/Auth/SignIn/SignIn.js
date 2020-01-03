@@ -113,9 +113,13 @@ const SignIn = props => {
   const checkIfUserExistsInDatabaseAndSetGlobalState = () => {
     setLoading(true);
     const { uid, displayName, email } = firebase.auth().currentUser;
-    const fullName = displayName.split(" ");
-    const firstName = fullName[0];
-    const lastName = fullName[1];
+    let firstName = "";
+    let lastName = "";
+    if (displayName !== null) {
+      const fullName = displayName.split(" ");
+      firstName = fullName[0];
+      lastName = fullName[1];
+    }
     db.collection("users")
       .doc(uid)
       .get()

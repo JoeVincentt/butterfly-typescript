@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+
 import uuidv4 from "uuid/v4";
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
@@ -618,6 +619,13 @@ const JobDescription = () => {
               alignContent="center"
               className={classes.containerForDynamicFields}
             >
+              {/* Job Requirements */}
+              {renderDynamicFieldName(
+                "Requirements",
+                jobState.requirements,
+                "requirements"
+              )}
+              {renderDynamicFields(jobState.requirements, "requirements")}
               {/* Job Responsibilities */}
               {renderDynamicFieldName(
                 "Responsibilities",

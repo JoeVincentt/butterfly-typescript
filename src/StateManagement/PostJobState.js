@@ -19,6 +19,7 @@ export const postJobReducer = (draft, action) => {
       draft.jobType = action.payload.jobType;
       draft.about = action.payload.about;
       draft.hiringProcessSteps = action.payload.hiringProcessSteps;
+      draft.requirements = action.payload.requirements;
       draft.responsibilities = action.payload.responsibilities;
       draft.educationAndExperience = action.payload.educationAndExperience;
       draft.skills = action.payload.skills;
@@ -37,6 +38,7 @@ export const postJobReducer = (draft, action) => {
       draft.category = "";
       draft.jobType = "Full-Time";
       draft.about = "";
+      draft.requirements = [""];
       draft.responsibilities = [""];
       draft.educationAndExperience = [""];
       draft.skills = [""];
@@ -64,6 +66,7 @@ const initialState = {
   jobType: "Full-Time",
   about: "",
   hiringProcessSteps: [""],
+  requirements: [""],
   responsibilities: [""],
   educationAndExperience: [""],
   skills: [""],

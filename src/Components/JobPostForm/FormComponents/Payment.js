@@ -276,36 +276,9 @@ const _CardForm = props => {
 
   const createDataBaseInstanceOfPostedJob = async () => {
     // console.log("create job data");
+    const jobID = uuid();
+    setLoading(true);
     try {
-      const jobID = uuid();
-      await db
-        .collection("jobs")
-        .doc(jobID)
-        .set({
-          postedBy: userState.uid,
-          id: jobID,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          date: Date.now(),
-          status: "active",
-          advertisementPlan: postJobState.advertisementPlan,
-          logo: postJobState.logo,
-          companyName: postJobState.companyName,
-          companyLocation: postJobState.companyLocation,
-          companyWebsite: postJobState.companyWebsite,
-          companyAbout: postJobState.companyAbout,
-          title: postJobState.title,
-          category: postJobState.category,
-          jobType: postJobState.jobType,
-          about: postJobState.about,
-          hiringProcessSteps: postJobState.hiringProcessSteps,
-          responsibilities: postJobState.responsibilities,
-          educationAndExperience: postJobState.educationAndExperience,
-          skills: postJobState.skills,
-          compensationAndBenefits: postJobState.compensationAndBenefits,
-          additionalInformation: postJobState.additionalInformation,
-          externalJobPostingLink: postJobState.externalJobPostingLink
-        });
-
       //UPDATE EMPLOYER DASHBOARD STATS
       await db
         .collection("dashboardStats")
@@ -328,11 +301,43 @@ const _CardForm = props => {
           views: 0,
           applied: 0
         });
+    } catch (error) {}
+    try {
+      await db
+        .collection("jobs")
+        .doc(jobID)
+        .set({
+          postedBy: userState.uid,
+          id: jobID,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          date: Date.now(),
+          status: "active",
+          advertisementPlan: postJobState.advertisementPlan,
+          logo: postJobState.logo,
+          companyName: postJobState.companyName,
+          companyLocation: postJobState.companyLocation,
+          companyWebsite: postJobState.companyWebsite,
+          companyAbout: postJobState.companyAbout,
+          title: postJobState.title,
+          category: postJobState.category,
+          jobType: postJobState.jobType,
+          about: postJobState.about,
+          hiringProcessSteps: postJobState.hiringProcessSteps,
+          requirements: postJobState.requirements,
+          responsibilities: postJobState.responsibilities,
+          educationAndExperience: postJobState.educationAndExperience,
+          skills: postJobState.skills,
+          compensationAndBenefits: postJobState.compensationAndBenefits,
+          additionalInformation: postJobState.additionalInformation,
+          externalJobPostingLink: postJobState.externalJobPostingLink
+        });
+
       enqueueSnackbar("Great News, Job Posted.", {
         variant: "success"
       });
       setLoading(false);
     } catch (error) {
+      // console.log(error);
       enqueueSnackbar("Oops! Something went wrong! Please try again.", {
         variant: "error"
       });

@@ -55,6 +55,7 @@ const PostJobForm = () => {
       jobType: jobState.jobType,
       about: jobState.about,
       hiringProcessSteps: jobState.hiringProcessSteps,
+      requirements: jobState.requirements,
       responsibilities: jobState.responsibilities,
       educationAndExperience: jobState.educationAndExperience,
       skills: jobState.skills,

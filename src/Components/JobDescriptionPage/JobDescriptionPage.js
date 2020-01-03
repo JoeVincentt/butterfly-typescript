@@ -115,24 +115,28 @@ const JobDescriptionPage = ({ job, history }) => {
   };
 
   const renderListProperty = (args, name) => {
-    let fields = args.filter(field =>
-      field.trim().length !== 0 ? field : null
-    );
-    if (fields.length > 0) {
-      return (
-        <Grid container spacing={2} item xs={12} direction="column">
-          <Typography className={classes.listTitle}>{name}</Typography>
-          <ul>
-            {fields.map((item, index) => (
-              <li key={index} className={classes.listItem}>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Grid>
+    if (args !== null && args !== undefined) {
+      let fields = args.filter(field =>
+        field.trim().length !== 0 ? field : null
       );
+      if (fields.length > 0) {
+        return (
+          <Grid container spacing={2} item xs={12} direction="column">
+            <Typography className={classes.listTitle}>{name}</Typography>
+            <ul>
+              {fields.map((item, index) => (
+                <li key={index} className={classes.listItem}>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </Grid>
+        );
+      } else {
+        return false;
+      }
     } else {
-      return;
+      return false;
     }
   };
 
@@ -234,6 +238,7 @@ const JobDescriptionPage = ({ job, history }) => {
                 {renderDateAndJobType(job.date, job.jobType)}
                 {renderJobTitle(job.title)}
                 {renderJobAbout(job.about)}
+                {renderListProperty(job.requirements, "Requirements")}
                 {renderListProperty(job.responsibilities, "Responsibilities")}
                 {renderListProperty(
                   job.educationAndExperience,
