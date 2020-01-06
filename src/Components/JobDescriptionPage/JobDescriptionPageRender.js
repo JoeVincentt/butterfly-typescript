@@ -22,43 +22,38 @@ const JobDescriptionPageRender = props => {
     //need to fetch job description from the database
   }, [props.match.params.id]);
 
-  const getJobDescription = () => {
+  const getJobDescription = async () => {
     const id = props.match.params.id.toString();
     // console.log(id);
-    db.collection("jobs")
-      .where("id", "==", id)
-      // .where("status", "==", "active")
-      .get()
-      .then(querySnapshot => {
-        if (querySnapshot.size > 0) {
-          // Contents of first document
-          // console.log(querySnapshot.docs[0].data());
-          const job = querySnapshot.docs[0].data();
-          setJob(job);
-          //UPDATE JOB STATS
-          db.collection("jobStats")
+    try {
+      const querySnapshot = await db
+        .collection("jobs")
+        .where("id", "==", id)
+        // .where("status", "==", "active")
+        .get();
+      if (querySnapshot.size > 0) {
+        // Contents of first document
+        // console.log(querySnapshot.docs[0].data());
+        const job = querySnapshot.docs[0].data();
+        setJob(job);
+        //UPDATE JOB STATS
+        try {
+          await db
+            .collection("jobStats")
             .doc(job.postedBy)
             .collection("jobStats")
             .doc(job.id)
             .update({
               views: firebase.firestore.FieldValue.increment(1)
-            })
-            .then(() => {
-              // console.log("Document successfully updated!");
-            })
-            .catch(error => {
-              // console.log("Error updating document:", error);
             });
-          setLoading(false);
-        } else {
-          // console.log("No such document!");
-          setJobDoesNotExist(true);
-          setLoading(false);
-        }
-      })
-      .catch(error => {
-        // console.log("Error getting document:", error);
-      });
+        } catch (error) {}
+        setLoading(false);
+      } else {
+        // console.log("No such document!");
+        setJobDoesNotExist(true);
+        setLoading(false);
+      }
+    } catch (error) {}
   };
 
   if (loading) {

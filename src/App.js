@@ -9,6 +9,7 @@ import { purple } from "@material-ui/core/colors";
 import Content from "./Components/Router";
 import { UserStateProvider } from "./StateManagement/UserState";
 import { PostJobStateProvider } from "./StateManagement/PostJobState";
+import { EditJobStateProvider } from "./StateManagement/EditJobState";
 import { PaymentStateProvider } from "./StateManagement/PaymentState";
 // Include only the reset
 import "instantsearch.css/themes/reset.css";
@@ -48,9 +49,11 @@ const App = props => {
       <SnackbarProvider maxSnack={4} hideIconVariant={false}>
         <UserStateProvider>
           <PostJobStateProvider>
-            <PaymentStateProvider>
-              <Content />
-            </PaymentStateProvider>
+            <EditJobStateProvider>
+              <PaymentStateProvider>
+                <Content />
+              </PaymentStateProvider>
+            </EditJobStateProvider>
           </PostJobStateProvider>
         </UserStateProvider>
       </SnackbarProvider>

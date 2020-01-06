@@ -223,7 +223,7 @@ const JobListingOverview = ({ history }) => {
               <Button
                 color="primary"
                 className={classes.button}
-                size="large"
+                size="medium"
                 // endIcon={<ArrowForwardIcon />}
                 onClick={() => {
                   // console.log(id);
@@ -240,10 +240,18 @@ const JobListingOverview = ({ history }) => {
               <Button
                 color="primary"
                 className={classes.button}
-                size="large"
+                size="medium"
                 onClick={() => navigateToJobDetails(id)}
               >
                 Open
+              </Button>
+              <Button
+                color="primary"
+                className={classes.button}
+                size="medium"
+                onClick={() => history.push(`/edit-a-job/${id}`)}
+              >
+                Edit
               </Button>
             </Grid>
           </Grid>

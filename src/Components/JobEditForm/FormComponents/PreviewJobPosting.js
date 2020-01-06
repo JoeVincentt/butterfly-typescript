@@ -3,15 +3,15 @@ import { LinearProgress } from "@material-ui/core";
 
 import {
   // PostJobDispatchContext,
-  PostJobStateContext
-} from "../../../StateManagement/PostJobState";
+  EditJobStateContext
+} from "../../../StateManagement/EditJobState";
 import JobDescriptionPage from "../../JobDescriptionPage/JobDescriptionPage";
 
-const PreviewJobPosting = job => {
+const PreviewJobEditing = job => {
   const [loading, setLoading] = useState(true);
   //Use context
-  const state = useContext(PostJobStateContext);
-  // const dispatch = useContext(PostJobDispatchContext);
+  const state = useContext(EditJobStateContext);
+  // const dispatch = useContext(EditJobDispatchContext);
 
   useEffect(() => {
     setLoading(false);
@@ -25,4 +25,4 @@ const PreviewJobPosting = job => {
   }
 };
 
-export default PreviewJobPosting;
+export default PreviewJobEditing;

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, Suspense } from "react";
 
 import uuidv4 from "uuid/v4";
 import { useSnackbar } from "notistack";
@@ -27,9 +27,9 @@ import ClearAllIcon from "@material-ui/icons/ClearAll";
 import StyledRadio from "../../Buttons/StyledRadio";
 import { useDropzone } from "react-dropzone";
 import {
-  PostJobDispatchContext,
-  PostJobStateContext
-} from "../../../StateManagement/PostJobState";
+  EditJobDispatchContext,
+  EditJobStateContext
+} from "../../../StateManagement/EditJobState";
 import { UserStateContext } from "../../../StateManagement/UserState";
 
 import { categoryList } from "../../../AdditionalResources/categoryList";
@@ -39,8 +39,8 @@ const JobDescription = () => {
   const classes = useStyles();
   //Use context
   const { uid } = useContext(UserStateContext);
-  const dispatch = useContext(PostJobDispatchContext);
-  const jobState = useContext(PostJobStateContext);
+  const dispatch = useContext(EditJobDispatchContext);
+  const jobState = useContext(EditJobStateContext);
   //Notifications
   const { enqueueSnackbar } = useSnackbar();
   //Functional State
@@ -70,18 +70,6 @@ const JobDescription = () => {
         })
       )
   });
-
-  // Setting State if Draft Object exists
-  useEffect(() => {
-    const jobDraft = JSON.parse(localStorage.getItem("jobDraft"));
-    if (jobDraft !== null) {
-      // console.log(jobDraft);
-      dispatch({
-        type: "setJobDescription",
-        payload: jobDraft
-      });
-    }
-  }, []);
 
   //Image Upload
   useEffect(() => {
@@ -583,107 +571,113 @@ const JobDescription = () => {
   );
 
   return (
-    <Paper className={classes.paper}>
-      <Grid container alignContent="center" justify="center">
-        <Grid item xs={12} sm={10}>
-          <Paper elevation={0} className={classes.innerPaper}>
-            <Grid container justify="space-between">
+    <Suspense fallback={<LinearProgress />}>
+      <Paper className={classes.paper}>
+        <Grid container alignContent="center" justify="center">
+          <Grid item xs={12} sm={10}>
+            <Paper elevation={0} className={classes.innerPaper}>
+              <Grid container justify="space-between">
+                <Typography
+                  variant="h4"
+                  color="primary"
+                  className={classes.margin}
+                >
+                  Company Details
+                </Typography>
+                <Button
+                  color="primary"
+                  size="small"
+                  onClick={() => clearAllFields()}
+                >
+                  <ClearAllIcon className={classes.margin} />
+                  Clear All Fields
+                </Button>
+              </Grid>
+              {renderCompanyInformation()}
+            </Paper>
+          </Grid>
+          <Grid item xs={12} sm={10}>
+            <Paper elevation={0} className={classes.innerPaper}>
               <Typography
                 variant="h4"
                 color="primary"
                 className={classes.margin}
               >
-                Company Details
+                Position Details
               </Typography>
-              <Button
-                color="primary"
-                size="small"
-                onClick={() => clearAllFields()}
+              {renderGeneralInformation()}
+              <Grid
+                container
+                justify="center"
+                alignContent="center"
+                className={classes.containerForDynamicFields}
               >
-                <ClearAllIcon className={classes.margin} />
-                Clear All Fields
-              </Button>
-            </Grid>
-            {renderCompanyInformation()}
-          </Paper>
+                {/* Job Requirements */}
+                {renderDynamicFieldName(
+                  "Requirements",
+                  jobState.requirements,
+                  "requirements"
+                )}
+                {renderDynamicFields(jobState.requirements, "requirements")}
+                {/* Job Responsibilities */}
+                {renderDynamicFieldName(
+                  "Responsibilities",
+                  jobState.responsibilities,
+                  "responsibilities"
+                )}
+                {renderDynamicFields(
+                  jobState.responsibilities,
+                  "responsibilities"
+                )}
+
+                {/* Education and Experience */}
+                {renderDynamicFieldName(
+                  "Education and Experience",
+                  jobState.educationAndExperience,
+                  "educationAndExperience"
+                )}
+                {renderDynamicFields(
+                  jobState.educationAndExperience,
+                  "educationAndExperience"
+                )}
+
+                {/* Skills */}
+                {renderDynamicFieldName("Skills", jobState.skills, "skills")}
+                {renderDynamicFields(jobState.skills, "skills")}
+
+                {/* Compensation && Benefits*/}
+                {renderDynamicFieldName(
+                  "Compensation and Benefits",
+                  jobState.compensationAndBenefits,
+                  "compensationAndBenefits"
+                )}
+                {renderDynamicFields(
+                  jobState.compensationAndBenefits,
+                  "compensationAndBenefits"
+                )}
+
+                {/* Job Hiring Process Steps  */}
+                {renderDynamicFieldName(
+                  "Hiring Process Steps",
+                  jobState.hiringProcessSteps,
+                  "hiringProcessSteps"
+                )}
+                {renderDynamicFields(
+                  jobState.hiringProcessSteps,
+                  "hiringProcessSteps"
+                )}
+
+                {/* Additional Information */}
+                {renderAdditionalInformation()}
+
+                {/* External Job Posting Link */}
+                {renderJobLink()}
+              </Grid>
+            </Paper>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={10}>
-          <Paper elevation={0} className={classes.innerPaper}>
-            <Typography variant="h4" color="primary" className={classes.margin}>
-              Position Details
-            </Typography>
-            {renderGeneralInformation()}
-            <Grid
-              container
-              justify="center"
-              alignContent="center"
-              className={classes.containerForDynamicFields}
-            >
-              {/* Job Requirements */}
-              {renderDynamicFieldName(
-                "Requirements",
-                jobState.requirements,
-                "requirements"
-              )}
-              {renderDynamicFields(jobState.requirements, "requirements")}
-              {/* Job Responsibilities */}
-              {renderDynamicFieldName(
-                "Responsibilities",
-                jobState.responsibilities,
-                "responsibilities"
-              )}
-              {renderDynamicFields(
-                jobState.responsibilities,
-                "responsibilities"
-              )}
-
-              {/* Education and Experience */}
-              {renderDynamicFieldName(
-                "Education and Experience",
-                jobState.educationAndExperience,
-                "educationAndExperience"
-              )}
-              {renderDynamicFields(
-                jobState.educationAndExperience,
-                "educationAndExperience"
-              )}
-
-              {/* Skills */}
-              {renderDynamicFieldName("Skills", jobState.skills, "skills")}
-              {renderDynamicFields(jobState.skills, "skills")}
-
-              {/* Compensation && Benefits*/}
-              {renderDynamicFieldName(
-                "Compensation and Benefits",
-                jobState.compensationAndBenefits,
-                "compensationAndBenefits"
-              )}
-              {renderDynamicFields(
-                jobState.compensationAndBenefits,
-                "compensationAndBenefits"
-              )}
-
-              {/* Job Hiring Process Steps  */}
-              {renderDynamicFieldName(
-                "Hiring Process Steps",
-                jobState.hiringProcessSteps,
-                "hiringProcessSteps"
-              )}
-              {renderDynamicFields(
-                jobState.hiringProcessSteps,
-                "hiringProcessSteps"
-              )}
-
-              {/* Additional Information */}
-              {renderAdditionalInformation()}
-
-              {/* External Job Posting Link */}
-              {renderJobLink()}
-            </Grid>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+    </Suspense>
   );
 };
 
