@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
-import backgroundImage from "../../images/companybar.jpg";
+import backgroundImage from "../../images/companybarWhite.jpg";
 import logo from "../../images/logoFull.png";
 import GradientButton from "../Buttons/GradientButton";
 

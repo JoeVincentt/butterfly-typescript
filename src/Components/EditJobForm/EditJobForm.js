@@ -7,12 +7,10 @@ import { ArrowForward, ArrowBack } from "@material-ui/icons";
 import colors from "../../constants/colors";
 
 import JobDescription from "./FormComponents/JobDescription";
-import AdvertisementPlan from "./FormComponents/AdvertisementPlan";
-import Payment from "./FormComponents/Payment";
 import PreviewJobPosting from "./FormComponents/PreviewJobPosting";
 import CustomStepper from "../Custom/CustomStepper";
-import ThankYouCard from "./FormComponents/ThankYouCard";
-import "./PostJobForm.css";
+
+import "./EditJobForm.css";
 import { PaymentStateContext } from "../../StateManagement/PaymentState";
 import { PostJobStateContext } from "../../StateManagement/PostJobState";
 
@@ -26,10 +24,6 @@ const getStepContent = stepIndex => {
       return <JobDescription />;
     case 1:
       return <PreviewJobPosting />;
-    case 2:
-      return <AdvertisementPlan />;
-    case 3:
-      return <Payment />;
     default:
       return "Unknown stepIndex";
   }
@@ -63,12 +57,12 @@ const PostJobForm = () => {
       additionalInformation: jobState.additionalInformation,
       externalJobPostingLink: jobState.externalJobPostingLink
     };
-    localStorage.setItem("jobDraft", JSON.stringify(jobDraft));
+    localStorage.setItem("jobEditDraft", JSON.stringify(jobDraft));
   };
 
   const handleNext = () => {
     if (activeStep === 0) {
-      saveJobDraft();
+      // saveJobDraft();
     }
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
@@ -128,7 +122,7 @@ const PostJobForm = () => {
         <div>
           {activeStep === steps.length ? (
             <Grid container direction="column">
-              <ThankYouCard handleReset={handleReset} />
+              {/* <ThankYouCard handleReset={handleReset} /> */}
             </Grid>
           ) : (
             <Grid container direction="column" alignContent="center">

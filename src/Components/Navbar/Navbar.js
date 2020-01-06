@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { makeStyles, fade } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 
 import {
   Button,
@@ -15,9 +15,7 @@ import {
   IconButton,
   Hidden,
   withWidth,
-  Fab,
-  InputBase,
-  Typography
+  Fab
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import SpeedIcon from "@material-ui/icons/Speed";
@@ -38,7 +36,7 @@ const Navbar = props => {
 
   const state = useContext(UserStateContext);
   const dispatch = useContext(UserDispatchContext);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   const { isLoggedIn } = state;
   const [drawerOpen, setDrawerOpen] = useState(false);
 
