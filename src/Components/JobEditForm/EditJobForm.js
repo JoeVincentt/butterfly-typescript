@@ -16,6 +16,7 @@ import CustomStepper from "../Custom/CustomStepper";
 
 import "./EditJobForm.css";
 
+import { UserStateContext } from "../../StateManagement/UserState";
 import {
   EditJobStateContext,
   EditJobDispatchContext
@@ -40,6 +41,7 @@ const EditJobForm = props => {
   const db = firebase.firestore();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { uid } = useContext(UserStateContext);
   const dispatch = useContext(EditJobDispatchContext);
   const jobState = useContext(EditJobStateContext);
 
@@ -77,6 +79,16 @@ const EditJobForm = props => {
   };
 
   const updateJobPosting = async () => {
+    try {
+      await db
+        .collection("jobStats")
+        .doc(uid)
+        .collection("jobStats")
+        .doc(jobID)
+        .update({
+          title: jobState.title
+        });
+    } catch (error) {}
     try {
       await db
         .collection("jobs")
