@@ -44,7 +44,7 @@ const JobListingsOverview = React.lazy(() =>
 const JobByCategory = React.lazy(() =>
   import("./JobsFeed/JobByCategoryPage/JobByCategory")
 );
-const About = React.lazy(() => import("./Footer/FooterComponents/About"));
+// const About = React.lazy(() => import("./Footer/FooterComponents/About"));
 const ContactUs = React.lazy(() =>
   import("./Footer/FooterComponents/ContactUs")
 );
@@ -71,7 +71,7 @@ const Content = props => {
           <CompanyBar />
           <Switch>
             <Route exact path="/" component={JobsHomeFeed} />
-            <Route exact path="/about" component={About} />
+            {/* <Route exact path="/about" component={About} /> */}
             <Route exact path="/contact-us" component={ContactUs} />
             {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />
               <Route

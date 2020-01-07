@@ -7,10 +7,11 @@ import { withRouter } from "react-router-dom";
 import { LinearProgress, Typography, Grid } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import { transformTextCapitalize } from "../../utils/transformTextCapitalize";
 import { renderJobsFeed } from "../utils/renderJobsFeed";
 import SeeMoreButton from "../../Buttons/SeeMoreButton";
 
-const JobsFeed = ({ history, location }) => {
+const JobsFeed = ({ history, location, match }) => {
   const classes = useStyles();
   const db = firebase.firestore();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -30,16 +31,18 @@ const JobsFeed = ({ history, location }) => {
   const [inCategoryJobs, setInCategoryJobs] = useState([]);
 
   useEffect(() => {
+    transformTextCapitalize("marketing & something");
     // this.props.location.state
     // console.log(location);
+    // console.log(props.match.params.categoryID);
     // getRecentJobs();
     getJobs();
-  }, [location]);
+  }, [match.params.categoryID]);
 
   const getJobs = () => {
     let jobs = [];
     db.collection("jobs")
-      .where("category", "==", location.state.categoryID)
+      .where("category", "==", match.params.categoryID)
       .where("status", "==", "active")
       .limit(10)
       .get()
@@ -71,7 +74,7 @@ const JobsFeed = ({ history, location }) => {
     setLoadingMoreInCategoryJobs(true);
     let jobs = [...inCategoryJobs];
     db.collection("jobs")
-      .where("category", "==", location.state.categoryID)
+      .where("category", "==", match.params.categoryID)
       .where("status", "==", "active")
       .startAfter(lastVisibleInCategoryJob)
       .limit(10)
@@ -117,13 +120,13 @@ const JobsFeed = ({ history, location }) => {
     return (
       <React.Fragment>
         <Helmet>
-          <title>{`${location.state.category}`}</title>
+          <title>{transformTextCapitalize(match.params.categoryID)}</title>
         </Helmet>
         <Grid container justify="center">
           <Grid item xs={12} className={classes.categoryBox}>
             <Grid container justify="center" alignContent="center">
               <Typography variant="h4" className={classes.categoryText}>
-                {location.state.category}
+                {match.params.categoryID}
               </Typography>
             </Grid>
           </Grid>
@@ -138,7 +141,7 @@ const JobsFeed = ({ history, location }) => {
                 handleLoad={() => loadMoreInCategoryJobs()}
                 loading={loadingMoreInCategoryJobs}
                 noMoreJobs={noMoreJobsInCategoryCategory}
-                text={`no more ${location.state.category} jobs`}
+                text={`no more ${match.params.categoryID} jobs`}
               />
             )}
           </Grid>
@@ -161,6 +164,7 @@ const useStyles = makeStyles(theme => ({
     // border: "1px solid rgba(107, 19, 107, 0.2)",
     // borderRadius: "2px",
     // boxShadow: "0px 0px 4px -1px rgba(107,19,107,1)",
+    textTransform: "capitalize",
     padding: theme.spacing(2)
   }
 }));

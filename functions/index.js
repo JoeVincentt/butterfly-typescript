@@ -70,6 +70,7 @@ exports.setJobPostingExpireCleanUp = functions.https.onRequest(
   }
 );
 
+//ALGOLIA RELATED
 exports.indexJobOnCreate = functions.firestore
   .document("jobs/{jobID}")
   .onCreate((snapshot, context) => {
@@ -88,6 +89,7 @@ exports.unindexJobOnExpiredUpdate = functions.firestore
     return removeIndexOnExpire(change, client);
   });
 
+//JOB CLEAN-UP ON DELETE
 exports.cleanUpJobDependencies = functions.firestore
   .document("jobs/{jobID}")
   .onDelete((snapshot, context) => {
