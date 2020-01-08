@@ -5,7 +5,7 @@ exports.createUrlIndex = async function(snapshot, admin) {
   const data = snapshot.data();
   const id = data.id;
 
-  const fileBucket = "butterfly-remote-jobs-dev.appspot.com";
+  const fileBucket = "butterfly-remote-jobs-prod.appspot.com";
   const filePath = "sitemap/sitemap.txt";
   const metadata = {
     contentType: "text/plain"
@@ -47,7 +47,7 @@ exports.createUrlIndex = async function(snapshot, admin) {
 };
 
 exports.returnSitemap = async function(request, response, admin) {
-  const fileBucket = "butterfly-remote-jobs-dev.appspot.com";
+  const fileBucket = "butterfly-remote-jobs-prod.appspot.com";
   const filePath = "sitemap/sitemap.txt";
 
   const fileName = path.basename(filePath);
@@ -64,8 +64,8 @@ exports.returnSitemap = async function(request, response, admin) {
       //   "Content-disposition",
       //   "attachment; filename=sitemap.txt"
       // );
-      response.setHeader("Content-type", "text/plain");
-      response.charset = "UTF-8";
+      // response.setHeader("Content-type", "text/plain");
+      // response.charset = "UTF-8";
       response.send(data);
     });
     // Once the thumbnail has been uploaded delete the local file to free up disk space.
