@@ -16,5 +16,9 @@ service firebase.storage {
       						 && request.auth.uid == userId
                    && request.resource.contentType.matches('image/.*')   
     }
+    match /sitemap/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }

@@ -1,4 +1,7 @@
 const functions = require("firebase-functions");
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
 const cors = require("cors");
 //Initialize Algolia Search Client
 const algoliasearch = require("algoliasearch");
@@ -25,10 +28,20 @@ const {
   removeIndexOnDelete,
   removeIndexOnExpire
 } = require("./JobIndex");
+const { createUrlIndex, returnSitemap } = require("./UpdateSitemap");
 const { cleanUpDependencies } = require("./CleanUpJobDependencies");
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
+
+exports.returnSitemapFunction = functions.https.onRequest(
+  (request, response) => {
+    var corsFn = cors();
+    corsFn(request, response, () => {
+      returnSitemap(request, response, admin);
+    });
+  }
+);
 
 exports.completePaymentWithStripe = functions.https.onRequest(
   (request, response) => {
@@ -94,4 +107,11 @@ exports.cleanUpJobDependencies = functions.firestore
   .document("jobs/{jobID}")
   .onDelete((snapshot, context) => {
     return cleanUpDependencies(snapshot, admin);
+  });
+
+//UPDATE SITEMAP.TXT
+exports.createSitemapUrlIndex = functions.firestore
+  .document("jobs/{jobID}")
+  .onCreate((snapshot, context) => {
+    return createUrlIndex(snapshot, admin, path, os, fs);
   });
