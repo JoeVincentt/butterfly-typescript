@@ -106,8 +106,8 @@ const MenuDrawer = ({
         <ListItem
           button
           color="primary"
-          onClick={() => navigateTo("")}
-          onKeyDown={() => navigateTo("")}
+          onClick={() => navigateTo("home")}
+          onKeyDown={() => navigateTo("home")}
         >
           <ListItemIcon>
             <HomeIcon />

@@ -28,21 +28,13 @@ const {
   removeIndexOnDelete,
   removeIndexOnExpire
 } = require("./JobIndex");
-const { createUrlIndex, returnSitemap } = require("./UpdateSitemap");
+const { createUrlIndex, returnSitemap, removeUrlIndex } = require("./Sitemap");
 const { cleanUpDependencies } = require("./CleanUpJobDependencies");
 
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 
-exports.returnSitemapFunction = functions.https.onRequest(
-  (request, response) => {
-    var corsFn = cors();
-    corsFn(request, response, () => {
-      returnSitemap(request, response, admin);
-    });
-  }
-);
-
+//STRIPE PAYMENTS
 exports.completePaymentWithStripe = functions.https.onRequest(
   (request, response) => {
     var corsFn = cors();
@@ -52,6 +44,7 @@ exports.completePaymentWithStripe = functions.https.onRequest(
   }
 );
 
+//SENDGRID EMAIL SERVICES
 exports.contactUsEmailSendToCustomerSupport = functions.https.onRequest(
   (request, response) => {
     var corsFn = cors();
@@ -70,6 +63,8 @@ exports.notifyEmployerByEmailWhenNewApplication = functions.https.onRequest(
   }
 );
 
+//JOB POSTING MANAGER
+
 // exports.scheduledFunction = functions.pubsub.schedule('every 5 minutes').onRun((context) => {
 //   console.log('This will be run every 5 minutes!');
 //   return null;
@@ -83,7 +78,7 @@ exports.setJobPostingExpireCleanUp = functions.https.onRequest(
   }
 );
 
-//ALGOLIA RELATED
+//ALGOLIA RELATED INDEXING
 exports.indexJobOnCreate = functions.firestore
   .document("jobs/{jobID}")
   .onCreate((snapshot, context) => {
@@ -115,3 +110,19 @@ exports.createSitemapUrlIndex = functions.firestore
   .onCreate((snapshot, context) => {
     return createUrlIndex(snapshot, admin, path, os, fs);
   });
+
+exports.removeSitemapUrlIndex = functions.firestore
+  .document("jobs/{jobID}")
+  .onDelete((snapshot, context) => {
+    return removeUrlIndex(snapshot, admin);
+  });
+
+//RETURN SITEMAP FOR SEO CRAWLERS
+exports.returnSitemapFunction = functions.https.onRequest(
+  (request, response) => {
+    var corsFn = cors();
+    corsFn(request, response, () => {
+      returnSitemap(request, response, admin);
+    });
+  }
+);

@@ -70,7 +70,7 @@ const Content = props => {
           <Navbar />
           <CompanyBar />
           <Switch>
-            <Route exact path="/" component={JobsHomeFeed} />
+            <Route exact path="/home" component={JobsHomeFeed} />
             {/* <Route exact path="/about" component={About} /> */}
             <Route exact path="/contact-us" component={ContactUs} />
             {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />
