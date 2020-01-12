@@ -1,3 +1,4 @@
+const functions = require("firebase-functions");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
@@ -7,7 +8,7 @@ exports.createUrlIndex = async function(snapshot, admin) {
   const id = data.id;
 
   //change name of the bucket before deploy
-  const fileBucket = "butterfly-remote-jobs-dev.appspot.com";
+  const fileBucket = functions.config().fbase.projecturl;
   const filePath = "sitemap/sitemap.txt";
   const metadata = {
     contentType: "text/plain"
@@ -50,7 +51,7 @@ exports.createUrlIndex = async function(snapshot, admin) {
 
 exports.returnSitemap = async function(request, response, admin) {
   //change name of the bucket before deploy
-  const fileBucket = "butterfly-remote-jobs-dev.appspot.com";
+  const fileBucket = functions.config().fbase.projecturl;
   const filePath = "sitemap/sitemap.txt";
   const fileName = path.basename(filePath);
   const bucket = admin.storage().bucket(fileBucket);
@@ -94,7 +95,7 @@ exports.removeUrlIndex = async function(snapshot, admin) {
   const data = snapshot.data();
   const id = data.id;
   //change name of the bucket before deploy
-  const fileBucket = "butterfly-remote-jobs-dev.appspot.com";
+  const fileBucket = functions.config().fbase.projecturl;
   const filePath = "sitemap/sitemap.txt";
   const metadata = {
     contentType: "text/plain"

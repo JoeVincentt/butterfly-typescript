@@ -29,6 +29,7 @@ const {
   removeIndexOnExpire
 } = require("./JobIndex");
 const { createUrlIndex, returnSitemap, removeUrlIndex } = require("./Sitemap");
+const { returnLandingPage } = require("./LandingPage");
 const { cleanUpDependencies } = require("./CleanUpJobDependencies");
 
 // // Create and Deploy Your First Cloud Functions
@@ -123,6 +124,15 @@ exports.returnSitemapFunction = functions.https.onRequest(
     var corsFn = cors();
     corsFn(request, response, () => {
       returnSitemap(request, response, admin);
+    });
+  }
+);
+//RETURN LANDING PAGE
+exports.returnLandingPageFunction = functions.https.onRequest(
+  (request, response) => {
+    var corsFn = cors();
+    corsFn(request, response, () => {
+      returnLandingPage(request, response);
     });
   }
 );

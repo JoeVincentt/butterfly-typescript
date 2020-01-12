@@ -20,5 +20,9 @@ service firebase.storage {
       allow read: if true;
       allow write: if false;
     }
+    match /graphics/{document=**} {
+      allow read: if true;
+      allow write: if false;
+    }
   }
 }

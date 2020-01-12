@@ -1,5 +1,10 @@
 import React, { Suspense } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from "react-router-dom";
 
 import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { makeStyles } from "@material-ui/core/styles";
@@ -63,14 +68,14 @@ const Content = props => {
   // if (admin !== null && admin === "blahblah2020!!") {
   return (
     <Suspense fallback={<LinearProgress />}>
-      <Router>
+      <Router basename="app">
         <div className={classes.root}>
           <CssBaseline />
           <Toolbar id="back-to-top-anchor" />
           <Navbar />
           <CompanyBar />
           <Switch>
-            <Route exact path="/home" component={JobsHomeFeed} />
+            <Route exact path="/" component={JobsHomeFeed} />
             {/* <Route exact path="/about" component={About} /> */}
             <Route exact path="/contact-us" component={ContactUs} />
             {/* <Route exact path="/privacy-policy" component={PrivacyPolicy} />

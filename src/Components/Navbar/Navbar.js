@@ -132,7 +132,7 @@ const Navbar = props => {
           <div className={classes.buttonBar}>
             <Hidden smDown>
               <Grid container direction="row" alignItems="center">
-                <Link to="/home">
+                <Link to="/">
                   <Button
                     color="primary"
                     className={classes.button}

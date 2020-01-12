@@ -3,6 +3,7 @@
     // Required for certain syntax usages
     "ecmaVersion": 2017
   },
+
   "plugins": ["promise"],
   "extends": "eslint:recommended",
   "rules": {
